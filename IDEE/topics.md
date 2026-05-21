@@ -1,6 +1,8 @@
-# Content Idea Database
+# Topics / Macro-temi
 
-Lista dei topic correnti per il canale. Focus: **uso produttivo di Claude e integrazione con altri tool**.
+Lista dei macro-argomenti correnti per il canale. Focus: **uso produttivo di Claude e integrazione con altri tool**.
+
+> Questo file e' diverso da `manuali.md` (che contiene **idee di video concrete**) e da `ricerche-auto/` (che contiene le **idee generate automaticamente**). Qui ci sono solo i **temi-cappello**: aree di interesse da cui le idee vere possono nascere.
 
 ## Claude — Prodotti e modelli
 

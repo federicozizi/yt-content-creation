@@ -1,0 +1,208 @@
+<!DOCTYPE html>
+<html lang="it">
+<head>
+<meta charset="UTF-8">
+<title>[TITOLO VIDEO] - Guida regista</title>
+<style>
+  :root {
+    --bg: #fafaf9;
+    --ink: #1a1a1a;
+    --ink-soft: #555;
+    --accent: #d97706;
+    --accent-soft: #fef3c7;
+    --line: #e5e5e5;
+    --green: #15803d;
+    --green-soft: #dcfce7;
+    --blue: #1d4ed8;
+    --blue-soft: #dbeafe;
+  }
+  * { box-sizing: border-box; }
+  body {
+    font-family: -apple-system, BlinkMacSystemFont, "Segoe UI", Roboto, sans-serif;
+    background: var(--bg);
+    color: var(--ink);
+    max-width: 900px;
+    margin: 0 auto;
+    padding: 40px 24px 120px;
+    line-height: 1.55;
+    font-size: 17px;
+  }
+  h1 {
+    font-size: 32px;
+    margin: 0 0 4px;
+    letter-spacing: -0.02em;
+  }
+  .sottotitolo {
+    color: var(--ink-soft);
+    font-size: 16px;
+    margin-bottom: 32px;
+  }
+  .badge-intro {
+    display: inline-block;
+    background: var(--accent-soft);
+    color: var(--accent);
+    padding: 4px 10px;
+    border-radius: 6px;
+    font-weight: 600;
+    font-size: 13px;
+    text-transform: uppercase;
+    letter-spacing: 0.05em;
+    margin-bottom: 12px;
+  }
+  .step-numero {
+    display: inline-block;
+    background: var(--ink);
+    color: white;
+    padding: 6px 12px;
+    border-radius: 6px;
+    font-weight: 700;
+    font-size: 14px;
+    margin-bottom: 12px;
+  }
+  section.intro {
+    background: linear-gradient(180deg, #fff 0%, var(--accent-soft) 100%);
+    border: 2px solid var(--accent);
+    border-radius: 12px;
+    padding: 28px;
+    margin: 24px 0 40px;
+  }
+  section.step {
+    border: 1px solid var(--line);
+    background: white;
+    border-radius: 10px;
+    padding: 24px;
+    margin: 24px 0;
+  }
+  section.cta {
+    background: var(--green-soft);
+    border: 2px solid var(--green);
+    border-radius: 12px;
+    padding: 28px;
+    margin: 40px 0 24px;
+  }
+  .blocco {
+    margin: 16px 0;
+  }
+  .blocco-label {
+    font-size: 12px;
+    font-weight: 700;
+    text-transform: uppercase;
+    letter-spacing: 0.08em;
+    color: var(--ink-soft);
+    margin-bottom: 6px;
+  }
+  .blocco.mostrare .blocco-label { color: var(--blue); }
+  .blocco.mostrare {
+    background: var(--blue-soft);
+    border-left: 4px solid var(--blue);
+    padding: 12px 16px;
+    border-radius: 4px;
+  }
+  .blocco.dire {
+    background: #fafafa;
+    border-left: 4px solid var(--ink);
+    padding: 14px 18px;
+    border-radius: 4px;
+    font-size: 18px;
+    line-height: 1.6;
+  }
+  .blocco.dire p { margin: 0 0 12px; }
+  .blocco.dire p:last-child { margin-bottom: 0; }
+  hr {
+    border: none;
+    border-top: 1px solid var(--line);
+    margin: 48px 0;
+  }
+  .nota {
+    font-size: 14px;
+    color: var(--ink-soft);
+    font-style: italic;
+    margin-top: 8px;
+  }
+</style>
+</head>
+<body>
+
+<h1>[TITOLO DEL VIDEO]</h1>
+<div class="sottotitolo">Guida regista - per la registrazione. Non e' un documento pubblico.</div>
+
+<!-- ============== INTRO ============== -->
+<section class="intro">
+  <div class="badge-intro">Intro - sotto 1 minuto</div>
+  <h2 style="margin-top:0">Apertura persuasiva</h2>
+
+  <div class="blocco mostrare">
+    <div class="blocco-label">Cosa mostrare a schermo</div>
+    <p>[Es: CAMERA su di te, oppure lavagnetta con un disegno secco, oppure split tra te + un preview del risultato finale. Scegli UNA cosa.]</p>
+  </div>
+
+  <div class="blocco dire">
+    <div class="blocco-label">Cosa dire (verbatim)</div>
+    <p>[Hook secco, una frase che fa fermare lo scroll. Es: "Questo agente AI scrive 30 email di follow-up al posto tuo, ogni mattina, senza che tu apra il PC."]</p>
+    <p>[Cosa faremo nel video, elencato: "Nel prossimo video ti mostro come (1) X, (2) Y, (3) Z."]</p>
+    <p>[Promessa concreta che invoglia a guardare fino alla fine: "Alla fine avrai il sistema completo, gratis, pronto da usare."]</p>
+  </div>
+
+  <div class="nota">Vincolo: questa intro deve leggersi a voce naturale in 50-70 secondi. Se la stai scrivendo e supera, taglia.</div>
+</section>
+
+
+<!-- ============== STEP 1 ============== -->
+<section class="step">
+  <div class="step-numero">STEP 1</div>
+  <h2 style="margin-top:0">[Titolo step]</h2>
+
+  <div class="blocco mostrare">
+    <div class="blocco-label">Cosa mostrare a schermo</div>
+    <p>[Una sola cosa: lavagna con disegno X, oppure terminale con comando Y, oppure browser su Z, oppure file W in VS Code. Scegli e descrivi cosa esattamente.]</p>
+  </div>
+
+  <div class="blocco dire">
+    <div class="blocco-label">Cosa dire (verbatim)</div>
+    <p>[Testo esatto da pronunciare. Nessun riferimento temporale.]</p>
+    <p>[Continua con frase 2.]</p>
+    <p>[Frase 3 se serve.]</p>
+  </div>
+</section>
+
+
+<!-- ============== STEP 2 ============== -->
+<section class="step">
+  <div class="step-numero">STEP 2</div>
+  <h2 style="margin-top:0">[Titolo step]</h2>
+
+  <div class="blocco mostrare">
+    <div class="blocco-label">Cosa mostrare a schermo</div>
+    <p>[...]</p>
+  </div>
+
+  <div class="blocco dire">
+    <div class="blocco-label">Cosa dire (verbatim)</div>
+    <p>[...]</p>
+  </div>
+</section>
+
+
+<!-- Duplica section.step quanti servono -->
+
+
+<!-- ============== CTA FINALE ============== -->
+<section class="cta">
+  <div class="badge-intro" style="background:white;color:var(--green)">CTA finale</div>
+  <h2 style="margin-top:0">Chiusura</h2>
+
+  <div class="blocco mostrare">
+    <div class="blocco-label">Cosa mostrare a schermo</div>
+    <p>[CAMERA su di te, oppure il prodotto finito + tu in piccolo. Mantieni semplice.]</p>
+  </div>
+
+  <div class="blocco dire">
+    <div class="blocco-label">Cosa dire (verbatim)</div>
+    <p>[Recap secco di cosa hai mostrato.]</p>
+    <p>[Invito allo scaricamento dei materiali: "Tutti i file che ho usato li trovi gratis nel link in descrizione."]</p>
+    <p>[CTA iscrizione: "Se vuoi vedere altri esempi come questo, iscriviti — il prossimo video esce [cadenza]."]</p>
+  </div>
+</section>
+
+</body>
+</html>
