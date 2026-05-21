@@ -1,0 +1,24 @@
+# === Credenziali (CRITICO) ===
+.env
+.env.*
+!.env.example
+*.pem
+*.key
+
+# === Settings locali Claude Code ===
+.claude/settings.local.json
+
+# === Output runtime ===
+briefs/_partial/
+*.log
+
+# === Git worktree (se usi il pattern worktree, le cartelle worktree non vanno committate) ===
+.worktrees/
+
+# === Sistema operativo ===
+.DS_Store
+Thumbs.db
+
+# === IDE ===
+.vscode/
+.idea/

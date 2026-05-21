@@ -1,0 +1,15 @@
+{
+  "_comment": "MCP connectors configuration for this project. Italian twin: CONTENUTI/claude-code-piccoli-business-3-componenti/materiali/.claude/mcp.json",
+  "_note": "Credentials must NOT be written here. They are read from .env via ${VAR}. Edit only if you know what you're doing.",
+
+  "mcpServers": {
+    "supabase": {
+      "command": "npx",
+      "args": ["-y", "@supabase/mcp-server-supabase"],
+      "env": {
+        "SUPABASE_URL": "${SUPABASE_URL}",
+        "SUPABASE_SERVICE_ROLE_KEY": "${SUPABASE_SERVICE_ROLE_KEY}"
+      }
+    }
+  }
+}

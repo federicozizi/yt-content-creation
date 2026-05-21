@@ -1,0 +1,578 @@
+<!DOCTYPE html>
+<!-- ⚠️ COPY inside materiali/ — the original is ../PRINCIPALE.html. Italian twin: CONTENUTI/newsletter-personale-ai-con-claude-code/PRINCIPALE.html — keep both in sync. -->
+<html lang="en">
+<head>
+<meta charset="UTF-8">
+<title>Your personal AI newsletter with Claude Code</title>
+<style>
+:root {
+  --primary: #2563eb;
+  --primary-dark: #1d4ed8;
+  --text: #111827;
+  --muted: #6b7280;
+  --bg: #ffffff;
+  --bg-soft: #fafbfc;
+  --border: #e5e7eb;
+  --code-bg: #f3f4f6;
+  --output-bg: #ecfdf5;
+  --output-border: #10b981;
+  --switch-bg: #eff6ff;
+  --switch-border: #93c5fd;
+  --concept-bg: #fef3c7;
+  --concept-border: #f59e0b;
+}
+* { box-sizing: border-box; }
+html { scroll-behavior: smooth; }
+body { font-family: system-ui, -apple-system, "Inter", "Segoe UI", sans-serif; color: var(--text); background: var(--bg); line-height: 1.7; max-width: 880px; margin: 0 auto; padding: 32px 24px 64px; font-size: 16px; }
+h1 { font-size: 1.95rem; margin: 0 0 6px; line-height: 1.2; letter-spacing: -0.01em; }
+h2 { font-size: 1.45rem; margin-top: 48px; padding-bottom: 6px; border-bottom: 2px solid var(--primary); }
+h3 { font-size: 1.2rem; margin-top: 30px; color: var(--primary); }
+h4 { font-size: 1.05rem; margin-top: 20px; }
+p { margin: 12px 0; }
+.subtitle { color: var(--muted); margin-top: 0; font-size: 1rem; }
+nav.toc { display: flex; gap: 16px; flex-wrap: wrap; padding: 12px 0; margin: 18px 0 24px; border-top: 1px solid var(--border); border-bottom: 1px solid var(--border); font-size: 0.9rem; }
+nav.toc a { color: var(--primary); text-decoration: none; font-weight: 500; }
+.metodo-switch { background: var(--switch-bg); border: 1px solid var(--switch-border); border-radius: 8px; padding: 16px 20px; margin: 20px 0; }
+.metodo-switch h2 { margin: 0 0 8px; border: none; padding: 0; font-size: 1.05rem; color: var(--primary-dark); }
+.block { background: var(--bg-soft); border: 1px solid var(--border); border-radius: 8px; padding: 20px 24px; margin: 24px 0; }
+.block h3 { margin-top: 0; }
+.concetto-chiave { background: var(--concept-bg); border-left: 4px solid var(--concept-border); padding: 14px 18px; margin: 16px 0; border-radius: 4px; font-size: 1.04rem; }
+.concetto-chiave strong { color: #92400e; }
+.use-case { background: #fff; border: 1px solid var(--border); border-radius: 6px; padding: 12px 16px; margin: 10px 0; }
+.use-case strong { color: var(--primary-dark); display: block; margin-bottom: 4px; }
+ol.steps { padding-left: 0; counter-reset: step; list-style: none; margin-top: 16px; }
+ol.steps > li { margin-bottom: 22px; padding-left: 38px; position: relative; }
+ol.steps > li::before { counter-increment: step; content: counter(step); position: absolute; left: 0; top: 2px; width: 26px; height: 26px; border-radius: 50%; background: var(--primary); color: white; font-weight: 700; font-size: 0.85rem; display: flex; align-items: center; justify-content: center; }
+ol.steps li > strong:first-child { display: block; margin-bottom: 6px; font-size: 1.02rem; }
+.action { background: #1e293b; color: #e2e8f0; padding: 10px 14px; border-radius: 6px; font-family: "SF Mono", Menlo, monospace; font-size: 0.88rem; margin: 8px 0; overflow-x: auto; white-space: pre-wrap; }
+.action::before { content: "▶  "; color: #38bdf8; }
+.note { background: #fff; padding: 10px 14px; border-radius: 4px; margin: 8px 0; font-size: 0.95rem; border-left: 3px solid var(--primary); }
+.output { background: var(--output-bg); padding: 10px 14px; border-radius: 4px; font-size: 0.92rem; margin: 8px 0; border-left: 3px solid var(--output-border); }
+.output::before { content: "✅  "; font-weight: 700; }
+code { background: var(--code-bg); padding: 2px 6px; border-radius: 3px; font-family: "SF Mono", Menlo, monospace; font-size: 0.92em; }
+.materiali-link { margin-top: 18px; padding-top: 12px; border-top: 1px dashed var(--border); font-size: 0.94rem; }
+.materiali-link::before { content: "📎  "; }
+.diagram { font-family: "SF Mono", Menlo, monospace; background: #0f172a; color: #e2e8f0; padding: 14px; border-radius: 6px; font-size: 0.8rem; white-space: pre; overflow-x: auto; margin: 16px 0; line-height: 1.4; }
+ul.checks { list-style: none; padding-left: 0; }
+ul.checks li { padding: 5px 0; padding-left: 24px; position: relative; }
+ul.checks li::before { content: "✓"; color: var(--output-border); font-weight: 700; position: absolute; left: 0; top: 5px; }
+table.compare { width: 100%; border-collapse: collapse; margin: 16px 0; font-size: 0.92rem; }
+table.compare th, table.compare td { padding: 10px 12px; text-align: left; border-bottom: 1px solid var(--border); vertical-align: top; }
+table.compare th { background: var(--bg-soft); font-weight: 600; color: var(--primary-dark); }
+.community-box { background: #f0fdf4; border: 1px solid #86efac; border-radius: 8px; padding: 18px 22px; margin: 24px 0; }
+.community-box h3 { margin-top: 0; color: #166534; }
+details { background: var(--bg-soft); border: 1px solid var(--border); border-radius: 6px; padding: 12px 16px; margin: 16px 0; }
+details summary { cursor: pointer; font-weight: 600; color: var(--muted); font-size: 0.95rem; }
+details[open] summary { margin-bottom: 12px; }
+footer { margin-top: 48px; padding-top: 18px; border-top: 1px solid var(--border); color: var(--muted); font-size: 0.85rem; text-align: center; }
+@media print { body { max-width: none; padding: 0 16px; font-size: 11pt; } nav.toc, footer { display: none; } .block, .metodo-switch, .community-box { break-inside: avoid; } h2, h3 { break-after: avoid; } .action { background: #f3f4f6; color: #1e293b; border: 1px solid var(--border); } .diagram { background: #f3f4f6; color: #1e293b; } }
+</style>
+</head>
+<body>
+
+<header>
+  <h1>Your personal AI newsletter with Claude Code</h1>
+  <p class="subtitle">A minimal system that delivers the news you care about every morning, filtered and summarized. Zero subscriptions, zero spam, zero scrolling.</p>
+</header>
+
+<section class="metodo-switch">
+  <h2>📌 Who this video is for</h2>
+  <p>You want to stay up to date on a specific topic — AI, a business sector, your competitors' moves — without having to scroll Twitter, LinkedIn, or Hacker News every morning. Public newsletters are generic, slow, full of ads. Specialized ones cost money. And none of them know exactly what interests you.</p>
+  <p>We're building a system that does exactly what you want, for you. No coding required. No complicated accounts. Just Claude Code and 10 minutes of setup.</p>
+</section>
+
+<section class="metodo-switch">
+  <h2>📚 The 3 versions of this tutorial</h2>
+  <ul>
+    <li>📍 <strong>You're here</strong> — Main method: <strong>Claude Code + Claude Routines</strong> (zero code, recommended if you're not technical)</li>
+    <li><a href="../VARIANTE-1.html">Variant 1 — Claude Agent SDK (Python)</a> · for those who know some Python and want to customize the logic</li>
+    <li><a href="../VARIANTE-2.html">Variant 2 — Anthropic API + RSS feed</a> · ultra-light stack, for those who want to understand every piece</li>
+  </ul>
+</section>
+
+<nav class="toc">
+  <a href="#what-is">What is a personal AI newsletter</a>
+  <a href="#what-build">What we'll build</a>
+  <a href="#how-works">How it works</a>
+  <a href="#setup">Initial setup</a>
+  <a href="#step-1">1. Define the sources</a>
+  <a href="#step-2">2. Define the tone</a>
+  <a href="#step-3">3. First run</a>
+  <a href="#step-4">4. Schedule</a>
+  <a href="#step-5">5. Agent team</a>
+  <a href="#beyond">Other uses</a>
+  <a href="#recap">Recap</a>
+</nav>
+
+<!-- 1. CONCEPTUAL OPENING -->
+<section id="what-is">
+<h2>What is a personal AI newsletter</h2>
+
+<p>A normal newsletter is written by one person, sent to thousands. Topics you often don't care about. Ads in the middle. Imposed frequency. Imposed tone.</p>
+
+<p>A personal AI newsletter is written by Claude for <em>you only</em>. You choose the sources. You choose the frequency. You choose the tone. The filter is your brain (expressed in 5 lines of instructions), not any social network's algorithm.</p>
+
+<div class="concetto-chiave">
+  <strong>The point:</strong> you turn the internet into an assistant that every morning brings only the things that matter to you onto your desk. No open browsers, no notifications, no FOMO.
+</div>
+
+<p>System characteristics:</p>
+
+<ul>
+  <li><strong>Local</strong>: runs on your PC with Claude Code, no cloud, no data upload</li>
+  <li><strong>Private</strong>: nobody sees your sources or your summaries</li>
+  <li><strong>Editable in 30 seconds</strong>: change sources by editing a JSON file</li>
+  <li><strong>Schedulable</strong>: starts by itself every morning with Claude Routines</li>
+  <li><strong>No duplicates</strong>: Claude remembers what it's already seen and won't show it to you again</li>
+</ul>
+</section>
+
+<!-- 2. CASE STUDY -->
+<section id="what-build">
+<h2>What we'll build today</h2>
+
+<p>To demonstrate the pattern we'll use a simple, verifiable case: <strong>a daily newsletter on Anthropic's new releases</strong> (the company that makes Claude). Every morning at 8, Claude visits Anthropic's news page, identifies articles published in the last 24 hours, summarizes each in 3-5 bullets, and drops a clean markdown file on your desk.</p>
+
+<p>Example of how a generated newsletter looks:</p>
+
+<div class="diagram"># 🧠 Your AI Brief — Friday May 16, 2026
+
+## 3 Anthropic updates today
+
+### 🚀 Claude Sonnet 4.7 available in beta
+- 15% performance increase on reasoning tasks
+- New "thinking" model activatable on demand
+- Available immediately on API and Claude.ai
+- 🔗 anthropic.com/news/claude-sonnet-4-7
+
+### 📄 Paper: "Constitutional AI v2"
+- Update to the system of principles behind training
+- Focus on transparency of safety trade-offs
+- 🔗 anthropic.com/research/constitutional-ai-v2
+
+### 🔧 Claude Code: new "Plan Mode" feature
+- Mode that separates planning and execution
+- Useful for complex multi-step tasks
+- 🔗 anthropic.com/news/plan-mode
+
+---
+Generated in 47 seconds · 3 articles read · 2 articles skipped (already seen)</div>
+
+<p>You open the file, read in 90 seconds, you know as much as someone who spends 2 hours a day following the ecosystem. Done.</p>
+
+<p>The example is "Anthropic news", but at the end of the video we'll see that the same pattern works for any site: competitors, industry blogs, academic papers, niche sources.</p>
+</section>
+
+<!-- 3. ARCHITECTURE -->
+<section id="how-works">
+<h2>How the system works</h2>
+
+<p>Only 3 pieces, all text files you edit with VS Code:</p>
+
+<div class="diagram">    📁 THE "NEWSLETTER" FOLDER  (everything in here)
+   ┌──────────────────────────────────────────────────────┐
+   │                                                       │
+   │   📝 sources.json  →  "read these sites"             │
+   │   📝 CLAUDE.md     →  "write in this tone"           │
+   │   📝 prompts/      →  "here's exactly what to do"    │
+   │   📝 state.json    →  memory: what I've already seen  │
+   │                                                       │
+   │   📂 newsletter/                                      │
+   │     └── 2026-05-16.md  ← today's output               │
+   │                                                       │
+   └──────────────────────────────────────────────────────┘
+                              │
+                              ▼
+                     🤖  CLAUDE CODE
+            (launches → visits sites → summarizes → saves file)
+                              │
+                              ▼
+                     ⏰  CLAUDE ROUTINES
+              (at 8 every morning it starts it)</div>
+
+<p>Claude Code already has all the tools needed:</p>
+
+<ul>
+  <li><strong>Web fetch</strong>: opens a URL and reads its content. Built-in.</li>
+  <li><strong>File write</strong>: writes the markdown file. Built-in.</li>
+  <li><strong>State tracking</strong>: uses <code>state.json</code> to remember what it has already processed. Updates it by itself.</li>
+  <li><strong>Routines</strong>: Claude Code's scheduling system. One line to tell it "do it at 8".</li>
+</ul>
+
+<p>No Python, no third-party API keys, no databases. Just Claude and files.</p>
+</section>
+
+<!-- 4. SETUP -->
+<section id="setup">
+<h2>Initial setup</h2>
+
+<p>2 things to prepare. No complicated accounts, no credit cards.</p>
+
+<ol class="steps">
+  <li>
+    <strong>Claude Code installed</strong>
+    <p>At <a href="https://claude.com/code">claude.com/code</a> you'll find both the <strong>desktop app</strong> (Mac/Windows/Linux, the simplest way if you're not technical) and instructions for the <strong>CLI</strong> from the terminal. Once installed, it runs with your Claude subscription (Pro or Max) — no API key to manage. If you prefer pay-per-use, you can use an Anthropic API key.</p>
+    <details>
+      <summary>Technical details — CLI installation</summary>
+      <p>If you already have Node.js (v18+):</p>
+      <div class="action">npm install -g @anthropic-ai/claude-code
+claude   # first interactive login</div>
+      <p>If you don't have Node.js, download the LTS version from <a href="https://nodejs.org">nodejs.org</a> and relaunch. On macOS with Homebrew: <code>brew install node</code>. Verify with <code>node --version</code> and <code>claude --version</code>.</p>
+    </details>
+  </li>
+  <li>
+    <strong>Download the materials</strong>
+    <p>The attached folder contains everything already configured: example sources, orchestrator prompt, empty state file.</p>
+  </li>
+</ol>
+
+<div class="concetto-chiave">
+  <strong>The zero-stress way:</strong> open Claude Code inside the downloaded folder and tell it <em>"run the setup by reading START_HERE.md"</em>. It does the 3-4 checks, asks for 1-2 confirmations, in 3 minutes the first run is done.
+</div>
+</section>
+
+<!-- 5. STEP 1 -->
+<section class="block" id="step-1">
+<h3>Step 1 — Define the sources</h3>
+
+<p>The sources are the sites Claude visits every morning. In our case: the Anthropic pages where new things come out.</p>
+
+<div class="concetto-chiave">
+  <strong>The <code>sources.json</code> file</strong> contains a list of URLs with a label. You edit it with VS Code. Add a source, remove one, in 10 seconds.
+</div>
+
+<h4>Example of ready-to-use <code>sources.json</code></h4>
+
+<div class="output">{
+  "sources": [
+    {
+      "name": "Anthropic News",
+      "url": "https://www.anthropic.com/news",
+      "category": "product"
+    },
+    {
+      "name": "Anthropic Research",
+      "url": "https://www.anthropic.com/research",
+      "category": "research"
+    },
+    {
+      "name": "Claude Code Changelog",
+      "url": "https://docs.claude.com/en/release-notes/claude-code",
+      "category": "changelog"
+    }
+  ]
+}</div>
+
+<p>3 starting sources. A news page (product announcements), a research page (papers), a changelog (release notes). Three pieces of the "Anthropic news" puzzle.</p>
+
+<p>To add a source of yours (e.g. a blog you care about): add a block with <code>name</code>, <code>url</code>, <code>category</code>. No weird syntax, it's a list.</p>
+
+<p class="materiali-link">Ready file: <a href="sources.json">materiali/sources.json</a>.</p>
+</section>
+
+<!-- 6. STEP 2 -->
+<section class="block" id="step-2">
+<h3>Step 2 — Define the tone</h3>
+
+<p>A badly synthesized newsletter is worse than no newsletter. If Claude writes verbosely, academically, with paragraphs of 10 lines, you'll never read the file.</p>
+
+<div class="concetto-chiave">
+  <strong>The <code>CLAUDE.md</code> file</strong> at the root of the folder tells Claude how to write. Tone, length, structure, what to emphasize. Claude reads it automatically at the start of every session.
+</div>
+
+<h4>Example of ready-to-use <code>CLAUDE.md</code></h4>
+
+<div class="output">## Newsletter tone
+
+- English, direct, colloquial
+- Max 3-5 bullets per article
+- Max 1 line per bullet
+- No generic intros/outros ("here are today's news…")
+- No marketing adjectives ("revolutionary", "incredible")
+- Always the original link at the end of each article
+
+## What to emphasize
+
+- Concrete numbers (versions, percentages, prices)
+- What changes for those who use the product
+- Availability dates
+
+## What to skip
+
+- Partnership announcements without concrete details
+- "Filler" articles (sponsored events, open positions)
+- Stuff already covered in previous runs (check state.json)</div>
+
+<p>3 tone rules, 3 things to emphasize, 3 things to skip. It's a 20-line instruction sheet that applies to all future runs. You edit it once, it always applies.</p>
+
+<p class="materiali-link">Ready file: <a href="CLAUDE.md">materiali/CLAUDE.md</a>.</p>
+</section>
+
+<!-- 7. STEP 3 -->
+<section class="block" id="step-3">
+<h3>Step 3 — Launch the first run</h3>
+
+<p>Now you start Claude for the first time and see what it produces.</p>
+
+<div class="concetto-chiave">
+  <strong>One single command.</strong> Open the terminal inside the materials folder, type <code>claude</code>, and give the prompt you find in <code>prompts/newsletter-daily.md</code>. Claude visits the sources, identifies new items, writes the newsletter, updates the state. ~1 minute.
+</div>
+
+<h4>What to do</h4>
+
+<ol class="steps">
+  <li>
+    <strong>Open Claude Code in the folder</strong>
+    <div class="action">cd materiali
+claude</div>
+  </li>
+  <li>
+    <strong>Give the prompt</strong>
+    <p>Copy the content of <code>prompts/newsletter-daily.md</code> and paste it. Or say:</p>
+    <div class="action">run the prompt in prompts/newsletter-daily.md</div>
+  </li>
+  <li>
+    <strong>Wait ~1 minute</strong>
+    <p>Claude tells you what it's doing step by step: which source it's reading, which articles it found, which it skipped because they were already seen. Transparent.</p>
+  </li>
+  <li>
+    <strong>Open the generated file</strong>
+    <p>Inside <code>newsletter/</code> you find <code>YYYY-MM-DD.md</code>. You open it with VS Code or any markdown reader (e.g. Obsidian, Typora).</p>
+    <div class="output">📂 newsletter/
+   └── 2026-05-16.md      ← here's your first newsletter</div>
+  </li>
+</ol>
+
+<p>If you don't like the result, go back to Step 2 and change the tone in <code>CLAUDE.md</code>. Relaunch. You iterate in 30 seconds.</p>
+
+<p class="materiali-link">Orchestrator prompt: <a href="prompts/newsletter-daily.md">materiali/prompts/newsletter-daily.md</a>. Output example: <a href="example-output.md">materiali/example-output.md</a>.</p>
+</section>
+
+<!-- 8. STEP 4 -->
+<section class="block" id="step-4">
+<h3>Step 4 — Schedule with Claude Routines</h3>
+
+<p>It works, the first run is done. Now we want it to start by itself every morning, without you opening the terminal.</p>
+
+<div class="concetto-chiave">
+  <strong>Claude Routines</strong> is Claude Code's built-in scheduling system. One line to say "every day at 8, start this prompt in this folder". No cron, no Windows Task Scheduler, no YAML files.
+</div>
+
+<h4>What to do</h4>
+
+<ol class="steps">
+  <li>
+    <strong>Create the routine</strong>
+    <div class="action">claude routines add daily-newsletter \
+  --schedule "0 8 * * *" \
+  --cwd "/path/to/materiali" \
+  --prompt "run prompts/newsletter-daily.md"</div>
+    <p>Translation in plain English: "every day at 8:00, enter <code>materiali</code> and start the prompt".</p>
+  </li>
+  <li>
+    <strong>Verify</strong>
+    <div class="action">claude routines list</div>
+    <div class="output">📋 Active routines:
+   • daily-newsletter — every day at 08:00 — next: tomorrow 08:00</div>
+  </li>
+  <li>
+    <strong>Manual test (so you don't wait until tomorrow morning)</strong>
+    <div class="action">claude routines run daily-newsletter</div>
+    <p>Forces the execution now. If it works, from tomorrow it starts by itself.</p>
+  </li>
+</ol>
+
+<p>From tomorrow morning, at 8 you'll always find a new file in <code>newsletter/</code>. You do nothing.</p>
+
+<div class="note">
+  <strong>Alternative if you don't have Claude Routines</strong>: use Windows Task Scheduler or cron on Mac/Linux. The script to launch is one line: <code>cd /path/to/materiali && claude --print "$(cat prompts/newsletter-daily.md)"</code>. Full example in <code>materiali/scheduling/crontab-example.txt</code>.
+</div>
+
+<p class="materiali-link">Complete scheduling guide: <a href="scheduling/claude-routines.md">materiali/scheduling/claude-routines.md</a>.</p>
+</section>
+
+<!-- 9. STEP 5 — AGENT TEAM -->
+<section class="block" id="step-5">
+<h3>Step 5 — A team of specialized agents</h3>
+
+<p>The system works. Every morning the file arrives. But it always does the same thing: read sources, summarize. Period.</p>
+
+<p>Now we make it smart. We add <strong>2 small specialized agents</strong> that activate automatically when needed, without you having to think about it.</p>
+
+<div class="concetto-chiave">
+  <strong>The idea:</strong> the main orchestrator does the standard job (fetch + summary). When it encounters special cases — a day without news, or a major update to flag — it automatically calls an agent specialized in that specific case. You only see the final result: a richer, more useful, more reliable newsletter.
+</div>
+
+<h4>The 2 agents</h4>
+
+<div class="use-case">
+  <strong>🚑 empty-day-rescue</strong>
+  Activates when the orchestrator finishes the run with zero new articles in the last 48 hours. Instead of leaving you an empty file, it goes to <strong>secondary sources</strong> defined separately (official Anthropic tweets, AI podcasts, founder blogs you flagged) and pulls 1-2 deep-dive contents — even if they're not strictly "news". Result: zero empty days.
+</div>
+
+<div class="use-case">
+  <strong>🚨 major-update-spotter</strong>
+  Activates ALWAYS at the end of the run, on the just-produced results. It classifies each article by importance and if it finds a <strong>major update</strong> — a new model released, a new product/tool/service, an important breaking change — it highlights it at the top of the file with a red <code>🚨 MAJOR UPDATE</code> box and suggests 1-2 concrete actions (e.g. "try the model on Claude.ai", "read the announcement post"). Result: the news that matters doesn't get lost among the minor ones.
+</div>
+
+<h4>How the team works</h4>
+
+<div class="diagram">    🤖  ORCHESTRATOR  (prompts/newsletter-daily.md)
+        │   "read sources, summarize news"
+        │
+        ├──── 0 results?  ─── YES ──▶  🚑 empty-day-rescue
+        │                                   (searches secondary sources)
+        │
+        ▼
+    📄  newsletter/YYYY-MM-DD.md
+        │
+        ▼
+    🚨  major-update-spotter
+        (re-reads the file, puts major updates on top)
+        │
+        ▼
+    📄  newsletter/YYYY-MM-DD.md  ← enriched</div>
+
+<p>The agents live as text files in <code>.claude/agents/</code>. Claude Code recognizes them automatically — you don't have to configure anything else.</p>
+
+<h4>What to do</h4>
+
+<ol class="steps">
+  <li>
+    <strong>The 2 agent files</strong>
+    <p>They're already in the materials, in <code>.claude/agents/empty-day-rescue.md</code> and <code>.claude/agents/major-update-spotter.md</code>. They're Markdown files with a small YAML header that tells Claude Code: "this is a sub-agent, called X, does Y, can use these tools".</p>
+    <div class="output">---
+name: empty-day-rescue
+description: Activates when the daily newsletter is empty.
+              Searches deep-dive content on secondary sources.
+tools: [web_fetch, file_write]
+---
+
+You are a "rescue" agent for the daily newsletter.
+When the orchestrator calls you, it has 0 new articles in the primary sources.
+Go to the sources listed in `sources-fallback.json` and ...
+[full rules inside the file]</div>
+  </li>
+  <li>
+    <strong>The secondary sources list</strong>
+    <p>The <code>empty-day-rescue</code> agent needs to know WHERE to go when primary sources are empty. The <code>sources-fallback.json</code> file contains this list — already prepared with 3 examples (Anthropic on X, Dario Amodei's blog, Latent Space podcast). You edit it with VS Code if you want to change the backup sources.</p>
+  </li>
+  <li>
+    <strong>The updated orchestrator</strong>
+    <p>The <code>prompts/newsletter-daily.md</code> file now includes 2 new lines at the end: <em>"if I found 0 articles, call empty-day-rescue. In any case, at the end, call major-update-spotter on the just-saved file."</em> No code, they're instructions in English. Claude Code interprets and delegates.</p>
+  </li>
+  <li>
+    <strong>Test</strong>
+    <p>Relaunch the prompt as you did in Step 3:</p>
+    <div class="action">claude --print "$(cat prompts/newsletter-daily.md)"</div>
+    <p>You see that now Claude, in its steps, says things like <em>"calling major-update-spotter…"</em> and in the output file you find (if there really is a major update today) a box at the top like this:</p>
+    <div class="output">## 🚨 MAJOR UPDATE — Claude Sonnet 4.7 available in beta
+&gt; New model with +15% reasoning performance. Available now on API and Claude.ai.
+&gt; **What to do**: try it on claude.ai/new and compare with 4.6 on your most demanding recurring task.
+
+---
+
+[then the normal newsletter follows...]</div>
+  </li>
+</ol>
+
+<h4>When this system really makes a difference</h4>
+
+<ul>
+  <li><strong>On weekends and holidays</strong>: Anthropic and other companies publish little. Without <code>empty-day-rescue</code> you'd have empty files, you'd forget about the system. With it, you always have something to read.</li>
+  <li><strong>On major releases</strong>: without <code>major-update-spotter</code>, an important launch can end up buried among 5 minor articles and you miss it. With it, it's the first thing you see when you open the file.</li>
+  <li><strong>To scale the system</strong>: tomorrow you want to add a third agent (e.g. "translator", "code extractor", "fact-checker")? You create a new file in <code>.claude/agents/</code> with its description, tell the orchestrator when to call it, done. The pattern extends infinitely.</li>
+</ul>
+
+<div class="note">
+  <strong>Sub-agent vs single big prompt</strong>: you could have put all this logic inside the main orchestrator (a single mega-prompt that does fetch + summary + fallback + classification + spotting). It would work, but it would become unmanageable fast. Splitting into specialized sub-agents has 3 advantages: 1) <strong>clarity</strong> (each file does one thing only), 2) <strong>reusability</strong> (the <code>major-update-spotter</code> tomorrow you reuse on another newsletter, just copy a file), 3) <strong>debugging</strong> (if something doesn't work, you know exactly which agent to touch).
+</div>
+
+<p class="materiali-link">Agent files: <a href=".claude/agents/empty-day-rescue.md">materiali/.claude/agents/empty-day-rescue.md</a> · <a href=".claude/agents/major-update-spotter.md">materiali/.claude/agents/major-update-spotter.md</a>. Fallback sources: <a href="sources-fallback.json">materiali/sources-fallback.json</a>.</p>
+</section>
+
+<!-- 10. BEYOND -->
+<section id="beyond">
+<h2>Beyond Anthropic: how to apply the pattern</h2>
+
+<p>The "Anthropic news" example is one of a thousand ways this system combines. You change 2 files (<code>sources.json</code> and <code>CLAUDE.md</code>), and Claude works for another case. Same folder, same prompt, same scheduling.</p>
+
+<div class="use-case">
+  <strong>Competitor newsletter</strong>
+  In <code>sources.json</code> you put the sites of your 3 competitors (blog pages, news, changelogs). In <code>CLAUDE.md</code> you say "emphasize prices, product launches, strategic moves". Every morning you know what they're doing without opening LinkedIn.
+</div>
+
+<div class="use-case">
+  <strong>B2B industry newsletter</strong>
+  Sources: 5-10 blogs/publications in your industry (e.g. fintech: Sifted, Finextra, EU-Startups; legal: Legalweek, Above the Law). Tone: "technical language, English, emphasis on deals and regulation". 10 minutes of reading replaces 2 hours of scrolling.
+</div>
+
+<div class="use-case">
+  <strong>Academic paper newsletter</strong>
+  Sources: selected arXiv categories (e.g. cs.AI, cs.CL), Google Scholar Alerts. Tone: "explain accessibly, include links to PDF papers". You keep up with research without having to read cryptic abstracts.
+</div>
+
+<div class="use-case">
+  <strong>Social trend newsletter (consultants, agencies)</strong>
+  Sources: LinkedIn accounts of top voices in your industry (via public pages). Tone: "extract strong opinions from the last week, max 3 per person". You understand what your professional world is talking about without living on LinkedIn.
+</div>
+
+<div class="use-case">
+  <strong>"Clipping" newsletter for PR / brand monitoring</strong>
+  Sources: publications that might mention your brand. In <code>CLAUDE.md</code>: "skip everything, only report articles containing the word 'XXX' (my brand) or 'YYY' (my products)". Brand monitoring done in-house, free, every morning.
+</div>
+
+<p>The pattern: <strong>sources</strong> + <strong>tone</strong> + <strong>state tracking</strong> + <strong>scheduling</strong>. Only what you put in <code>sources.json</code> and <code>CLAUDE.md</code> changes. The rest is identical.</p>
+</section>
+
+<!-- 10. RECAP -->
+<section id="recap">
+<h2>Recap</h2>
+
+<ul class="checks">
+  <li>A personal AI newsletter is written by Claude for you only, on the sources you choose, in the tone you decide</li>
+  <li>4 text files are enough: <code>sources.json</code> (what to read), <code>CLAUDE.md</code> (how to write), <code>prompts/newsletter-daily.md</code> (what to do step by step), <code>state.json</code> (memory of what's already seen)</li>
+  <li>Claude Code already has everything: web fetch, file write, state tracking. No Python, no databases, no external APIs</li>
+  <li>Scheduling with Claude Routines: one line and it starts by itself every morning</li>
+  <li>Team of 2 specialized sub-agents (<code>empty-day-rescue</code> + <code>major-update-spotter</code>): zero empty days, major updates always highlighted at the top</li>
+  <li>The pattern adapts in 2 edits for any case: competitors, B2B industry, academic papers, brand monitoring</li>
+</ul>
+
+<p>Everything is already configured in the materials. You download, launch Claude Code inside the folder, you tell it <em>"run the setup by reading START_HERE.md"</em>. 3 minutes and the first file is in <code>newsletter/</code>.</p>
+</section>
+
+<!-- 11. MATERIALS -->
+<section id="materials-overview">
+<h2>Attached materials</h2>
+
+<table class="compare">
+<tr><th>File</th><th>What it is</th></tr>
+<tr><td><a href="README.md">README.md</a></td><td>Manual quick start (3 commands)</td></tr>
+<tr><td><a href="START_HERE.md">START_HERE.md</a></td><td>Automatic setup via Claude Code</td></tr>
+<tr><td><a href="CLAUDE.md">CLAUDE.md</a></td><td>Step 2 — example of tone rules</td></tr>
+<tr><td><a href="sources.json">sources.json</a></td><td>Step 1 — sources list (editable)</td></tr>
+<tr><td><a href="state.json">state.json</a></td><td>Memory of already-seen URLs (Claude updates it)</td></tr>
+<tr><td><a href="prompts/newsletter-daily.md">prompts/newsletter-daily.md</a></td><td>Step 3 — orchestrator prompt</td></tr>
+<tr><td><a href="scheduling/claude-routines.md">scheduling/claude-routines.md</a></td><td>Step 4 — scheduling with Routines</td></tr>
+<tr><td><a href="scheduling/crontab-example.txt">scheduling/crontab-example.txt</a></td><td>Step 4 — local cron fallback</td></tr>
+<tr><td><a href=".claude/agents/empty-day-rescue.md">.claude/agents/empty-day-rescue.md</a></td><td>Step 5 — sub-agent for empty days</td></tr>
+<tr><td><a href=".claude/agents/major-update-spotter.md">.claude/agents/major-update-spotter.md</a></td><td>Step 5 — sub-agent to highlight major updates</td></tr>
+<tr><td><a href="sources-fallback.json">sources-fallback.json</a></td><td>Step 5 — secondary sources for empty days</td></tr>
+<tr><td><a href="docs/email-optional.md">docs/email-optional.md</a></td><td>Optional — how to receive the newsletter via email</td></tr>
+<tr><td><a href="example-output.md">example-output.md</a></td><td>How a generated newsletter looks</td></tr>
+</table>
+</section>
+
+<!-- 12. CTA -->
+<section class="community-box">
+<h3>Resources</h3>
+<p>All the files from this tutorial are ready in our <strong>free Skool community</strong>. You download the folder, launch Claude Code inside, in 3 minutes you have your first newsletter.</p>
+<p>If you want to adapt the system to your specific case (competitor monitoring, brand monitoring, custom industry newsletter) and don't feel like doing it alone, <strong>reach out</strong>.</p>
+</section>
+
+<footer>
+  <p>Pipeline v5 · Your personal AI newsletter with Claude Code · 2026-05-18</p>
+</footer>
+
+</body>
+</html>

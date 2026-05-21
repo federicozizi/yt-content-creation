@@ -1,0 +1,23 @@
+# === Credentials (CRITICAL) ===
+.env
+.env.*
+!.env.example
+
+# === State and output (private) ===
+state.json
+newsletter/*.md
+
+# === Python ===
+.venv/
+venv/
+__pycache__/
+*.pyc
+*.egg-info/
+
+# === Operating system ===
+.DS_Store
+Thumbs.db
+
+# === IDE ===
+.vscode/
+.idea/

@@ -1,0 +1,43 @@
+# === Template .gitignore per il progetto Metodo C (Claude Agent SDK) ===
+# Copia questo file nella radice del progetto che crei (es. competitor-intel-sdk/)
+# PRIMA di fare il primo `git add`.
+#
+# ⚠️  IMPORTANTE: il file .env contiene API key Anthropic e password Gmail.
+#     Se lo committi anche solo una volta, le credenziali sono COMPROMESSE
+#     anche dopo averlo rimosso (la storia git resta). Vanno REVOCATE
+#     (Anthropic console + Google App Passwords) e RICREATE.
+
+# === Credenziali (CRITICO) ===
+.env
+.env.*
+!.env.example
+*.pem
+*.key
+
+# === Python ===
+.venv/
+venv/
+__pycache__/
+*.pyc
+*.pyo
+.pytest_cache/
+.mypy_cache/
+
+# === Output del sistema ===
+briefs/
+logs/
+*.log
+
+# === Settings locali Claude Code (l'Agent SDK li usa via setting_sources) ===
+.claude/settings.local.json
+
+# IMPORTANTE: i 4 file .claude/agents/*.md INVECE vanno committati
+# (sono il "cervello" del sistema, non secret). Non aggiungere .claude/ qui.
+
+# === Sistema operativo ===
+.DS_Store
+Thumbs.db
+
+# === IDE ===
+.vscode/
+.idea/

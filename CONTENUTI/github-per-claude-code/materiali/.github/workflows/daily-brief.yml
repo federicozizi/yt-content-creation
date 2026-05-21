@@ -1,0 +1,44 @@
+name: Daily Competitor Brief
+
+# Trigger: ogni giorno alle 7:05 UTC + manuale (workflow_dispatch)
+on:
+  schedule:
+    - cron: "5 7 * * *"
+  workflow_dispatch:
+
+jobs:
+  brief:
+    runs-on: ubuntu-latest
+    permissions:
+      contents: write
+      pull-requests: write
+    steps:
+      - name: Checkout repo
+        uses: actions/checkout@v4
+
+      - name: Setup Node
+        uses: actions/setup-node@v4
+        with:
+          node-version: "20"
+
+      - name: Install Claude Code CLI
+        run: npm install -g @anthropic-ai/claude-code
+
+      - name: Run Claude Code with daily-brief prompt
+        env:
+          ANTHROPIC_API_KEY: ${{ secrets.ANTHROPIC_API_KEY }}
+        run: |
+          claude --print --permission-mode acceptEdits \
+            "$(cat prompts/daily-brief.md)"
+
+      - name: Open PR with the brief
+        uses: peter-evans/create-pull-request@v6
+        with:
+          token: ${{ secrets.GITHUB_TOKEN }}
+          branch: auto/daily-brief-${{ github.run_id }}
+          commit-message: "daily brief ${{ github.run_id }}"
+          title: "📊 Daily Competitor Brief — auto"
+          body: |
+            Brief generato automaticamente da Claude Code.
+            Revisiona, mergi se OK.
+          delete-branch: true

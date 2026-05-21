@@ -1,0 +1,23 @@
+# === Credentials (CRITICAL) ===
+.env
+.env.*
+!.env.example
+*.pem
+*.key
+
+# === Agent outputs and logs ===
+logs/
+*.log
+agent-outputs/
+
+# === OS ===
+.DS_Store
+Thumbs.db
+
+# === IDE ===
+.vscode/
+.idea/
+
+# === Claude Code local state ===
+.claude/cache/
+.claude/sessions/

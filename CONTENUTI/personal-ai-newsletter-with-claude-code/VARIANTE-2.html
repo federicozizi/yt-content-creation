@@ -1,0 +1,398 @@
+<!DOCTYPE html>
+<!-- ⚠️ Italian twin: CONTENUTI/newsletter-personale-ai-con-claude-code/VARIANTE-2.html — keep both in sync. -->
+<html lang="en">
+<head>
+<meta charset="UTF-8">
+<title>Personal AI Newsletter — Variant 2: Anthropic API + HTML/RSS parsing</title>
+<style>
+:root {
+  --primary: #2563eb;
+  --primary-dark: #1d4ed8;
+  --text: #111827;
+  --muted: #6b7280;
+  --bg: #ffffff;
+  --bg-soft: #fafbfc;
+  --border: #e5e7eb;
+  --code-bg: #f3f4f6;
+  --output-bg: #ecfdf5;
+  --output-border: #10b981;
+  --switch-bg: #eff6ff;
+  --switch-border: #93c5fd;
+  --concept-bg: #fef3c7;
+  --concept-border: #f59e0b;
+}
+* { box-sizing: border-box; }
+html { scroll-behavior: smooth; }
+body { font-family: system-ui, -apple-system, "Inter", "Segoe UI", sans-serif; color: var(--text); background: var(--bg); line-height: 1.7; max-width: 880px; margin: 0 auto; padding: 32px 24px 64px; font-size: 16px; }
+h1 { font-size: 1.95rem; margin: 0 0 6px; line-height: 1.2; letter-spacing: -0.01em; }
+h2 { font-size: 1.45rem; margin-top: 48px; padding-bottom: 6px; border-bottom: 2px solid var(--primary); }
+h3 { font-size: 1.2rem; margin-top: 30px; color: var(--primary); }
+h4 { font-size: 1.05rem; margin-top: 20px; }
+p { margin: 12px 0; }
+.subtitle { color: var(--muted); margin-top: 0; font-size: 1rem; }
+nav.toc { display: flex; gap: 16px; flex-wrap: wrap; padding: 12px 0; margin: 18px 0 24px; border-top: 1px solid var(--border); border-bottom: 1px solid var(--border); font-size: 0.9rem; }
+nav.toc a { color: var(--primary); text-decoration: none; font-weight: 500; }
+.metodo-switch { background: var(--switch-bg); border: 1px solid var(--switch-border); border-radius: 8px; padding: 16px 20px; margin: 20px 0; }
+.metodo-switch h2 { margin: 0 0 8px; border: none; padding: 0; font-size: 1.05rem; color: var(--primary-dark); }
+.block { background: var(--bg-soft); border: 1px solid var(--border); border-radius: 8px; padding: 20px 24px; margin: 24px 0; }
+.block h3 { margin-top: 0; }
+.concetto-chiave { background: var(--concept-bg); border-left: 4px solid var(--concept-border); padding: 14px 18px; margin: 16px 0; border-radius: 4px; font-size: 1.04rem; }
+.concetto-chiave strong { color: #92400e; }
+.use-case { background: #fff; border: 1px solid var(--border); border-radius: 6px; padding: 12px 16px; margin: 10px 0; }
+.use-case strong { color: var(--primary-dark); display: block; margin-bottom: 4px; }
+ol.steps { padding-left: 0; counter-reset: step; list-style: none; margin-top: 16px; }
+ol.steps > li { margin-bottom: 22px; padding-left: 38px; position: relative; }
+ol.steps > li::before { counter-increment: step; content: counter(step); position: absolute; left: 0; top: 2px; width: 26px; height: 26px; border-radius: 50%; background: var(--primary); color: white; font-weight: 700; font-size: 0.85rem; display: flex; align-items: center; justify-content: center; }
+ol.steps li > strong:first-child { display: block; margin-bottom: 6px; font-size: 1.02rem; }
+.action { background: #1e293b; color: #e2e8f0; padding: 10px 14px; border-radius: 6px; font-family: "SF Mono", Menlo, monospace; font-size: 0.88rem; margin: 8px 0; overflow-x: auto; white-space: pre-wrap; }
+.action::before { content: "▶  "; color: #38bdf8; }
+.note { background: #fff; padding: 10px 14px; border-radius: 4px; margin: 8px 0; font-size: 0.95rem; border-left: 3px solid var(--primary); }
+.output { background: var(--output-bg); padding: 10px 14px; border-radius: 4px; font-size: 0.92rem; margin: 8px 0; border-left: 3px solid var(--output-border); }
+.output::before { content: "✅  "; font-weight: 700; }
+code { background: var(--code-bg); padding: 2px 6px; border-radius: 3px; font-family: "SF Mono", Menlo, monospace; font-size: 0.92em; }
+pre { background: var(--code-bg); padding: 14px; border-radius: 6px; overflow-x: auto; font-size: 0.85rem; line-height: 1.5; }
+.materiali-link { margin-top: 18px; padding-top: 12px; border-top: 1px dashed var(--border); font-size: 0.94rem; }
+.materiali-link::before { content: "📎  "; }
+.diagram { font-family: "SF Mono", Menlo, monospace; background: #0f172a; color: #e2e8f0; padding: 14px; border-radius: 6px; font-size: 0.8rem; white-space: pre; overflow-x: auto; margin: 16px 0; line-height: 1.4; }
+ul.checks { list-style: none; padding-left: 0; }
+ul.checks li { padding: 5px 0; padding-left: 24px; position: relative; }
+ul.checks li::before { content: "✓"; color: var(--output-border); font-weight: 700; position: absolute; left: 0; top: 5px; }
+table.compare { width: 100%; border-collapse: collapse; margin: 16px 0; font-size: 0.92rem; }
+table.compare th, table.compare td { padding: 10px 12px; text-align: left; border-bottom: 1px solid var(--border); vertical-align: top; }
+table.compare th { background: var(--bg-soft); font-weight: 600; color: var(--primary-dark); }
+.community-box { background: #f0fdf4; border: 1px solid #86efac; border-radius: 8px; padding: 18px 22px; margin: 24px 0; }
+.community-box h3 { margin-top: 0; color: #166534; }
+footer { margin-top: 48px; padding-top: 18px; border-top: 1px solid var(--border); color: var(--muted); font-size: 0.85rem; text-align: center; }
+@media print { body { max-width: none; padding: 0 16px; font-size: 11pt; } nav.toc, footer { display: none; } .block, .metodo-switch, .community-box { break-inside: avoid; } h2, h3 { break-after: avoid; } .action { background: #f3f4f6; color: #1e293b; border: 1px solid var(--border); } .diagram { background: #f3f4f6; color: #1e293b; } }
+</style>
+</head>
+<body>
+
+<header>
+  <h1>Your personal AI newsletter — Variant 2</h1>
+  <p class="subtitle">The same system, stripped to the bone: <strong>Anthropic API + standard Python + HTML/RSS parsing</strong>. For those who want to understand every piece, control every step, and not depend on any agent framework.</p>
+</header>
+
+<section class="metodo-switch">
+  <h2>📚 The 3 versions of this tutorial</h2>
+  <ul>
+    <li><a href="PRINCIPALE.html">Main method — Claude Code + Claude Routines</a> · zero code, recommended if you're not technical</li>
+    <li><a href="VARIANTE-1.html">Variant 1 — Claude Agent SDK (Python)</a> · for those who know some Python and want to customize</li>
+    <li>📍 <strong>You're here</strong> — Variant 2: <strong>Anthropic API + HTML/RSS parsing</strong></li>
+  </ul>
+</section>
+
+<section class="metodo-switch">
+  <h2>📌 When to prefer this variant</h2>
+  <ul>
+    <li>You want to <strong>understand every piece of the flow</strong> (no agent magic, every step is explicit code you read)</li>
+    <li>You want <strong>minimum costs</strong>: you pass to Claude only the already-extracted text (~$0.002-0.01 per run, 5-10x less than Variant 1)</li>
+    <li>You want <strong>maximum portability</strong>: no Claude Code, no Agent SDK, just Python + 3 lightweight dependencies</li>
+    <li>You already know Python and feel at home with <code>requests</code>, <code>BeautifulSoup</code>, <code>feedparser</code></li>
+  </ul>
+  <p>If instead you just want a working newsletter without writing code → use the <a href="PRINCIPALE.html">main method</a>. If you want an agent to handle the smart flow → use <a href="VARIANTE-1.html">Variant 1</a>.</p>
+</section>
+
+<nav class="toc">
+  <a href="#what-is">What is it</a>
+  <a href="#what-build">What we'll build</a>
+  <a href="#how-works">How it works</a>
+  <a href="#setup">Setup</a>
+  <a href="#step-1">1. Sources (HTML/RSS)</a>
+  <a href="#step-2">2. Summary prompt</a>
+  <a href="#step-3">3. The Python script</a>
+  <a href="#step-4">4. cron scheduling</a>
+  <a href="#beyond">Other uses</a>
+  <a href="#recap">Recap</a>
+</nav>
+
+<!-- 1. OPENING -->
+<section id="what-is">
+<h2>What is a personal AI newsletter</h2>
+
+<p>A personal AI newsletter is written by Claude for <em>you only</em>. Your sources, your tone, your frequency. The filter is your brain (5 lines of instructions), not any social's algorithm.</p>
+
+<div class="concetto-chiave">
+  <strong>What changes in this variant:</strong> no Claude Code, no Agent SDK. Just a ~80-line Python script that explicitly does all the steps: downloads HTML/RSS of the sources, parses to extract new articles, downloads the full text, sends Claude only the clean texts for summarization, saves the markdown.
+</div>
+
+<p>The idea is <strong>maximum transparency</strong>: every piece is your code, readable, debuggable. If tomorrow Claude API is down, you know exactly where to swap the piece. If you want to change the HTML parser, you know where to put your hands.</p>
+
+<p>Cost: reduced to the minimum (Claude only sees the already-extracted text, doesn't have to do web fetching itself — you save tokens).</p>
+</section>
+
+<!-- 2. CASE STUDY -->
+<section id="what-build">
+<h2>What we'll build today</h2>
+
+<p>Same example as the other 2 methods: <strong>a daily newsletter on Anthropic's new releases</strong>. Identical output (same markdown file), but generated by a Python script that does everything explicitly.</p>
+
+<div class="diagram"># 🧠 Your AI Brief — Friday May 16, 2026
+
+## 3 updates today
+...
+
+[same output as the main method and Variant 1]</div>
+
+<p>The invisible advantage: each run costs ~5x less than Variant 1 because you don't pass entire HTMLs to Claude — you pass only clean text already extracted by BeautifulSoup.</p>
+</section>
+
+<!-- 3. ARCHITECTURE -->
+<section id="how-works">
+<h2>How the system works</h2>
+
+<div class="diagram">    📁 THE "NEWSLETTER" FOLDER (minimal Python project)
+   ┌──────────────────────────────────────────────────────┐
+   │                                                       │
+   │   📝 newsletter.py     →  ~80 lines script           │
+   │   📝 sources.json      →  "read these sites"          │
+   │   📝 prompt.txt        →  the summary prompt          │
+   │   📝 state.json        →  memory of seen URLs         │
+   │   📝 requirements.txt  →  anthropic, requests, bs4    │
+   │   📝 .env              →  ANTHROPIC_API_KEY           │
+   │                                                       │
+   │   📂 newsletter/                                      │
+   │     └── 2026-05-16.md  ← today's output               │
+   │                                                       │
+   └──────────────────────────────────────────────────────┘
+                              │
+                              ▼
+                     🐍  python newsletter.py
+        (zero agent: every piece of the flow is explicit code)
+                              │
+                              ▼
+                     ⏰  cron / Task Scheduler</div>
+
+<p>Script flow, step by step:</p>
+
+<ol>
+  <li><strong>requests</strong> downloads the HTML of each source</li>
+  <li><strong>BeautifulSoup</strong> extracts article list (title + URL + date)</li>
+  <li>Python filter: keep only new articles (not in <code>state.json</code>) and recent (≤48h)</li>
+  <li>For each new article, <strong>requests</strong> downloads the full HTML, <strong>BeautifulSoup</strong> extracts the body</li>
+  <li><strong>anthropic SDK</strong> calls the API with the summary prompt + the extracted text</li>
+  <li>Compose final markdown, write to <code>newsletter/YYYY-MM-DD.md</code></li>
+  <li>Update <code>state.json</code></li>
+</ol>
+
+<p>Zero agent loop, zero tool use, zero magic. Readable procedural code.</p>
+</section>
+
+<!-- 4. SETUP -->
+<section id="setup">
+<h2>Initial setup</h2>
+
+<ol class="steps">
+  <li>
+    <strong>Python ≥ 3.10</strong>
+    <p>Mac/Linux usually already installed. Windows: <a href="https://www.python.org/downloads/">python.org</a>.</p>
+  </li>
+  <li>
+    <strong>Anthropic API key</strong>
+    <p><a href="https://console.anthropic.com">console.anthropic.com</a> → Settings → API Keys → Create Key. Cost per run: ~$0.002-0.01 (5-10x less than Variant 1).</p>
+  </li>
+  <li>
+    <strong>Download the materials</strong>
+    <p>Folder <code>materiali-variante-2/</code>.</p>
+  </li>
+</ol>
+
+<div class="concetto-chiave">
+  <strong>Zero-stress:</strong> open Claude Code in <code>materiali-variante-2/</code> and tell it <em>"run the setup by reading START_HERE.md"</em>. Creates venv, installs dependencies, asks for the API key, does the first run. ~5 min.
+</div>
+</section>
+
+<!-- 5. STEP 1 - SOURCES -->
+<section class="block" id="step-1">
+<h3>Step 1 — Define the sources (HTML or RSS)</h3>
+
+<p>The <code>sources.json</code> schema here supports <strong>2 types</strong> of source:</p>
+
+<div class="output">{
+  "sources": [
+    {
+      "name": "Anthropic News",
+      "url": "https://www.anthropic.com/news",
+      "type": "html",
+      "article_selector": "a[href*='/news/']",
+      "category": "product"
+    },
+    {
+      "name": "Hacker News (front page)",
+      "url": "https://hnrss.org/frontpage",
+      "type": "rss",
+      "category": "tech"
+    }
+  ]
+}</div>
+
+<p>For <code>html</code> sources you need a <strong>CSS selector</strong> that identifies article links (easy to discover with the browser DevTools: right-click → Inspect → identify the article link pattern, copy the CSS selector).</p>
+
+<p>For <code>rss</code> sources no selector: <code>feedparser</code> does everything automatically.</p>
+
+<div class="note">
+  <strong>RSS advantage when available</strong>: guaranteed stability (the site can change layout without breaking your parser). When a site exposes RSS, always prefer it.
+</div>
+</section>
+
+<!-- 6. STEP 2 - PROMPT -->
+<section class="block" id="step-2">
+<h3>Step 2 — The summary prompt</h3>
+
+<p>In this variant the tone lives in <code>prompt.txt</code> (simple text file, not special Markdown). The script reads it once and passes it in the system prompt of the API call.</p>
+
+<div class="output">You are an assistant that summarizes articles for a personal newsletter.
+
+TONE RULES:
+- English, direct, colloquial
+- Max 3-5 bullets per article, max 1 line each
+- No generic intros/outros, no marketing adjectives
+
+EMPHASIZE:
+- Concrete numbers, dates, breaking changes
+- What changes for those who use the product
+
+SKIP:
+- Filler, partnerships without concrete details
+- Open positions, sponsored events
+
+OUTPUT: only the summary bullets, no title (the script adds it).</div>
+
+<p>The script calls the API once per article, passing only the extracted text + this prompt. No agent loop, no tool, no ambiguity.</p>
+
+<p class="materiali-link">Ready file: <a href="materiali-variante-2/prompt.txt">materiali-variante-2/prompt.txt</a>.</p>
+</section>
+
+<!-- 7. STEP 3 - SCRIPT -->
+<section class="block" id="step-3">
+<h3>Step 3 — The <code>newsletter.py</code> script</h3>
+
+<p>~80 lines of Python that you read and understand from start to finish.</p>
+
+<div class="concetto-chiave">
+  <strong>Philosophy:</strong> every step is a Python function with a clear name. <code>fetch_sources()</code>, <code>extract_articles()</code>, <code>summarize_article()</code>, <code>compose_newsletter()</code>. Open the script, read the 4 names, you've understood the flow.
+</div>
+
+<h4>Excerpt of key functions</h4>
+
+<pre>def extract_articles(source: dict) -> list[dict]:
+    """Downloads the source and returns list of articles {title, url, date}."""
+    if source["type"] == "rss":
+        feed = feedparser.parse(source["url"])
+        return [{"title": e.title, "url": e.link, "date": e.published} for e in feed.entries]
+    elif source["type"] == "html":
+        html = requests.get(source["url"], timeout=15).text
+        soup = BeautifulSoup(html, "html.parser")
+        return [
+            {"title": a.text.strip(), "url": urljoin(source["url"], a["href"])}
+            for a in soup.select(source["article_selector"])
+        ]
+
+
+def summarize_article(article: dict, summary_prompt: str) -> str:
+    """Downloads the article full text and calls Claude to summarize."""
+    full_html = requests.get(article["url"], timeout=15).text
+    text = BeautifulSoup(full_html, "html.parser").get_text(" ", strip=True)[:8000]
+
+    msg = client.messages.create(
+        model=os.getenv("ANTHROPIC_MODEL", "claude-sonnet-4-7"),
+        max_tokens=400,
+        system=summary_prompt,
+        messages=[{"role": "user", "content": f"Article:\n\n{text}"}],
+    )
+    return msg.content[0].text</pre>
+
+<p>The real script handles errors (timeout, 404), duplicate filters, atomic file writing. But the core is this: <strong>download → extract → summarize → compose</strong>.</p>
+
+<p class="materiali-link">Full script: <a href="materiali-variante-2/newsletter.py">materiali-variante-2/newsletter.py</a>.</p>
+</section>
+
+<!-- 8. STEP 4 - SCHEDULING -->
+<section class="block" id="step-4">
+<h3>Step 4 — Schedule with cron</h3>
+
+<p>Identical to Variant 1: cron on Mac/Linux, Task Scheduler on Windows, systemd timer on server.</p>
+
+<pre>0 8 * * * cd /path/to/materiali-variante-2 && /path/to/.venv/bin/python newsletter.py >> /tmp/newsletter.log 2>&1</pre>
+
+<div class="note">
+  <strong>Maximum portability advantage</strong>: this script runs on a $35 Raspberry Pi left always on. No Claude Code, no Pro subscription. Just Python and $0.005/run of API.
+</div>
+
+<p class="materiali-link">Examples: <a href="materiali-variante-2/scheduling/crontab-example.txt">materiali-variante-2/scheduling/crontab-example.txt</a>.</p>
+</section>
+
+<!-- 9. BEYOND -->
+<section id="beyond">
+<h2>Beyond Anthropic: how to apply the pattern</h2>
+
+<p>All 5 use cases from the previous methods work here. The advantage of this variant: <strong>you have access to every byte of the flow</strong>.</p>
+
+<div class="use-case">
+  <strong>Ultra-aggressive pre-Claude filters</strong>
+  Before calling the API, you filter brutally in Python (e.g. keep only articles with at least 3 keywords from your industry in the body). You send Claude 1 article out of 20 → costs reduced to cents/month.
+</div>
+
+<div class="use-case">
+  <strong>Multi-stage AI pipeline</strong>
+  Step 1: call Claude with a small model (Haiku, $0.0003/article) to classify whether the article deserves attention. Step 2: only "approved" articles pass to Sonnet for the actual summary. Save 70% of tokens by using Claude in cascade.
+</div>
+
+<div class="use-case">
+  <strong>Aggressive caching</strong>
+  In the Python script add a disk cache of downloaded articles (if the URL has been downloaded in the last 7 days, reuse). Reduce web traffic and execution time.
+</div>
+
+<div class="use-case">
+  <strong>Multi-output</strong>
+  The same run produces: 1) the markdown newsletter, 2) a LinkedIn POST (200 chars), 3) an entry in a SQLite database for future search. 1 Claude call, 3 different outputs.
+</div>
+</section>
+
+<!-- 10. RECAP -->
+<section id="recap">
+<h2>Recap</h2>
+
+<ul class="checks">
+  <li>Same pattern as the other 2 methods, stripped to the bone: <strong>~80 Python lines + Anthropic API + requests + BeautifulSoup + feedparser</strong></li>
+  <li>Zero agent, zero tool use, zero magic: readable procedural code from start to finish</li>
+  <li>Costs reduced 5-10x compared to Variant 1 (send Claude only clean already-extracted text)</li>
+  <li>Maximum portability: runs on any PC/server with Python, even on Raspberry Pi</li>
+  <li>cron / Task Scheduler / systemd timer scheduling — no Claude Code needed</li>
+</ul>
+
+<p>Everything is already configured in the materials. Open Claude Code in <code>materiali-variante-2/</code>, tell it <em>"run START_HERE.md"</em>, in 5 minutes the first run is done.</p>
+</section>
+
+<!-- 11. MATERIALS -->
+<section id="materials-overview">
+<h2>Attached materials</h2>
+
+<table class="compare">
+<tr><th>File</th><th>What it is</th></tr>
+<tr><td><a href="materiali-variante-2/README.md">README.md</a></td><td>Manual quick start</td></tr>
+<tr><td><a href="materiali-variante-2/START_HERE.md">START_HERE.md</a></td><td>Automatic setup via Claude Code</td></tr>
+<tr><td><a href="materiali-variante-2/.env.example">.env.example</a></td><td>Template ANTHROPIC_API_KEY</td></tr>
+<tr><td><a href="materiali-variante-2/requirements.txt">requirements.txt</a></td><td>anthropic, requests, beautifulsoup4, feedparser, python-dotenv</td></tr>
+<tr><td><a href="materiali-variante-2/newsletter.py">newsletter.py</a></td><td>The main script (~80 lines)</td></tr>
+<tr><td><a href="materiali-variante-2/sources.json">sources.json</a></td><td>Sources list (HTML/RSS)</td></tr>
+<tr><td><a href="materiali-variante-2/prompt.txt">prompt.txt</a></td><td>Summary prompt for Claude</td></tr>
+<tr><td><a href="materiali-variante-2/state.json">state.json</a></td><td>Memory of seen URLs</td></tr>
+<tr><td><a href="materiali-variante-2/scheduling/crontab-example.txt">scheduling/crontab-example.txt</a></td><td>cron examples</td></tr>
+<tr><td><a href="materiali-variante-2/example-output.md">example-output.md</a></td><td>Generated newsletter example</td></tr>
+</table>
+</section>
+
+<!-- 12. CTA -->
+<section class="community-box">
+<h3>Resources</h3>
+<p>All the files of this variant are ready in the <strong>free Skool community</strong>. Download the folder, in 5 minutes the system runs.</p>
+<p>If you want to adapt the script to your case (multi-stage pipeline, multi-output, advanced caching, custom integrations) and don't feel like doing it alone, <strong>reach out</strong>.</p>
+</section>
+
+<footer>
+  <p>Pipeline v5 · Personal AI Newsletter — Variant 2: Anthropic API + HTML/RSS parsing · 2026-05-16</p>
+</footer>
+
+</body>
+</html>

@@ -1,0 +1,792 @@
+<!DOCTYPE html>
+<html lang="it">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1">
+<title>Creare un team di agenti AI con Claude: 3 metodi a confronto — Guida</title>
+<style>
+:root {
+  --primary: #2563eb;
+  --primary-dark: #1d4ed8;
+  --primary-light: #dbeafe;
+  --text: #111827;
+  --muted: #6b7280;
+  --bg: #ffffff;
+  --bg-soft: #fafbfc;
+  --border: #e5e7eb;
+  --code-bg: #f3f4f6;
+  --output-bg: #ecfdf5;
+  --output-border: #10b981;
+  --switch-bg: #eff6ff;
+  --switch-border: #93c5fd;
+  --concetto-bg: #f0f9ff;
+  --concetto-border: #2563eb;
+  --metodo-a-bg: #ecfdf5;
+  --metodo-a-border: #10b981;
+  --metodo-a-text: #065f46;
+  --metodo-b-bg: #fef3c7;
+  --metodo-b-border: #f59e0b;
+  --metodo-b-text: #92400e;
+  --metodo-c-bg: #fce7f3;
+  --metodo-c-border: #db2777;
+  --metodo-c-text: #831843;
+  --setup-bg: #f0f9ff;
+  --setup-border: #38bdf8;
+}
+* { box-sizing: border-box; }
+html { scroll-behavior: smooth; }
+body { font-family: system-ui, -apple-system, "Inter", "Segoe UI", sans-serif; color: var(--text); background: var(--bg); line-height: 1.7; max-width: 900px; margin: 0 auto; padding: 32px 28px 64px; font-size: 16.5px; }
+h1 { font-size: 2.1rem; margin: 0 0 8px; line-height: 1.18; letter-spacing: -0.015em; }
+h2 { font-size: 1.55rem; margin-top: 56px; padding-bottom: 8px; border-bottom: 2px solid var(--primary); letter-spacing: -0.01em; }
+h3 { font-size: 1.25rem; margin-top: 32px; color: var(--primary); }
+h4 { font-size: 1.05rem; margin-top: 22px; color: var(--text); font-weight: 600; }
+p { margin: 12px 0; }
+.subtitle { color: var(--muted); margin-top: 0; font-size: 1.05rem; }
+nav.toc { display: flex; gap: 16px; flex-wrap: wrap; padding: 12px 0; margin: 18px 0 24px; border-top: 1px solid var(--border); border-bottom: 1px solid var(--border); font-size: 0.9rem; }
+nav.toc a { color: var(--primary); text-decoration: none; font-weight: 500; }
+nav.toc a:hover { text-decoration: underline; }
+.metodo-switch { background: var(--switch-bg); border: 1px solid var(--switch-border); border-radius: 8px; padding: 16px 20px; margin: 20px 0; }
+.metodo-switch h2 { margin: 0 0 8px; border: none; padding: 0; font-size: 1.05rem; color: var(--primary-dark); }
+.metodo-switch p { margin: 6px 0; font-size: 0.95rem; }
+.metodo-switch ul { list-style: none; padding-left: 0; margin: 8px 0 0; }
+.metodo-switch li { margin: 4px 0; font-size: 0.95rem; }
+.concetto-chiave { background: var(--concetto-bg); border-left: 4px solid var(--concetto-border); border-radius: 4px; padding: 14px 18px; margin: 16px 0; font-size: 1.08rem; line-height: 1.55; color: #0c4a6e; }
+.concetto-chiave strong { color: var(--primary-dark); }
+
+.metodo-section-a { background: var(--metodo-a-bg); border: 2px solid var(--metodo-a-border); border-radius: 10px; padding: 24px 26px; margin: 32px 0; }
+.metodo-section-a h2 { color: var(--metodo-a-text); border-bottom: 2px solid var(--metodo-a-border); margin-top: 0; }
+.metodo-section-a h3 { color: var(--metodo-a-text); }
+.metodo-section-a .block { background: #fff; }
+
+.metodo-section-b { background: var(--metodo-b-bg); border: 2px solid var(--metodo-b-border); border-radius: 10px; padding: 24px 26px; margin: 32px 0; }
+.metodo-section-b h2 { color: var(--metodo-b-text); border-bottom: 2px solid var(--metodo-b-border); margin-top: 0; }
+.metodo-section-b h3 { color: var(--metodo-b-text); }
+.metodo-section-b .block { background: #fff; }
+
+.metodo-section-c { background: var(--metodo-c-bg); border: 2px solid var(--metodo-c-border); border-radius: 10px; padding: 24px 26px; margin: 32px 0; }
+.metodo-section-c h2 { color: var(--metodo-c-text); border-bottom: 2px solid var(--metodo-c-border); margin-top: 0; }
+.metodo-section-c h3 { color: var(--metodo-c-text); }
+.metodo-section-c .block { background: #fff; }
+
+.metodo-badge { display: inline-block; padding: 4px 10px; border-radius: 4px; font-size: 0.85rem; font-weight: 700; margin-right: 8px; vertical-align: middle; }
+.metodo-badge.a { background: var(--metodo-a-border); color: white; }
+.metodo-badge.b { background: var(--metodo-b-border); color: white; }
+.metodo-badge.c { background: var(--metodo-c-border); color: white; }
+
+.setup-box {
+  background: var(--setup-bg);
+  border-left: 4px solid var(--setup-border);
+  border-radius: 4px;
+  padding: 14px 18px;
+  margin: 16px 0;
+  font-size: 0.97rem;
+}
+.setup-box strong { color: #075985; }
+.setup-box::before { content: "⚡ "; }
+
+.block { background: var(--bg-soft); border: 1px solid var(--border); border-radius: 8px; padding: 22px 26px; margin: 26px 0; }
+.block h3 { margin-top: 0; }
+.action { background: #1e293b; color: #e2e8f0; padding: 10px 14px; border-radius: 6px; font-family: "SF Mono", Menlo, Consolas, monospace; font-size: 0.88rem; margin: 8px 0; overflow-x: auto; white-space: pre-wrap; }
+.action code { background: transparent; padding: 0; color: #38bdf8; }
+.action::before { content: "▶  "; color: #38bdf8; user-select: none; font-weight: 600; }
+.output { background: var(--output-bg); padding: 8px 14px; border-radius: 4px; font-size: 0.9rem; margin: 8px 0; border-left: 3px solid var(--output-border); font-family: "SF Mono", Menlo, monospace; }
+.output::before { content: "✅  "; font-family: system-ui, sans-serif; font-weight: 700; }
+code { background: var(--code-bg); padding: 2px 6px; border-radius: 3px; font-family: "SF Mono", Menlo, monospace; font-size: 0.92em; }
+.materiali-link { margin-top: 18px; padding-top: 12px; border-top: 1px dashed var(--border); font-size: 0.94rem; }
+.materiali-link a { color: var(--primary); text-decoration: none; font-weight: 500; }
+.materiali-link a:hover { text-decoration: underline; }
+.materiali-link::before { content: "📎  "; }
+.diagram { font-family: "SF Mono", Menlo, monospace; background: #0f172a; color: #e2e8f0; padding: 14px; border-radius: 6px; font-size: 0.8rem; white-space: pre; overflow-x: auto; margin: 16px 0; line-height: 1.4; }
+ul.checks { list-style: none; padding-left: 0; }
+ul.checks li { padding: 5px 0; padding-left: 24px; position: relative; }
+ul.checks li::before { content: "✓"; color: var(--output-border); font-weight: 700; position: absolute; left: 0; top: 5px; }
+ul.use-cases { list-style: none; padding-left: 0; }
+ul.use-cases li { padding: 12px 16px; margin: 10px 0; background: #fff; border: 1px solid var(--border); border-radius: 6px; }
+ul.use-cases strong { color: var(--primary-dark); }
+table.compare { width: 100%; border-collapse: collapse; margin: 16px 0; font-size: 0.92rem; }
+table.compare th, table.compare td { padding: 10px 12px; text-align: left; border-bottom: 1px solid var(--border); vertical-align: top; }
+table.compare th { background: var(--bg-soft); font-weight: 600; color: var(--primary-dark); }
+.prereq-section { background: #fffbeb; border: 1px solid #fcd34d; border-radius: 10px; padding: 24px 26px; margin: 32px 0; }
+.prereq-section h2 { color: #78350f; border-bottom: 2px solid #f59e0b; margin-top: 0; }
+.prereq-section h3 { color: #92400e; margin-top: 28px; }
+.prereq-section h4 { color: #78350f; margin-top: 18px; font-size: 1rem; }
+ol.steps { counter-reset: step; list-style: none; padding-left: 0; margin: 14px 0; }
+ol.steps > li { counter-increment: step; position: relative; padding: 8px 0 8px 42px; margin: 4px 0; }
+ol.steps > li::before { content: counter(step); position: absolute; left: 0; top: 6px; width: 28px; height: 28px; background: var(--primary); color: white; border-radius: 50%; font-weight: 700; font-size: 0.88rem; display: flex; align-items: center; justify-content: center; }
+ol.steps > li strong { color: var(--primary-dark); }
+.note-box { background: #f0f9ff; border-left: 4px solid #0ea5e9; padding: 10px 14px; margin: 12px 0; font-size: 0.94rem; border-radius: 4px; }
+.note-box::before { content: "💡 "; }
+.warn-box { background: #fef2f2; border-left: 4px solid #ef4444; padding: 10px 14px; margin: 12px 0; font-size: 0.94rem; border-radius: 4px; }
+.warn-box::before { content: "⚠️ "; }
+.community-box { background: #f0fdf4; border: 1px solid #86efac; border-radius: 8px; padding: 18px 22px; margin: 24px 0; }
+.community-box h3 { margin-top: 0; color: #166534; }
+.community-box p { margin: 8px 0; }
+footer { margin-top: 48px; padding-top: 18px; border-top: 1px solid var(--border); color: var(--muted); font-size: 0.85rem; text-align: center; }
+@media print { body { max-width: none; padding: 0 16px; font-size: 11pt; } nav.toc, footer { display: none; } .block, .metodo-switch, .community-box, .concetto-chiave, .metodo-section-a, .metodo-section-b, .metodo-section-c, .setup-box { break-inside: avoid; } h2, h3 { break-after: avoid; } .action { background: #f3f4f6; color: #1e293b; border: 1px solid var(--border); } .diagram { background: #f3f4f6; color: #1e293b; } }
+</style>
+</head>
+<body>
+
+<header>
+  <h1>Creare un team di agenti AI: 3 metodi a confronto</h1>
+  <p class="subtitle">Stesso obiettivo, 3 strade per arrivarci. Vediamo cosa cambia e quale ha senso scegliere.</p>
+</header>
+
+<section class="metodo-switch">
+  <h2>📌 Video confronto: 3 modi nativi all'ecosistema Claude</h2>
+  <p>Questo video mette a confronto i 3 modi ufficiali Anthropic per costruire un team di agenti, dal più "interattivo" al più "programmatico":</p>
+  <ul>
+    <li>📍 <strong>Stai qui</strong>: <span class="metodo-badge a">A</span> Claude Code &nbsp; <span class="metodo-badge b">B</span> Anthropic SDK &nbsp; <span class="metodo-badge c">C</span> Claude Agent SDK</li>
+  </ul>
+</section>
+
+<nav class="toc">
+  <a href="#cosa-e">Cos'è un team di agenti</a>
+  <a href="#cosa-costruiremo">Cosa costruiremo</a>
+  <a href="#i-3-metodi">I 3 metodi</a>
+  <a href="#prerequisiti">Setup iniziale</a>
+  <a href="#metodo-a">A: Claude Code</a>
+  <a href="#metodo-b">B: Anthropic SDK</a>
+  <a href="#metodo-c">C: Agent SDK</a>
+  <a href="#quale-scegliere">Quale scegliere</a>
+  <a href="#oltre-il-case">Oltre l'esempio</a>
+  <a href="#materiali-overview">Materiali</a>
+</nav>
+
+<!-- ============================================================ -->
+<section id="cosa-e">
+<h2>Cos'è un team di agenti AI</h2>
+
+<div class="concetto-chiave">
+È un gruppo di chiamate Claude — ognuna con un ruolo specifico — che lavorano <strong>in parallelo</strong> sulla stessa attività. Ognuno fa una cosa sola, e poi un quarto agente raccoglie i risultati e li sintetizza.
+</div>
+
+<p>Un agente solo che fa tutto si confonde. Quattro agenti specializzati no.</p>
+
+<p>Quando l'attività è ricorrente — controlli da fare ogni mattina, dati da raccogliere ogni settimana, report da generare ogni mese — un team di agenti diventa un <strong>dipendente che non dorme</strong>. Lo costruisci una volta, lavora per te ogni giorno.</p>
+
+<h3>Quando ha senso</h3>
+
+<p>Quando devi:</p>
+<ul>
+  <li>Toccare <strong>più fonti diverse</strong> (siti, file, API, social)</li>
+  <li>Applicare <strong>filtri distinti</strong> per ogni fonte</li>
+  <li>Aggregare i risultati in un <strong>output unificato</strong></li>
+</ul>
+
+<p>Casi tipici: monitoraggio competitor, lead research, content radar, account-based monitoring, due diligence. Tutti lo stesso pattern.</p>
+</section>
+
+<!-- ============================================================ -->
+<section id="cosa-costruiremo">
+<h2>Cosa costruiremo oggi</h2>
+
+<p>Per dimostrare il pattern useremo un esempio concreto: un team che ti manda un <strong>brief sui competitor ogni mattina alle 7</strong>.</p>
+
+<p>Lo costruiremo in <strong>3 modi diversi</strong>, tutti dentro l'ecosistema Anthropic. Stesso obiettivo, livelli di astrazione diversi: dal più "premasticato" (Claude Code che orchestra da solo) al più "low-level" (tu scrivi il loop con l'SDK base). Vedrai pro e contro di ognuno, e scegli tu quale fa per te.</p>
+
+<p>In tutti e 3 i metodi il sistema fa la stessa cosa: alle 7 del mattino apre i siti dei tuoi 3 competitor, controlla 3 cose (prezzi, novità prodotto, post LinkedIn forti), sintetizza tutto, e ti consegna il brief. Tu apri la mail, in 30 secondi sai cos'è successo.</p>
+
+<h3>Esempio del brief</h3>
+
+<div class="diagram"># Daily Competitor Brief — 5 maggio 2026
+
+## TOP INSIGHT
+1. Acme ha alzato il prezzo del piano Pro del +15%
+2. Beta Inc ha lanciato l'integrazione con Notion ieri
+3. Gamma Co ha pubblicato un case study su LinkedIn (310 reactions)
+
+## Per competitor
+
+### Acme
+- Pricing: piano Pro €49 → €56 (+15%)
+- Features: nessun annuncio rilevante
+- Social: 2 post settimanali, engagement medio
+
+### Beta Inc
+- Pricing: invariato
+- Features: lancio integrazione Notion (4 maggio)
+- Social: top post del lancio (180 reactions)
+
+### Gamma Co
+...</div>
+
+<div class="concetto-chiave">
+<strong>Importante:</strong> il brief competitor è solo l'esempio. Il pattern (4 ruoli specializzati + orchestrazione + scheduling) vale per qualunque attività ricorrente. A fine video vediamo come applicarlo a lead research, content radar, e altri casi.
+</div>
+</section>
+
+<!-- ============================================================ -->
+<section id="i-3-metodi">
+<h2>I 3 metodi che vedrai</h2>
+
+<p>Costruiremo lo stesso sistema in 3 modi diversi, tutti dentro l'ecosistema Anthropic. La differenza è <strong>quanta della complessità si occupa Claude</strong> e quanta resta a te.</p>
+
+<div class="concetto-chiave">
+<strong>Spiegato al volo, in 3 frasi:</strong>
+<ul style="margin: 10px 0 0; padding-left: 0; list-style: none;">
+  <li style="margin: 8px 0;"><span class="metodo-badge a">A</span> Apri Claude Code nel terminale e gli dici "fai il brief". Lui legge i 4 ruoli (file <code>.md</code>) e li orchestra da solo. Tu non scrivi una riga di codice.</li>
+  <li style="margin: 8px 0;"><span class="metodo-badge b">B</span> Scrivi tu in Python 4 funzioni che chiamano l'API di Claude, una per ogni ruolo. Gestisci tu parallelismo, tool e gestione errori. Massimo controllo, massimo lavoro.</li>
+  <li style="margin: 8px 0;"><span class="metodo-badge c">C</span> Scrivi un Python molto corto che usa l'Agent SDK per <strong>caricare gli stessi 4 file <code>.md</code> del Metodo A</strong> e li orchestra al posto tuo. È "Claude Code embedded nel tuo script".</li>
+</ul>
+<p style="margin: 10px 0 0; font-size: 0.96rem;"><strong>Analogia:</strong> stesso cervello (i 4 <code>.md</code>), tre modi diversi di svegliarlo. In tutti e 3 i casi il modello AI gira sui server di Anthropic — quello che cambia è solo <strong>dove sta il codice che decide quando chiamarlo</strong>.</p>
+</div>
+
+<h3><span class="metodo-badge a">A</span> Claude Code Agent Teams + Routines</h3>
+
+<p>Il livello più alto di astrazione. Zero codice, solo file di istruzioni in markdown. Claude Code orchestra tutto da solo, le Routines lo schedulano sui server di Anthropic. Per chi è a suo agio col terminale e ha già il piano Claude Pro.</p>
+
+<h3><span class="metodo-badge b">B</span> Anthropic SDK (raw) + asyncio + cron</h3>
+
+<p>Il livello più basso. Tu costruisci tutto: il loop di chiamate, il parallelismo con <code>asyncio.gather()</code>, l'invio mail. ~150 righe di codice, gira ovunque ci sia Python. Massimo controllo, costo minimo. Per chi sa cos'è <code>pip install</code> e vuole un sistema che può integrare nel suo stack aziendale.</p>
+
+<h3><span class="metodo-badge c">C</span> Claude Agent SDK + subagent nativi</h3>
+
+<p>La via di mezzo. È <strong>Claude Code come libreria Python</strong>: l'SDK ufficiale Anthropic che porta dentro il tuo script lo stesso agent loop, gli stessi tool built-in (<code>WebFetch</code>, <code>Read</code>, <code>Write</code>) e — soprattutto — la stessa <strong>feature subagent</strong> del Metodo A. Riusi gli identici file <code>.claude/agents/*.md</code> del Metodo A, ma li lanci da uno script. ~50 righe di Python, niente loop tool-use scritto a mano.</p>
+
+<h3>Confronto rapido</h3>
+
+<table class="compare">
+<tr><th></th><th><span class="metodo-badge a">A</span> Claude Code</th><th><span class="metodo-badge b">B</span> Anthropic SDK</th><th><span class="metodo-badge c">C</span> Agent SDK</th></tr>
+<tr><td><strong>Stack</strong></td><td>Claude Code v2.1.32+ con Agent Teams + Routines</td><td>Python 3.10+ con <code>anthropic</code> SDK + cron/GitHub Actions</td><td>Python 3.10+ + Node ≥ 18 con <code>claude-agent-sdk</code> + cron/GitHub Actions</td></tr>
+<tr><td><strong>Astrazione</strong></td><td>Massima — Claude Code orchestra tutto</td><td>Minima — costruisci il loop a mano</td><td>Media — l'SDK ti dà subagent + tool built-in</td></tr>
+<tr><td><strong>Codice da scrivere</strong></td><td>Zero (solo file .md)</td><td>~150 righe Python</td><td>~50 righe Python</td></tr>
+<tr><td><strong>Sub-agent come</strong></td><td>File <code>.claude/agents/*.md</code></td><td>4 funzioni Python che chiamano <code>messages.create()</code></td><td><strong>Stessi file <code>.md</code> del Metodo A</strong>, caricati da Python</td></tr>
+<tr><td><strong>Tool built-in</strong></td><td>Tutti (WebFetch, Read, Bash, ...)</td><td>Nessuno — implementi tu</td><td>Tutti (stessi del Metodo A)</td></tr>
+<tr><td><strong>Costo</strong></td><td>$20/mese piano Claude Pro</td><td>$1-2/mese (solo API)</td><td>$1-2/mese (solo API)</td></tr>
+<tr><td><strong>Dove gira</strong></td><td>Server Anthropic (Routines)</td><td>Locale o GitHub Actions</td><td>Locale o GitHub Actions</td></tr>
+<tr><td><strong>Per chi</strong></td><td>Già usa Claude Code, vuole zero codice</td><td>Vuole controllo totale e portabilità</td><td>Vuole programmaticità senza riscrivere il loop</td></tr>
+</table>
+
+<p>Vediamoli all'opera, in ordine. Ma prima: i prerequisiti comuni a tutti e 3.</p>
+</section>
+
+<!-- ============================================================ -->
+<section class="prereq-section" id="prerequisiti">
+<h2>⚙️ Setup iniziale: i prerequisiti comuni</h2>
+
+<p>Tre cose servono indipendentemente dal metodo che scegli. Falle ora una volta sola, le riusi per qualunque metodo (o anche per tutti e tre, se vuoi provarli).</p>
+
+<h3>1. Claude Code <span class="metodo-badge a">A</span> <span class="metodo-badge b">B</span> <span class="metodo-badge c">C</span></h3>
+
+<p>Claude Code è l'assistente AI che ti guida nel setup di ogni metodo. È lui che legge il file <code>INIZIO_QUI.md</code> e fa tutto automaticamente: installa dipendenze, configura il progetto, ti chiede solo le informazioni che servono.</p>
+
+<p>Puoi usarlo in due modi:</p>
+
+<ul>
+  <li><strong>App Desktop</strong> (consigliato) — scarica l'app da <a href="https://claude.ai/download" target="_blank">claude.ai/download</a>, installala, accedi col tuo account Anthropic. Hai un'interfaccia grafica con terminale integrato, editor di file, e le sessioni parallele degli agenti tutte visibili nella sidebar.</li>
+  <li><strong>Terminale CLI</strong> — se preferisci lavorare dal terminale classico (vedi l'approfondimento tecnico in fondo a ogni metodo per i comandi di installazione).</li>
+</ul>
+
+<p>Per il Metodo A serve il piano Pro ($20/mese). Per i Metodi B e C basta l'account gratuito con credito API.</p>
+
+<h3>2. API key Anthropic <span class="metodo-badge a">A</span> <span class="metodo-badge b">B</span> <span class="metodo-badge c">C</span></h3>
+
+<p>Serve a tutti e 3 i metodi. Si crea in 1 minuto e costa $0 finché non la usi (paghi solo le chiamate effettive, ~$1-2/mese per il nostro brief quotidiano).</p>
+
+<ol class="steps">
+  <li>Vai su <a href="https://console.anthropic.com" target="_blank">console.anthropic.com</a> e accedi (o registrati se è la prima volta)</li>
+  <li>Menu a sinistra → <strong>Settings</strong> → <strong>API Keys</strong></li>
+  <li>Clicca <strong>Create Key</strong>. Nome suggerito: <code>team-agenti-competitor</code></li>
+  <li>Copia subito la chiave (formato <code>sk-ant-...</code>) e <strong>salvala in un posto sicuro</strong>: dopo che chiudi la finestra non la rivedi più</li>
+  <li>Vai su <strong>Settings → Billing</strong> e aggiungi un metodo di pagamento. Imposta un <strong>spending limit</strong> di $5/mese per stare tranquillo</li>
+</ol>
+
+<div class="note-box"><strong>Quanto costa davvero?</strong> Il brief usa ~30k token al giorno = circa $0,05/giorno = $1,50/mese. Lo spending limit a $5 è un margine abbondante per non preoccuparti.</div>
+
+<h3>3. App Password Gmail <span class="metodo-badge b">B</span> <span class="metodo-badge c">C</span></h3>
+
+<p>Serve solo per i metodi B e C, che mandano il brief per email via SMTP. Il Metodo A invece scrive un file markdown nel repo Git, niente email.</p>
+
+<p>Una <strong>App Password</strong> è un codice usa-e-getta a 16 caratteri che permette agli script di mandare mail per tuo conto, <strong>senza esporre la password vera</strong>. Google la richiede per qualunque uso "automatico" di Gmail.</p>
+
+<ol class="steps">
+  <li>Vai su <a href="https://myaccount.google.com/security" target="_blank">myaccount.google.com/security</a></li>
+  <li>Verifica che la <strong>verifica in 2 passaggi</strong> sia <strong>attiva</strong> (è prerequisito obbligatorio per generare app password). Se è disattiva, attivala ora — bastano 2 minuti</li>
+  <li>Vai su <a href="https://myaccount.google.com/apppasswords" target="_blank">myaccount.google.com/apppasswords</a></li>
+  <li>Nome dell'app: scrivi <code>team-agenti</code> e clicca <strong>Crea</strong></li>
+  <li>Google mostra un codice tipo <code>abcd efgh ijkl mnop</code>. Copialo subito (anche qui: una volta chiusa la finestra non lo rivedi)</li>
+</ol>
+
+<div class="warn-box">Non confondere: la <strong>password normale di Gmail NON funziona</strong> per SMTP da script. Ti serve l'App Password generata sopra. Se provi con quella normale ricevi <code>535 Authentication failed</code>.</div>
+
+<div class="note-box"><strong>Non usi Gmail?</strong> Outlook, Yahoo, ProtonMail e i provider self-hosted hanno tutti SMTP. Cambia <code>smtp.gmail.com</code> nello script con il server del tuo provider e usa le credenziali normali (Outlook richiede invece OAuth: in quel caso meglio usare un servizio come Resend o SendGrid, gratuiti fino a 3000 mail/mese).</div>
+
+<h3>4. Sicurezza credenziali: il <code>.gitignore</code> <span class="metodo-badge a">A</span> <span class="metodo-badge b">B</span> <span class="metodo-badge c">C</span></h3>
+
+<p>Tutti e 3 i metodi salvano credenziali sensibili in locale (chiave Anthropic, App Password Gmail). Se le committi su Git per sbaglio anche solo una volta, sono <strong>compromesse per sempre</strong>: anche dopo averle rimosse, restano nella storia git e bot automatici scansionano GitHub di continuo cercando proprio queste stringhe.</p>
+
+<p>Per evitarlo: ogni cartella materiali contiene un file <code>.gitignore</code> pronto. <strong>Copialo nella radice del tuo progetto PRIMA di fare il primo <code>git init</code></strong>. Esclude:</p>
+
+<ul class="checks">
+  <li><code>.env</code> — il file con le credenziali (Metodi B e C)</li>
+  <li><code>.claude/settings.local.json</code> — settings locali Claude Code (Metodi A e C)</li>
+  <li><code>.venv/</code>, <code>__pycache__/</code> — ambiente Python (Metodi B e C)</li>
+  <li><code>briefs/</code>, <code>logs/</code> — output che si rigenerano automaticamente</li>
+</ul>
+
+<div class="warn-box"><strong>Se hai già committato per sbaglio:</strong> revoca subito la chiave su <a href="https://console.anthropic.com" target="_blank">console.anthropic.com</a> → Settings → API Keys → revoke. E revoca l'App Password Gmail su <a href="https://myaccount.google.com/apppasswords" target="_blank">myaccount.google.com/apppasswords</a>. Poi crea credenziali nuove. Rimuoverle dalla storia git da sole non basta.</div>
+
+<h3>Riepilogo cosa serve per ogni metodo</h3>
+
+<table class="compare">
+<tr><th>Metodo</th><th>Claude Code</th><th>API key Anthropic</th><th>App Password Gmail</th><th>Altro</th></tr>
+<tr><td><span class="metodo-badge a">A</span></td><td>✓ (setup + motore)</td><td>✓</td><td>—</td><td>Piano Pro $20/mese</td></tr>
+<tr><td><span class="metodo-badge b">B</span></td><td>✓ (solo setup)</td><td>✓</td><td>✓</td><td>Python ≥ 3.10</td></tr>
+<tr><td><span class="metodo-badge c">C</span></td><td>✓ (setup + runtime)</td><td>✓</td><td>✓</td><td>Python ≥ 3.10 + Node ≥ 18</td></tr>
+</table>
+
+<p>Una volta che hai questi prerequisiti in tasca, i setup specifici di ogni metodo durano 3-5 minuti. Vediamoli.</p>
+</section>
+
+<!-- ============================================================ -->
+<section class="metodo-section-a" id="metodo-a">
+<h2><span class="metodo-badge a">A</span> Metodo A: Claude Code Agent Teams + Routines</h2>
+
+<h3>L'idea</h3>
+
+<p>Claude Code ha 3 feature native che messe insieme fanno un team di agenti senza scrivere codice:</p>
+
+<ul>
+  <li><strong>Sub-agent definitions</strong> — ogni ruolo è un file <code>.md</code> in <code>.claude/agents/</code>. Frontmatter YAML per nome/strumenti/modello, body con le istruzioni.</li>
+  <li><strong>Agent Teams</strong> — feature che permette a Claude Code di lanciare 4 sessioni parallele che si parlano tra loro tramite shared task list. Sperimentale, ma stabile in pratica.</li>
+  <li><strong>Claude Routines</strong> — scheduler cloud Anthropic. Dichiari prompt + cron, gira sui server di Anthropic anche col laptop spento. Incluso nel piano Pro.</li>
+</ul>
+
+<h3>Perché sceglierlo</h3>
+
+<ul class="checks">
+  <li>Zero codice. Zero terminale dopo il setup. Solo prompt in markdown.</li>
+  <li>Scheduling nativo Anthropic, niente VPS, niente computer da tenere acceso</li>
+  <li>Il piano Pro che usi già copre tutto — niente abbonamenti extra</li>
+</ul>
+
+<h3>Quando NON sceglierlo</h3>
+
+<ul>
+  <li>Se vuoi integrare il sistema in un repo aziendale con CI/CD: meglio Python</li>
+  <li>Se vuoi integrare il sistema in CI/CD o in un repo aziendale: meglio il <a href="#metodo-b">Metodo B (Anthropic SDK)</a> o il <a href="#metodo-c">Metodo C (Agent SDK)</a></li>
+  <li>Se vuoi evitare feature in research preview: meglio il <a href="#metodo-b">Metodo B (Anthropic SDK)</a></li>
+</ul>
+
+<h3>Architettura</h3>
+
+<div class="diagram">    ⏰ Claude Routine (daily 7:00) → 🧠 Team Lead → spawn parallel
+                                                          │
+              ┌───────────────────┬───────────────────┐
+              ▼                   ▼                   ▼
+       pricing-watcher    feature-watcher    social-watcher
+              │                   │                   │
+              └───────────────────┼───────────────────┘
+                                  ▼
+                            🎯 synthesizer → briefs/YYYY-MM-DD.md</div>
+
+<h3>Come si parte</h3>
+
+<p>La cartella <code>materiali/</code> è già pronta all'uso: contiene tutto il necessario. Tu devi fare esattamente 2 cose:</p>
+
+<ol class="steps">
+  <li><strong>Apri Claude Code</strong> (app Desktop o terminale) <strong>dentro la cartella <code>materiali/</code></strong></li>
+  <li><strong>Scrivi:</strong> <em>"esegui il setup leggendo INIZIO_QUI.md"</em></li>
+</ol>
+
+<p>Claude Code fa tutto da solo: verifica che i prerequisiti siano installati (e ti dice come installarli se mancano), configura il progetto, e ti chiede solo una cosa — i nomi e gli URL dei tuoi 3 competitor reali. Fine. Sei operativo.</p>
+
+<h3>Il momento "wow": vedere il team partire</h3>
+
+<p>Dopo il setup, scrivi in Claude Code: <em>"lancia il brief competitor"</em>. Premi Invio.</p>
+
+<p>Vedrai 4 sessioni Claude apparire in parallelo (nell'app Desktop le vedi nella sidebar, nel terminale scorri con <code>Shift+Down</code>). I 3 watcher (pricing, features, social) lavorano contemporaneamente. Quando hanno finito, il synthesizer si attiva e scrive il brief in <code>briefs/&lt;data&gt;.md</code>.</p>
+
+<p>Tempo totale del primo run: 3-5 minuti.</p>
+
+<div class="output">briefs/&lt;data-oggi&gt;.md pronto nella cartella del progetto</div>
+
+<h3>Schedulazione</h3>
+
+<p>Una volta che il test locale funziona, la metti in produzione 24/7: vai su <a href="https://claude.ai/code">claude.ai/code</a> → Routines → New Routine. Imposti l'orario (es. ogni mattina alle 7), incolli il prompt che trovi in <code>prompt-routine.md</code>, salvi. Da domani mattina parte da sola, anche col laptop spento.</p>
+
+<h3>Approfondimento tecnico</h3>
+
+<details>
+<summary><strong>Cosa fa Claude Code dietro le quinte + setup manuale</strong></summary>
+
+<p>Se preferisci fare tutto a mano o vuoi capire cosa succede sotto, ecco i passaggi che Claude Code esegue automaticamente quando lanci il setup:</p>
+
+<ol class="steps">
+  <li>Entra nella cartella: <code>cd materiali</code></li>
+  <li>Apri <code>competitors.json</code> con un editor di testo e inserisci i tuoi 3 competitor (nome + URL pricing + URL blog + URL LinkedIn)</li>
+  <li>Lancia Claude Code: <code>claude</code></li>
+  <li>Incolla il contenuto di <code>daily-brief.md</code> come primo messaggio e premi Invio</li>
+</ol>
+
+</details>
+
+<p class="materiali-link"><strong>Tutti i file (con INIZIO_QUI.md per setup automatico):</strong> <a href="materiali/">materiali/</a></p>
+</section>
+
+<!-- ============================================================ -->
+<section class="metodo-section-b" id="metodo-b">
+<h2><span class="metodo-badge b">B</span> Metodo B: Python + Anthropic SDK + cron</h2>
+
+<h3>L'idea</h3>
+
+<p>Un singolo file Python di ~150 righe che fa tutto: 3 chiamate watcher in parallelo con <code>asyncio.gather()</code>, una chiamata synthesizer in coda, invio mail con <code>smtplib</code>. Niente magia: 4 funzioni, ognuna con il suo compito.</p>
+
+<p>Il pezzo critico è <code>asyncio.gather()</code>:</p>
+
+<div class="action">findings = await asyncio.gather(
+    watcher("pricing", load_prompt("pricing.txt"), competitors),
+    watcher("features", load_prompt("features.txt"), competitors),
+    watcher("social", load_prompt("social.txt"), competitors),
+)</div>
+
+<p>5 righe e i 3 watcher partono contemporaneamente. Il tempo totale è quello del watcher più lento, non la somma di tutti e 3.</p>
+
+<h3>Perché sceglierlo</h3>
+
+<ul class="checks">
+  <li>Massima portabilità: lo script gira ovunque ci sia Python (laptop, VPS, Docker, GitHub Actions, AWS Lambda)</li>
+  <li>Costo minimo: ~$1-2/mese di sole API, niente abbonamenti</li>
+  <li>Massimo controllo: ogni byte è codice tuo, modifichi tutto come vuoi</li>
+  <li>SDK Anthropic stabile da anni, niente feature sperimentali</li>
+  <li>Si integra in repo aziendali, CI/CD, Docker, FastAPI, Kubernetes</li>
+</ul>
+
+<h3>Quando NON sceglierlo</h3>
+
+<ul>
+  <li>Se non hai mai usato Python: meglio il <a href="#metodo-a">Metodo A (Claude Code)</a> — zero codice, solo prompt in markdown</li>
+  <li>Se vuoi tutto su un'unica piattaforma senza terminale: meglio il <a href="#metodo-a">Metodo A (Claude Code)</a></li>
+  <li>Se non vuoi gestire scheduling esterno (cron / GitHub Actions): meglio il <a href="#metodo-a">Metodo A</a> con Routines cloud Anthropic</li>
+</ul>
+
+<h3>Architettura</h3>
+
+<div class="diagram">  ⏰ cron (locale o GitHub Actions) → python team_agenti.py
+                                              │
+                                  asyncio.gather(  fan-out parallelo
+              ┌───────────────────┬───────────────────┐
+              ▼                   ▼                   ▼
+        pricing watcher    features watcher    social watcher    (Sonnet)
+              │                   │                   │
+              └───────────────────┼───────────────────┘
+                                  )  fan-in
+                                  ▼
+                        synthesizer (Opus) → briefs/YYYY-MM-DD.md + smtplib send mail</div>
+
+<h3>Come si parte</h3>
+
+<p>La cartella <code>materiali-variante-2/</code> è già pronta all'uso. Tu devi fare esattamente 2 cose:</p>
+
+<ol class="steps">
+  <li><strong>Apri Claude Code</strong> (app Desktop o terminale) <strong>dentro la cartella <code>materiali-variante-2/</code></strong></li>
+  <li><strong>Scrivi:</strong> <em>"esegui il setup leggendo INIZIO_QUI.md"</em></li>
+</ol>
+
+<p>Claude Code fa tutto da solo: verifica che Python sia installato (e ti dice come installarlo se manca), crea l'ambiente virtuale, installa le dipendenze, e ti chiede una alla volta le credenziali (API key Anthropic, App Password Gmail) e i nomi dei tuoi 3 competitor. Fine.</p>
+
+<div class="warn-box">Le credenziali vengono salvate in un file <code>.env</code> protetto dal <code>.gitignore</code>. Se per sbaglio le committi su Git, vanno <strong>revocate e ricreate</strong>: rimuoverle dalla storia git da sole non basta.</div>
+
+<h3>Il momento "wow": i 3 watcher in parallelo a terminale</h3>
+
+<div class="action">python team_agenti.py</div>
+
+<p>Output a terminale (i timestamp dimostrano il parallelismo):</p>
+
+<div class="output">[14:32:01] pricing  → fetching 3 competitor...
+[14:32:01] features → fetching 3 competitor...
+[14:32:01] social   → fetching 3 competitor...
+[14:32:14] pricing  → 3 competitor processati ✓
+[14:32:11] features → 3 competitor processati ✓
+[14:32:08] social   → 3 competitor processati ✓
+[14:32:14] synthesizer → in elaborazione...
+[14:32:31] synthesizer → brief scritto in briefs/2026-05-05.md ✓
+[14:32:32] email     → inviata a tuoindirizzo@gmail.com ✓</div>
+
+<p>I 3 watcher partono nello stesso secondo (14:32:01) e finiscono in tempi diversi. Il synthesizer aspetta tutti, scrive il brief, lo manda via mail. Tempo totale: 31 secondi.</p>
+
+<h3>Schedulazione</h3>
+
+<p>Vuoi che il brief parta da solo ogni mattina senza tenere il computer acceso? Serve un account <a href="https://github.com" target="_blank">GitHub</a> gratuito (crea un repository <strong>privato</strong>). Claude Code ti guida anche in questo: dopo il primo test, digli <em>"configura la schedulazione automatica"</em> e lui prepara tutto. Il workflow pronto è già nella cartella <code>scheduling/</code>.</p>
+
+<h3>Approfondimento tecnico</h3>
+
+<details>
+<summary><strong>Cosa fa Claude Code dietro le quinte + setup manuale</strong></summary>
+
+<p>Se preferisci fare tutto a mano o vuoi capire cosa succede sotto, ecco i passaggi che Claude Code esegue automaticamente:</p>
+
+<ol class="steps">
+  <li><strong>Verifica Python:</strong> scrivi <code>python --version</code> nel terminale. Se esce un numero ≥ 3.10, sei a posto. Se dice "comando non trovato", scaricalo da <a href="https://python.org" target="_blank">python.org</a> (prendi la versione più recente, clicca "Install", spunta "Add to PATH", avanti-avanti-fine)</li>
+  <li><strong>Crea l'ambiente e installa le dipendenze:</strong>
+    <div class="action">cd materiali-variante-2
+python -m venv .venv
+source .venv/bin/activate          # Windows: .venv\Scripts\activate
+pip install -r requirements.txt</div>
+  </li>
+  <li><strong>Configura le credenziali:</strong>
+    <div class="action">cp .env.example .env</div>
+    <p>Apri <code>.env</code> con un editor di testo e compila i 4 valori: API key Anthropic, Gmail, App Password Gmail, email destinatario.</p>
+  </li>
+  <li><strong>Modifica <code>competitors.json</code></strong> coi tuoi 3 competitor reali.</li>
+  <li><strong>Lancia:</strong>
+    <div class="action">python team_agenti.py</div>
+  </li>
+</ol>
+
+</details>
+
+<p class="materiali-link"><strong>Tutti i file (con INIZIO_QUI.md per setup automatico):</strong> <a href="materiali-variante-2/">materiali-variante-2/</a></p>
+</section>
+
+<!-- ============================================================ -->
+<section class="metodo-section-c" id="metodo-c">
+<h2><span class="metodo-badge c">C</span> Metodo C: Claude Agent SDK + subagent nativi</h2>
+
+<h3>L'idea</h3>
+
+<p>Il <strong>Claude Agent SDK</strong> è la libreria Python (e TypeScript) ufficiale di Anthropic che porta dentro al tuo script <strong>lo stesso motore che fa girare Claude Code</strong>. Stesso agent loop, stessi tool built-in (<code>WebFetch</code>, <code>Read</code>, <code>Write</code>, <code>Bash</code>, ...), stessa feature subagent.</p>
+
+<p>La cosa interessante per noi: i sub-agent sono definiti <strong>esattamente nello stesso formato del Metodo A</strong> — file markdown con frontmatter YAML. Quindi i 4 file <code>.claude/agents/*.md</code> che hai scritto per Claude Code li riusi tali e quali qui. Cambia solo come li lanci: nel Metodo A usi il CLI, qui li lanci da Python.</p>
+
+<p>Il pezzo che sorprende: parallelismo e tool sono <strong>built-in nell'SDK</strong>. Non scrivi <code>asyncio.gather()</code> a mano come nel Metodo B, non implementi il loop tool-use. Dichiari l'orchestrator, gli passi i 4 sub-agent, e chiedi "lancia i 3 watcher in parallelo poi il synthesizer". L'SDK fa il resto.</p>
+
+<h3>Perché sceglierlo</h3>
+
+<ul class="checks">
+  <li>Riusi gli STESSI <code>.md</code> sub-agent del Metodo A — il prototipo CLI diventa script di produzione senza riscrivere nulla</li>
+  <li>~50 righe di Python invece di 150: l'SDK gestisce loop, tool, parallelismo</li>
+  <li>Tool built-in (<code>WebFetch</code>, <code>Read</code>, <code>Write</code>) — niente HTTP a mano, niente parsing</li>
+  <li>Programmatico ma sempre dentro l'ecosistema Anthropic: nessun pezzo di terze parti</li>
+  <li>Costo: solo $1-2/mese di API Claude (no piano Pro richiesto)</li>
+</ul>
+
+<h3>Quando NON sceglierlo</h3>
+
+<ul>
+  <li>Se vuoi controllo byte per byte sul codice: meglio Anthropic SDK raw (Metodo B)</li>
+  <li>Se non vuoi installare nulla in locale: meglio Claude Code + Routines (Metodo A)</li>
+  <li>Se hai bisogno di un loop di chiamate altamente custom: il Metodo B è più flessibile</li>
+</ul>
+
+<h3>Architettura</h3>
+
+<div class="diagram">  ⏰ cron / GitHub Actions → python team_agenti.py
+                                       │
+                            claude_agent_sdk.query(
+                              orchestrator + AgentDefinition x 4
+                            )
+                                       │
+                            🧠 Orchestrator (Opus) usa il tool Agent
+                                       │
+              ┌───────────────────┬───────────────────┐
+              ▼                   ▼                   ▼
+       pricing-watcher    feature-watcher    social-watcher
+       (.md riusati dal Metodo A, ognuno coi suoi tool: WebFetch, ...)
+              │                   │                   │
+              └───────────────────┼───────────────────┘
+                                  ▼
+                            🎯 synthesizer (Opus) → briefs/YYYY-MM-DD.md + mail</div>
+
+<h3>Come si parte</h3>
+
+<p>La cartella <code>materiali-variante-3/</code> è già pronta all'uso. Tu devi fare esattamente 2 cose:</p>
+
+<ol class="steps">
+  <li><strong>Apri Claude Code</strong> (app Desktop o terminale) <strong>dentro la cartella <code>materiali-variante-3/</code></strong></li>
+  <li><strong>Scrivi:</strong> <em>"esegui il setup leggendo INIZIO_QUI.md"</em></li>
+</ol>
+
+<p>Claude Code fa tutto da solo: verifica che Python e Node siano installati (e ti dice come installarli se mancano), crea l'ambiente virtuale, installa le dipendenze, e ti chiede una alla volta le credenziali e i nomi dei tuoi 3 competitor. Fine.</p>
+
+<div class="warn-box">Le credenziali vengono salvate in un file <code>.env</code> protetto dal <code>.gitignore</code>. Se per sbaglio le committi su Git, vanno <strong>revocate e ricreate</strong>: rimuoverle dalla storia git da sole non basta.</div>
+
+<h3>Il momento "wow": una sola <code>query()</code> orchestra tutto</h3>
+
+<div class="action">python team_agenti.py</div>
+
+<p>L'SDK stampa lo stream degli eventi mentre l'orchestrator decide cosa fare. Vedi le 3 chiamate al tool <code>Agent</code> partire una dopo l'altra (ma eseguite in parallelo dall'SDK), poi il synthesizer:</p>
+
+<div class="output">[14:32:01] orchestrator → spawn pricing-watcher (Agent tool)
+[14:32:01] orchestrator → spawn feature-watcher (Agent tool)
+[14:32:01] orchestrator → spawn social-watcher (Agent tool)
+[14:32:13] pricing-watcher → done ✓
+[14:32:11] feature-watcher → done ✓
+[14:32:09] social-watcher → done ✓
+[14:32:14] orchestrator → spawn synthesizer
+[14:32:31] synthesizer → briefs/2026-05-05.md scritto ✓
+[14:32:32] email      → inviata a tuoindirizzo@gmail.com ✓</div>
+
+<p>Il punto: <strong>non hai scritto un singolo <code>asyncio.gather()</code></strong>. Non hai scritto il loop tool-use. Non hai implementato <code>WebFetch</code>. È tutto dentro l'SDK. Tu hai dichiarato i 4 ruoli e l'obiettivo finale.</p>
+
+<h3>Schedulazione</h3>
+
+<p>Stesso discorso del Metodo B: vuoi che parta da solo ogni mattina? Serve un account <a href="https://github.com" target="_blank">GitHub</a> gratuito (repository privato). Claude Code ti guida anche qui — digli <em>"configura la schedulazione automatica"</em> dopo il primo test. Il workflow pronto è già nella cartella <code>scheduling/</code>.</p>
+
+<h3>Approfondimento tecnico</h3>
+
+<details>
+<summary><strong>Cosa fa Claude Code dietro le quinte + setup manuale</strong></summary>
+
+<p>Se preferisci fare tutto a mano o vuoi capire cosa succede sotto, ecco i passaggi che Claude Code esegue automaticamente:</p>
+
+<ol class="steps">
+  <li><strong>Verifica Python:</strong> scrivi <code>python --version</code> nel terminale. Serve ≥ 3.10. Se manca: <a href="https://python.org" target="_blank">python.org</a> → scarica → installa (spunta "Add to PATH")</li>
+  <li><strong>Verifica Node.js:</strong> scrivi <code>node --version</code>. Serve ≥ 18 (l'Agent SDK usa il binario Claude Code sotto). Se manca: <a href="https://nodejs.org" target="_blank">nodejs.org</a> → scarica LTS → installa</li>
+  <li><strong>Crea l'ambiente e installa le dipendenze:</strong>
+    <div class="action">cd materiali-variante-3
+python -m venv .venv
+source .venv/bin/activate          # Windows: .venv\Scripts\activate
+pip install -r requirements.txt</div>
+  </li>
+  <li><strong>Configura le credenziali:</strong>
+    <div class="action">cp .env.example .env</div>
+    <p>Apri <code>.env</code> con un editor di testo e compila i 4 valori: API key Anthropic, Gmail, App Password Gmail, email destinatario.</p>
+  </li>
+  <li><strong>Modifica <code>competitors.json</code></strong> coi tuoi 3 competitor reali.</li>
+  <li><strong>Lancia:</strong>
+    <div class="action">python team_agenti.py</div>
+  </li>
+</ol>
+
+</details>
+
+<p class="materiali-link"><strong>Tutti i file (con INIZIO_QUI.md per setup automatico):</strong> <a href="materiali-variante-3/">materiali-variante-3/</a></p>
+</section>
+
+<!-- ============================================================ -->
+<section id="quale-scegliere">
+<h2>Quale scegliere</h2>
+
+<div class="concetto-chiave">
+Tutti e 3 producono lo stesso brief, ogni mattina, in autonomia. Cambia solo da dove parti e come ti piace lavorare.
+</div>
+
+<h3>Scegli <span class="metodo-badge a">A</span> Claude Code se</h3>
+
+<p>Sei già a tuo agio col terminale, hai il piano Claude Pro, e vuoi un sistema che vive interamente in Anthropic senza dipendere da nient'altro. È la scelta più pulita per chi è già "dentro" l'ecosistema e vuole zero codice.</p>
+
+<h3>Scegli <span class="metodo-badge b">B</span> Anthropic SDK raw se</h3>
+
+<p>Conosci Python e vuoi controllo totale a basso livello. È la scelta migliore se il sistema deve diventare un'API REST, finire in Docker, integrarsi col CI/CD aziendale, o se hai bisogno di logiche di orchestrazione molto custom che non si esprimono bene in un prompt.</p>
+
+<h3>Scegli <span class="metodo-badge c">C</span> Claude Agent SDK se</h3>
+
+<p>Hai prototipato col Metodo A e ora vuoi <strong>portarlo in produzione senza riscriverlo</strong>. Riusi gli stessi <code>.md</code>, ottieni un loop programmatico stabile, ti porti dietro tutti i tool built-in. È il sweet spot tra "Claude Code orchestra tutto" e "fai tutto a mano".</p>
+
+<h3>Se proprio non sai</h3>
+
+<p>Parti dal <strong>Metodo A</strong> per prototipare velocemente (zero codice, vedi se l'idea funziona). Quando il prototipo gira, passa al <strong>Metodo C</strong>: porti gli stessi <code>.md</code> dentro uno script Python, lo metti in CI/CD, schedulalo. Il <strong>Metodo B</strong> serve solo quando hai bisogno di scendere sotto il livello dell'SDK per logiche molto custom.</p>
+</section>
+
+<!-- ============================================================ -->
+<section id="oltre-il-case">
+<h2>Oltre il competitor brief: come applicare il pattern</h2>
+
+<p>Il pattern che hai imparato — <strong>N ruoli specializzati + orchestrazione parallela + scheduling autonomo</strong> — vale per qualunque attività ricorrente che richiede di toccare più fonti e aggregare i risultati. Funziona in tutti e 3 i metodi: cambiano i ruoli e il config, il pattern resta.</p>
+
+<ul class="use-cases">
+  <li>
+    <strong>📰 Content radar settimanale</strong> — Ogni lunedì controlla blog di settore, newsletter, podcast trending. Output: 5 idee di contenuto per la settimana. Ruoli: blog-watcher, newsletter-watcher, podcast-watcher, idea-generator.
+  </li>
+  <li>
+    <strong>🎯 Lead research automatica</strong> — Da una lista di aziende, per ognuna trova sito, settore, fatturato, decisionmaker LinkedIn, segnali di acquisto. Ruoli: company-profiler, financial-data-fetcher, decisionmaker-finder, signal-detector.
+  </li>
+  <li>
+    <strong>📈 Account-based monitoring</strong> — Per i tuoi top 10 clienti: news, post social, hire recenti, segnali di rischio. Ruoli: news-watcher, social-watcher, hires-watcher, risk-summarizer.
+  </li>
+  <li>
+    <strong>🏠 Real estate due diligence</strong> — Per ogni immobile: prezzo medio zona, trend, scuole, criminalità, lavori previsti. Ruoli: market-data-fetcher, neighborhood-profiler, public-records-checker, due-diligence-writer.
+  </li>
+  <li>
+    <strong>🎙️ PR alert (menzioni brand)</strong> — Ogni mattina: menzioni su X, Reddit, Hacker News. Ti avvisa solo se trova qualcosa di rilievo. Ruoli: x-watcher, reddit-watcher, hn-watcher, alert-classifier.
+  </li>
+</ul>
+
+<p>Cambi i prompt dei ruoli, cambi il config, lasci uguale il pattern. Conosci il pattern, hai 5 sistemi diversi.</p>
+</section>
+
+<!-- ============================================================ -->
+<section id="riepilogo">
+<h2>Riepilogo</h2>
+
+<p>Cosa ti porti a casa:</p>
+
+<ul class="checks">
+  <li>Cos'è un team di agenti AI e quando ha senso costruirne uno</li>
+  <li>3 modi diversi per costruirlo, ognuno per un'audience diversa</li>
+  <li>Una griglia per scegliere consapevolmente quale fa per te</li>
+  <li>Il pattern che vale per altri 5+ casi d'uso oltre il competitor brief</li>
+  <li>Un sistema funzionante (in qualsiasi dei 3 metodi) che gira ogni mattina alle 7</li>
+</ul>
+
+<p>Setup veloce in tutti e 3 i metodi: apri Claude Code dentro la cartella materiali, scrivi "esegui il setup leggendo INIZIO_QUI.md". Claude Code fa il lavoro per te. Lo riapri solo per il momento "wow" — vedere i 3 watcher partire in parallelo.</p>
+</section>
+
+<!-- ============================================================ -->
+<section id="materiali-overview">
+<h2>Materiali allegati</h2>
+
+<p>Tre cartelle separate, una per ogni metodo. Ognuna è <strong>già pronta all'uso</strong>: non devi spostare file in giro. Scarichi la cartella, apri Claude Code e dici <em>"esegui il setup leggendo INIZIO_QUI.md"</em>. In ogni cartella trovi un <code>README.md</code> con quick start manuale e un <code>INIZIO_QUI.md</code> per il setup automatico via Claude Code.</p>
+
+<h3><span class="metodo-badge a">A</span> materiali/ — Claude Code</h3>
+
+<table class="compare">
+<tr><th>File / Cartella</th><th>Cosa fa</th></tr>
+<tr><td><a href="materiali/README.md">README.md</a></td><td>Quick start manuale (3 step)</td></tr>
+<tr><td><a href="materiali/INIZIO_QUI.md">INIZIO_QUI.md</a></td><td>Setup automatico: lancia Claude Code che fa tutto</td></tr>
+<tr><td><code>.gitignore</code> + <code>.claude/settings.json</code></td><td>Settings Agent Teams + permessi + protezione file sensibili</td></tr>
+<tr><td><code>verifica-prerequisiti.sh</code></td><td>Controlla Node, claude CLI, login</td></tr>
+<tr><td><a href="materiali/.claude/agents/">.claude/agents/</a></td><td>I 4 sub-agent (pricing, feature, social, synthesizer)</td></tr>
+<tr><td><a href="materiali/competitors.json">competitors.json</a></td><td>Template lista competitor — <strong>da modificare</strong></td></tr>
+<tr><td><a href="materiali/daily-brief.md">daily-brief.md</a></td><td>Prompt orchestratore: incollalo in Claude Code per partire</td></tr>
+<tr><td><a href="materiali/prompt-routine.md">prompt-routine.md</a></td><td>Prompt da incollare in Anthropic Routines per la schedulazione</td></tr>
+<tr><td><a href="materiali/esempio-brief.md">esempio-brief.md</a></td><td>Come si presenta l'output atteso</td></tr>
+<tr><td><a href="materiali/docs/">docs/</a></td><td>Guide aggiuntive (test locale, scheduling)</td></tr>
+</table>
+
+<h3><span class="metodo-badge b">B</span> materiali-variante-2/ — Anthropic SDK raw</h3>
+
+<table class="compare">
+<tr><th>File / Cartella</th><th>Cosa fa</th></tr>
+<tr><td><a href="materiali-variante-2/README.md">README.md</a></td><td>Quick start manuale (5 comandi)</td></tr>
+<tr><td><a href="materiali-variante-2/INIZIO_QUI.md">INIZIO_QUI.md</a></td><td>Setup automatico via Claude Code</td></tr>
+<tr><td><code>.gitignore</code> + <code>.env.example</code></td><td>Template credenziali + protezione anti-commit</td></tr>
+<tr><td><code>requirements.txt</code></td><td>Dipendenze Python (anthropic + python-dotenv)</td></tr>
+<tr><td><a href="materiali-variante-2/competitors.json">competitors.json</a></td><td>Template lista competitor — <strong>da modificare</strong></td></tr>
+<tr><td><a href="materiali-variante-2/team_agenti.py">team_agenti.py</a></td><td>Lo script principale (~150 righe commentate)</td></tr>
+<tr><td><a href="materiali-variante-2/prompts/">prompts/</a></td><td>I 4 system prompt dei ruoli (file .txt)</td></tr>
+<tr><td><a href="materiali-variante-2/esempio-brief.md">esempio-brief.md</a></td><td>Come si presenta l'output atteso</td></tr>
+<tr><td><a href="materiali-variante-2/scheduling/">scheduling/</a></td><td>crontab + workflow GitHub Actions pronti</td></tr>
+</table>
+
+<h3><span class="metodo-badge c">C</span> materiali-variante-3/ — Claude Agent SDK</h3>
+
+<table class="compare">
+<tr><th>File / Cartella</th><th>Cosa fa</th></tr>
+<tr><td><a href="materiali-variante-3/README.md">README.md</a></td><td>Quick start manuale (5 comandi)</td></tr>
+<tr><td><a href="materiali-variante-3/INIZIO_QUI.md">INIZIO_QUI.md</a></td><td>Setup automatico via Claude Code</td></tr>
+<tr><td><code>.gitignore</code> + <code>.env.example</code></td><td>Template credenziali + protezione anti-commit</td></tr>
+<tr><td><code>requirements.txt</code></td><td>Dipendenze Python (claude-agent-sdk + python-dotenv)</td></tr>
+<tr><td><a href="materiali-variante-3/competitors.json">competitors.json</a></td><td>Template lista competitor — <strong>da modificare</strong></td></tr>
+<tr><td><a href="materiali-variante-3/team_agenti.py">team_agenti.py</a></td><td>Lo script principale (~50 righe)</td></tr>
+<tr><td><a href="materiali-variante-3/.claude/agents/">.claude/agents/</a></td><td>Stessi 4 sub-agent del Metodo A — riusati senza riscriverli</td></tr>
+<tr><td><a href="materiali-variante-3/esempio-brief.md">esempio-brief.md</a></td><td>Come si presenta l'output atteso</td></tr>
+<tr><td><a href="materiali-variante-3/scheduling/">scheduling/</a></td><td>crontab + workflow GitHub Actions pronti</td></tr>
+</table>
+</section>
+
+<!-- ============================================================ -->
+<section class="community-box">
+<h3>Risorse</h3>
+<p>Tutti i file di questo tutorial — agent definitions, prompt, script Python, workflow GitHub Actions — sono pronti nella nostra <strong>community gratuita Skool</strong>. Scarichi la cartella, lanci Claude Code dentro la cartella del metodo che preferisci, fai 3 minuti di setup guidato.</p>
+<p>Se invece vuoi adattare il pattern al tuo settore (real estate, e-commerce, agenzia marketing, M&amp;A advisory, ecc.), <strong>scrivici</strong>: ti aiutiamo a costruire la tua versione.</p>
+</section>
+
+<footer>
+  <p>Pipeline v3 · PRINCIPALE (video unione 3 metodi: Claude Code + Anthropic SDK + Claude Agent SDK) · 2026-05-05</p>
+</footer>
+
+</body>
+</html>

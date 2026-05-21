@@ -1,0 +1,21 @@
+# === Artefatti privati ===
+# Gli HTML che scarichi da Antigravity possono contenere copy specifico
+# del tuo business — non committarli per default.
+_da_antigravity/
+landing-vincitrice.html
+*.antigravity-artifact.html
+
+# === Archivio varianti scartate ===
+_archivio/
+
+# === Sistema operativo ===
+.DS_Store
+Thumbs.db
+
+# === IDE ===
+.vscode/
+.idea/
+
+# === Log e cache ===
+*.log
+.cache/

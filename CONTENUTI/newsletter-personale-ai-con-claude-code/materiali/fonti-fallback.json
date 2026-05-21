@@ -1,0 +1,23 @@
+{
+  "_descrizione": "Fonti secondarie usate dall'agente empty-day-rescue quando le fonti primarie in fonti.json non hanno novità nelle ultime 48 ore. Posti più informali (Twitter/X, podcast, blog di founder) dove si trova spesso contenuto rilevante anche nelle giornate piatte. Modificabili liberamente con VS Code.",
+  "fonti": [
+    {
+      "nome": "Anthropic on X",
+      "url": "https://x.com/AnthropicAI",
+      "tipo": "social",
+      "descrizione": "Account ufficiale di Anthropic. Spesso annuncia o commenta cose ore prima del blog ufficiale."
+    },
+    {
+      "nome": "Dario Amodei — Blog",
+      "url": "https://www.darioamodei.com",
+      "tipo": "blog-founder",
+      "descrizione": "Saggi lunghi del CEO di Anthropic. Frequenza bassa ma sempre rilevanti."
+    },
+    {
+      "nome": "Latent Space podcast",
+      "url": "https://www.latent.space/podcast",
+      "tipo": "podcast",
+      "descrizione": "Podcast con guest dell'ecosistema AI applicato. Episodi pubblicati settimanalmente."
+    }
+  ]
+}

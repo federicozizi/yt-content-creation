@@ -1,0 +1,19 @@
+# === State and output (private) ===
+state.json
+newsletter/*.md
+
+# === Credentials (if you add optional email) ===
+.env
+.env.*
+!.env.example
+
+# === Operating system ===
+.DS_Store
+Thumbs.db
+
+# === IDE ===
+.vscode/
+.idea/
+
+# === Local Claude Code ===
+.claude/settings.local.json

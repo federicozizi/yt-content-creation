@@ -1,0 +1,28 @@
+# Fallback: use Linux/Mac cron instead of Claude Routines
+#
+# Open your crontab with: crontab -e
+# Add ONE of the lines below.
+# Replace /path/to/materiali with the real path of your folder.
+
+# === Every day at 8:00 ===
+0 8 * * * cd /path/to/materiali && /usr/local/bin/claude --print "$(cat prompts/newsletter-daily.md)" >> /tmp/newsletter.log 2>&1
+
+# === Weekdays only (Mon-Fri) at 8:00 ===
+0 8 * * 1-5 cd /path/to/materiali && /usr/local/bin/claude --print "$(cat prompts/newsletter-daily.md)" >> /tmp/newsletter.log 2>&1
+
+# === Every 3 hours (for very active sources) ===
+0 */3 * * * cd /path/to/materiali && /usr/local/bin/claude --print "$(cat prompts/newsletter-daily.md)" >> /tmp/newsletter.log 2>&1
+
+
+# === ON WINDOWS (Task Scheduler) ===
+# Open "Task Scheduler" → Create task → Daily trigger at 8:00 AM
+# Action: "Start a program"
+#   Program: powershell.exe
+#   Arguments: -Command "cd 'C:\path\to\materiali'; claude --print (Get-Content prompts\newsletter-daily.md -Raw)"
+#   (make sure claude.exe is in the PATH)
+
+
+# === NOTES ===
+# - Verify claude path with: which claude (Mac/Linux) or where claude (Windows)
+# - The log in /tmp/newsletter.log lets you see what happened if the run fails
+# - On Mac, give cron "Full Disk Access" in Privacy & Security

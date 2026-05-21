@@ -1,0 +1,37 @@
+# === Template .gitignore per il progetto Metodo B (Anthropic SDK raw) ===
+# Copia questo file nella radice del progetto che crei (es. competitor-intel-py/)
+# PRIMA di fare il primo `git add`.
+#
+# ⚠️  IMPORTANTE: il file .env contiene API key e password Gmail.
+#     Se lo committi anche solo una volta, le credenziali sono COMPROMESSE
+#     anche dopo averlo rimosso (la storia git resta). Vanno REVOCATE
+#     (Anthropic console + Google App Passwords) e RICREATE.
+
+# === Credenziali (CRITICO) ===
+.env
+.env.*
+!.env.example
+*.pem
+*.key
+
+# === Python ===
+.venv/
+venv/
+__pycache__/
+*.pyc
+*.pyo
+.pytest_cache/
+.mypy_cache/
+
+# === Output del sistema ===
+briefs/
+logs/
+*.log
+
+# === Sistema operativo ===
+.DS_Store
+Thumbs.db
+
+# === IDE ===
+.vscode/
+.idea/

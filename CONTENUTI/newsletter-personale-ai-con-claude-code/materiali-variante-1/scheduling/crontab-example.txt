@@ -1,0 +1,56 @@
+# Schedulazione newsletter.py — esempi per Mac/Linux/Windows
+#
+# Sostituisci /path/to/materiali-variante-1 col path reale della tua cartella.
+# Sostituisci anche il path del Python del venv.
+
+# ====== MAC / LINUX (cron) ======
+# Apri il crontab con: crontab -e
+# Poi incolla UNA di queste righe:
+
+# Ogni giorno alle 8:00
+0 8 * * * cd /path/to/materiali-variante-1 && /path/to/materiali-variante-1/.venv/bin/python newsletter.py >> /tmp/newsletter.log 2>&1
+
+# Solo nei giorni lavorativi
+0 8 * * 1-5 cd /path/to/materiali-variante-1 && /path/to/materiali-variante-1/.venv/bin/python newsletter.py >> /tmp/newsletter.log 2>&1
+
+# Ogni 3 ore (per fonti molto attive)
+0 */3 * * * cd /path/to/materiali-variante-1 && /path/to/materiali-variante-1/.venv/bin/python newsletter.py >> /tmp/newsletter.log 2>&1
+
+
+# ====== WINDOWS (Utilità di pianificazione) ======
+# Apri "Utilità di pianificazione" → Crea attività → Trigger giornaliero ore 8:00
+# Azione "Avvia programma":
+#   Programma: C:\path\to\materiali-variante-1\.venv\Scripts\python.exe
+#   Argomenti: newsletter.py
+#   Inizio in: C:\path\to\materiali-variante-1
+
+
+# ====== SU SERVER (systemd timer, alternativa moderna a cron) ======
+# File: /etc/systemd/system/newsletter.service
+#   [Unit]
+#   Description=Personal AI newsletter
+#
+#   [Service]
+#   Type=oneshot
+#   WorkingDirectory=/path/to/materiali-variante-1
+#   ExecStart=/path/to/materiali-variante-1/.venv/bin/python newsletter.py
+#
+# File: /etc/systemd/system/newsletter.timer
+#   [Unit]
+#   Description=Run newsletter daily at 8:00
+#
+#   [Timer]
+#   OnCalendar=*-*-* 08:00:00
+#   Persistent=true
+#
+#   [Install]
+#   WantedBy=timers.target
+#
+# Poi: sudo systemctl enable --now newsletter.timer
+
+
+# ====== NOTE ======
+# - Verifica il path del Python del venv: which python (Mac/Linux) o where python (Windows)
+# - Il log in /tmp/newsletter.log ti permette di vedere cosa è successo se la run fallisce
+# - Su Mac, dare a cron i permessi di "Full Disk Access" in Privacy & Security
+# - Su Windows, se vuoi che giri anche col PC sospeso: spunta "Esegui anche se non c'è alcun utente connesso"

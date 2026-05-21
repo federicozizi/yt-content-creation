@@ -1,0 +1,10 @@
+# Credenziali OAuth Google (legacy)
+credentials.json
+token.json
+
+# Python
+__pycache__/
+*.pyc
+
+# Claude Code — stato locale macchina (i permessi shared vanno in settings.json)
+.claude/settings.local.json

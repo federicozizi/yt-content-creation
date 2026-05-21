@@ -1,0 +1,567 @@
+<!DOCTYPE html>
+<!-- ⚠️ Gemello inglese: CONTENUTI/claude-code-small-business-3-components/PRINCIPALE.html — sincronizzare ogni modifica. -->
+<html lang="it">
+<head>
+<meta charset="UTF-8">
+<title>Claude Code per piccoli business: le 3 componenti imprescindibili (Step by step)</title>
+<style>
+:root {
+  --primary: #2563eb;
+  --primary-dark: #1d4ed8;
+  --text: #111827;
+  --muted: #6b7280;
+  --bg: #ffffff;
+  --bg-soft: #fafbfc;
+  --border: #e5e7eb;
+  --code-bg: #f3f4f6;
+  --output-bg: #ecfdf5;
+  --output-border: #10b981;
+  --switch-bg: #eff6ff;
+  --switch-border: #93c5fd;
+  --concept-bg: #fef3c7;
+  --concept-border: #f59e0b;
+}
+* { box-sizing: border-box; }
+html { scroll-behavior: smooth; }
+body { font-family: system-ui, -apple-system, "Inter", "Segoe UI", sans-serif; color: var(--text); background: var(--bg); line-height: 1.7; max-width: 880px; margin: 0 auto; padding: 32px 24px 64px; font-size: 16px; }
+h1 { font-size: 1.95rem; margin: 0 0 6px; line-height: 1.2; letter-spacing: -0.01em; }
+h2 { font-size: 1.45rem; margin-top: 48px; padding-bottom: 6px; border-bottom: 2px solid var(--primary); }
+h3 { font-size: 1.2rem; margin-top: 30px; color: var(--primary); }
+h4 { font-size: 1.05rem; margin-top: 20px; }
+p { margin: 12px 0; }
+.subtitle { color: var(--muted); margin-top: 0; font-size: 1rem; }
+nav.toc { display: flex; gap: 16px; flex-wrap: wrap; padding: 12px 0; margin: 18px 0 24px; border-top: 1px solid var(--border); border-bottom: 1px solid var(--border); font-size: 0.9rem; }
+nav.toc a { color: var(--primary); text-decoration: none; font-weight: 500; }
+.metodo-switch { background: var(--switch-bg); border: 1px solid var(--switch-border); border-radius: 8px; padding: 16px 20px; margin: 20px 0; }
+.metodo-switch h2 { margin: 0 0 8px; border: none; padding: 0; font-size: 1.05rem; color: var(--primary-dark); }
+.block { background: var(--bg-soft); border: 1px solid var(--border); border-radius: 8px; padding: 20px 24px; margin: 24px 0; }
+.block h3 { margin-top: 0; }
+.concetto-chiave { background: var(--concept-bg); border-left: 4px solid var(--concept-border); padding: 14px 18px; margin: 16px 0; border-radius: 4px; font-size: 1.04rem; }
+.concetto-chiave strong { color: #92400e; }
+.use-case { background: #fff; border: 1px solid var(--border); border-radius: 6px; padding: 12px 16px; margin: 10px 0; }
+.use-case strong { color: var(--primary-dark); display: block; margin-bottom: 4px; }
+ol.steps { padding-left: 0; counter-reset: step; list-style: none; margin-top: 16px; }
+ol.steps > li { margin-bottom: 22px; padding-left: 38px; position: relative; }
+ol.steps > li::before { counter-increment: step; content: counter(step); position: absolute; left: 0; top: 2px; width: 26px; height: 26px; border-radius: 50%; background: var(--primary); color: white; font-weight: 700; font-size: 0.85rem; display: flex; align-items: center; justify-content: center; }
+ol.steps li > strong:first-child { display: block; margin-bottom: 6px; font-size: 1.02rem; }
+.action { background: #1e293b; color: #e2e8f0; padding: 10px 14px; border-radius: 6px; font-family: "SF Mono", Menlo, monospace; font-size: 0.88rem; margin: 8px 0; overflow-x: auto; white-space: pre-wrap; }
+.action::before { content: "▶  "; color: #38bdf8; }
+.note { background: #fff; padding: 10px 14px; border-radius: 4px; margin: 8px 0; font-size: 0.95rem; border-left: 3px solid var(--primary); }
+.output { background: var(--output-bg); padding: 10px 14px; border-radius: 4px; font-size: 0.92rem; margin: 8px 0; border-left: 3px solid var(--output-border); }
+.output::before { content: "✅  "; font-weight: 700; }
+code { background: var(--code-bg); padding: 2px 6px; border-radius: 3px; font-family: "SF Mono", Menlo, monospace; font-size: 0.92em; }
+.materiali-link { margin-top: 18px; padding-top: 12px; border-top: 1px dashed var(--border); font-size: 0.94rem; }
+.materiali-link::before { content: "📎  "; }
+.diagram { font-family: "SF Mono", Menlo, monospace; background: #0f172a; color: #e2e8f0; padding: 14px; border-radius: 6px; font-size: 0.8rem; white-space: pre; overflow-x: auto; margin: 16px 0; line-height: 1.4; }
+ul.checks { list-style: none; padding-left: 0; }
+ul.checks li { padding: 5px 0; padding-left: 24px; position: relative; }
+ul.checks li::before { content: "✓"; color: var(--output-border); font-weight: 700; position: absolute; left: 0; top: 5px; }
+table.compare { width: 100%; border-collapse: collapse; margin: 16px 0; font-size: 0.92rem; }
+table.compare th, table.compare td { padding: 10px 12px; text-align: left; border-bottom: 1px solid var(--border); vertical-align: top; }
+table.compare th { background: var(--bg-soft); font-weight: 600; color: var(--primary-dark); }
+.community-box { background: #f0fdf4; border: 1px solid #86efac; border-radius: 8px; padding: 18px 22px; margin: 24px 0; }
+.community-box h3 { margin-top: 0; color: #166534; }
+details { background: var(--bg-soft); border: 1px solid var(--border); border-radius: 6px; padding: 12px 16px; margin: 16px 0; }
+details summary { cursor: pointer; font-weight: 600; color: var(--muted); font-size: 0.95rem; }
+details[open] summary { margin-bottom: 12px; }
+footer { margin-top: 48px; padding-top: 18px; border-top: 1px solid var(--border); color: var(--muted); font-size: 0.85rem; text-align: center; }
+@media print { body { max-width: none; padding: 0 16px; font-size: 11pt; } nav.toc, footer { display: none; } .block, .metodo-switch, .community-box { break-inside: avoid; } h2, h3 { break-after: avoid; } .action { background: #f3f4f6; color: #1e293b; border: 1px solid var(--border); } .diagram { background: #f3f4f6; color: #1e293b; } }
+</style>
+</head>
+<body>
+
+<header>
+  <h1>Claude Code per piccoli business: le 3 componenti imprescindibili (Step by step)</h1>
+  <p class="subtitle">Un'infrastruttura AI minima ma vera: un database connesso via MCP, il pacchetto pre-cotto che Anthropic ha appena rilasciato per le piccole imprese, e gli agenti custom in parallelo. Tre pezzi che si parlano.</p>
+</header>
+
+<section class="metodo-switch">
+  <h2>📌 A chi è indirizzato questo video</h2>
+  <p>A te che hai un piccolo business (studio professionale, e-commerce, agenzia, consulenza, artigianato) e usi già Claude Code per esperimenti, ma non hai ancora messo in piedi un sistema vero. Un sistema vero ha tre pezzi: un posto dove tieni i dati specifici del tuo business, un pacchetto di workflow già pronti per le cose comuni, e degli agenti custom per le cose che fai solo tu.</p>
+  <p>Non serve essere uno sviluppatore. Useremo strumenti che vedono interfacce grafiche, comandi a copia-incolla, e un pacchetto che Anthropic ha pre-cucinato esattamente per te. Niente Docker, niente server da gestire, niente codice da capire riga per riga.</p>
+</section>
+
+<nav class="toc">
+  <a href="#cosa-e">Cos'è</a>
+  <a href="#cosa-costruiremo">Cosa costruiremo</a>
+  <a href="#come-funziona">Architettura</a>
+  <a href="#setup">Setup</a>
+  <a href="#step-1">1. Supabase via MCP</a>
+  <a href="#step-2">2. Claude for Small Business</a>
+  <a href="#step-3">3. Agent View</a>
+  <a href="#integrazione">Tutto insieme</a>
+  <a href="#oltre">Altri use case</a>
+  <a href="#riepilogo">Riepilogo</a>
+</nav>
+
+<!-- 1. APERTURA CONCETTUALE -->
+<section id="cosa-e">
+<h2>Cos'è un'"infrastruttura AI" per piccolo business</h2>
+
+<p>Non è un tool. È <strong>tre pezzi che si parlano</strong>. Se ti manca anche solo uno, l'AI resta un giochino: fa la stessa cosa due volte, dimentica quello che ha fatto ieri, non sa dove trovare i dati di un cliente, non riesce a riusare il lavoro che hai pagato l'AI di fare la settimana scorsa.</p>
+
+<div class="concetto-chiave">
+  <strong>La regola di base:</strong> un'infrastruttura AI minima ha 3 strati. (1) <strong>Il tuo dato</strong>: dove vivono i fatti specifici del tuo business — i clienti come li categorizzi tu, le scadenze come le gestisci tu, le particolarità che il tuo settore ha e nessun altro. (2) <strong>I workflow comuni</strong>: paghe, fatture, chiusura mese, briefing — cose che fanno tutti i piccoli business, e che Anthropic ha già scritto al posto tuo. (3) <strong>Gli agenti custom</strong>: per le cose che solo tu fai, in parallelo, quando i pre-cotti non bastano.
+</div>
+
+<p>Tutti e tre devono parlarsi con Claude Code (o con Claude Cowork per il pacchetto pre-cotto). Se un pezzo vive in un silos che l'AI non vede, l'AI non lo può automatizzare.</p>
+</section>
+
+<!-- 2. CASE STUDY -->
+<section id="cosa-costruiremo">
+<h2>Cosa costruiremo oggi</h2>
+
+<p>Per dimostrare il pattern useremo uno <strong>studio di commercialisti</strong> come esempio. 50 clienti, ognuno con le sue particolarità fiscali (regime forfettario, ordinario, scadenze IVA diverse). Oggi il junior dello studio fa la chiusura mensile in 3 giorni di lavoro. Domani la fa l'infrastruttura in 30 minuti, e il junior la revisiona invece di farla.</p>
+
+<div class="diagram">
+  COMPONENTE 1 — SUPABASE (via MCP)
+    Tabelle: clienti, regimi_fiscali, scadenze_custom, note_interne
+    → i dati SPECIFICI dello studio che nessun software fiscale standard conosce
+
+  COMPONENTE 2 — CLAUDE FOR SMALL BUSINESS (Cowork)
+    Workflow standard: /close-month, /invoice-chaser, /monday-brief
+    Connettori: QuickBooks, Google Workspace, HubSpot, DocuSign, ...
+    → fa le cose comuni a TUTTI gli studi, sa già come si fa
+
+  COMPONENTE 3 — AGENT VIEW (Claude Code)
+    Sub-agent: document-classifier, regime-checker, scadenza-allerter
+    → le cose CUSTOM dello studio, in parallelo
+
+  ──────────────────────────────────────────────────
+
+  FLUSSO LUNEDÌ MATTINA:
+
+  /monday-brief  →  legge QuickBooks + Supabase  →  riassume
+                                                     la situazione
+
+  document-classifier (custom)  →  parsa documenti ambigui
+                                    e aggiorna Supabase
+
+  /close-month  →  unisce dati QuickBooks + dati Supabase
+                   custom  →  report finale
+</div>
+
+<p>Lo stesso schema vale per qualunque piccolo business in cui hai (a) particolarità tue che nessun software standard conosce, (b) workflow comuni a tutto il tuo settore, (c) qualcosa di abbastanza tuo da non poter essere automatizzato dai pre-cotti.</p>
+</section>
+
+<!-- 3. ARCHITETTURA -->
+<section id="come-funziona">
+<h2>Come funziona il sistema</h2>
+
+<p>I 3 strati hanno ruoli netti e non si sovrappongono:</p>
+
+<ol>
+  <li><strong>Supabase via MCP</strong> — è il <em>tuo</em> database. Vive in cloud, accessibile dal browser, gratuito fino a 500MB. Ci tieni i dati che sono solo tuoi (categorizzazioni, scadenze, note interne). Claude Code ci parla tramite il <strong>connettore MCP ufficiale</strong> di Supabase — un protocollo aperto che fa leggere e scrivere a Claude direttamente nel DB, senza che tu scriva codice.</li>
+  <li><strong>Claude for Small Business</strong> — è il pacchetto che <em>Anthropic ha rilasciato il 13 maggio 2026</em>, dentro Claude Cowork. 15 workflow pronti + 15 skill + 7 connettori (QuickBooks, PayPal, HubSpot, Canva, DocuSign, Google Workspace, Microsoft 365). Fa quello che fanno tutti i piccoli business.</li>
+  <li><strong>Agent View</strong> — è la dashboard di Claude Code che lancia agenti custom in parallelo. La usi quando il pacchetto pre-cotto non copre una cosa che è solo tua, e devi scrivertelo tu (in markdown, non in codice).</li>
+</ol>
+
+<div class="concetto-chiave">
+  <strong>Regola di divisione tra i 3:</strong> se è un dato custom del tuo business → Supabase. Se è un'operazione comune a tutti i piccoli business → Claude for Small Business. Se è un'operazione custom che il pre-cotto non sa fare → Agent View. Sapendo questo, sai dove mettere qualunque cosa.
+</div>
+</section>
+
+<!-- 4. SETUP -->
+<section id="setup">
+<h2>Setup iniziale</h2>
+
+<p>Tre account ti servono, due gratuiti e uno con un costo modesto:</p>
+
+<ul class="checks">
+  <li>Claude Code installato (lo usi già, fatto).</li>
+  <li>Un account Supabase gratuito (<code>supabase.com</code>) — 500MB di DB, illimitato per un piccolo business.</li>
+  <li>Un account Claude Cowork con piano Team (per attivare il pacchetto Small Business). Non funziona con il piano Pro singolo.</li>
+</ul>
+
+<p>Per il setup operativo: lancia <code>claude</code> dentro la cartella <code>materiali/</code> e digli <em>"esegui il setup leggendo CLAUDE.md"</em>. Ti guida lui passo passo — Supabase, MCP, attivazione del pacchetto, sub-agent custom — in ~30 minuti.</p>
+</section>
+
+<!-- 5. STEP 1 — SUPABASE VIA MCP -->
+<section class="block" id="step-1">
+<h3>Step 1 — Supabase via MCP connector: il tuo dato strutturato</h3>
+
+<p>Il primo strato è il database del tuo business. Non i tuoi conti correnti (quelli stanno in banca), non le tue fatture (quelle stanno in QuickBooks). Sono i fatti <em>tuoi</em> che nessun software standard conosce: come categorizzi i clienti, quali scadenze custom segui, le note interne che condividi col team.</p>
+
+<div class="concetto-chiave">
+  <strong>Cos'è Supabase + MCP:</strong> Supabase è un servizio cloud che ti dà un database PostgreSQL pronto all'uso, accessibile dal browser, con un pannello visuale per creare tabelle senza scrivere SQL. <strong>MCP (Model Context Protocol)</strong> è un protocollo aperto che permette a Claude di parlare con servizi esterni: Supabase ha un MCP connector ufficiale che, una volta installato, fa leggere e scrivere a Claude direttamente nel DB.
+</div>
+
+<h4>Perché meglio di Excel (5 motivi concreti)</h4>
+
+<table class="compare">
+  <thead>
+    <tr><th>Aspetto</th><th>Excel / Fogli Google</th><th>Supabase via MCP</th></tr>
+  </thead>
+  <tbody>
+    <tr>
+      <td>Cercare un dato</td>
+      <td>Ctrl+F nel file giusto (se ti ricordi qual è)</td>
+      <td>Una query, anche tra 50.000 righe, in 50 ms</td>
+    </tr>
+    <tr>
+      <td>Più persone insieme</td>
+      <td>Conflitti, "modifica fatta da X", versioni diverse</td>
+      <td>Tutti scrivono allo stesso DB, nessun conflitto</td>
+    </tr>
+    <tr>
+      <td>Storico modifiche</td>
+      <td>"Chi ha cambiato quella cella?" → mistero</td>
+      <td>Audit log automatico, sai chi e quando</td>
+    </tr>
+    <tr>
+      <td>L'AI ci scrive sopra</td>
+      <td>L'AI deve scaricare il file, modificarlo, ricaricarlo</td>
+      <td>Diretto: Claude fa <code>SELECT</code>/<code>INSERT</code> via MCP, in tempo reale</td>
+    </tr>
+    <tr>
+      <td>Crescere</td>
+      <td>A 10.000 righe Excel inizia a soffrire. A 100.000 si pianta</td>
+      <td>Milioni di righe senza scomporsi</td>
+    </tr>
+  </tbody>
+</table>
+
+<h4>Nel nostro caso</h4>
+<p>Creiamo 4 tabelle nel DB dello studio commercialisti: <code>clienti</code> (anagrafica + regime fiscale + note), <code>regimi_fiscali</code> (lookup table dei regimi italiani con le loro regole), <code>scadenze_custom</code> (scadenze specifiche dello studio che non sono nello scadenziario fiscale standard), <code>note_interne</code> (commenti del team su ciascun cliente). Lo schema è in <code>materiali/schema-aziendale.sql</code>: lo apri nel pannello SQL di Supabase, click su Run, ed è creato.</p>
+
+<h4>Cosa fare</h4>
+<ol class="steps">
+  <li><strong>Crea il progetto Supabase</strong>
+    <div class="note">Vai su <code>supabase.com</code>, "New project", scegli regione vicino a te (Frankfurt o Milano per l'Italia), imposta una password di DB e annotala.</div>
+  </li>
+  <li><strong>Carica lo schema aziendale</strong>
+    <div class="note">Pannello "SQL Editor" → "New query" → incolla il contenuto di <code>materiali/schema-aziendale.sql</code> → Run. 4 tabelle create + relazioni + indici.</div>
+  </li>
+  <li><strong>Copia URL e Service Role Key</strong>
+    <div class="note">Settings → API → copia <code>Project URL</code> e <code>service_role key</code>. Li metterai in <code>.env</code> (mai a video — sono chiavi che danno accesso totale al DB).</div>
+  </li>
+  <li><strong>Installa il connettore MCP di Supabase</strong>
+    <div class="action">claude mcp add supabase</div>
+    <div class="note">Ti chiede URL e key (già copiate). Da quel momento Claude Code ha accesso letto-scrittura al DB tramite MCP. Lo schema delle tabelle, le righe, le query — tutto visibile.</div>
+  </li>
+  <li><strong>Verifica</strong>
+    <div class="action">claude
+> "Mostrami le tabelle del DB Supabase e quante righe hanno"</div>
+    <div class="output">📊 4 tabelle: clienti (0), regimi_fiscali (5), scadenze_custom (0), note_interne (0). MCP connector funzionante.</div>
+  </li>
+</ol>
+
+<p class="materiali-link">Schema SQL completo: <a href="materiali/schema-aziendale.sql">materiali/schema-aziendale.sql</a> · Come funziona MCP nel dettaglio: <a href="materiali/docs/supabase-mcp-howto.md">materiali/docs/supabase-mcp-howto.md</a></p>
+</section>
+
+<!-- 6. STEP 2 — CLAUDE FOR SMALL BUSINESS -->
+<section class="block" id="step-2">
+<h3>Step 2 — Claude for Small Business: il pacchetto pre-cotto di Anthropic</h3>
+
+<p>Il secondo strato è una novità importante che cambia il modo in cui un piccolo business si avvicina all'AI. Il 13 maggio 2026 — la settimana scorsa al momento di questo video — Anthropic ha rilasciato <strong>Claude for Small Business</strong>, un pacchetto di workflow e skill già scritti per le cose comuni a tutti i piccoli business. Quello che prima ti costava settimane di scripting custom, ora è un toggle.</p>
+
+<div class="concetto-chiave">
+  <strong>Cos'è in pratica:</strong> dentro Claude Cowork (l'interfaccia browser di Anthropic per team) c'è un plugin chiamato "Small Business". Lo attivi con il comando <code>/smb-onboard</code> e ti porta dentro un'esperienza guidata: ti chiede quali tool del tuo business già paghi, li collega con un click ciascuno, e dopo 10 minuti hai 15 workflow pronti che parlano con QuickBooks, PayPal, HubSpot, Canva, DocuSign, Google Workspace, Microsoft 365.
+</div>
+
+<h4>Cosa contiene (in concreto)</h4>
+
+<p>I 15 workflow sono comandi slash che esegui dentro Cowork. I più usati:</p>
+
+<table class="compare">
+  <thead>
+    <tr><th>Comando</th><th>Cosa fa</th></tr>
+  </thead>
+  <tbody>
+    <tr>
+      <td><code>/monday-brief</code></td>
+      <td>Lunedì mattina, ti dà un riassunto: cassa attuale (legge QuickBooks), fatture in scadenza, lead nuovi nel CRM (legge HubSpot), suggerimento prossima azione.</td>
+    </tr>
+    <tr>
+      <td><code>/close-month</code></td>
+      <td>Chiusura del mese: riconciliazione tra fatture emesse, incassate, pagate ai fornitori. Scrive il "P&L narrative", cioè il commento in linguaggio naturale sul perché i numeri sono quelli.</td>
+    </tr>
+    <tr>
+      <td><code>/invoice-chaser</code></td>
+      <td>Solleciti automatici delle fatture scadute. Scrive l'email personalizzata in base al cliente e al rapporto, ma tu approvi PRIMA che parta. Niente invii automatici alla cieca.</td>
+    </tr>
+    <tr>
+      <td><code>/plan-payroll</code></td>
+      <td>Pianificazione paghe del mese: calcoli, cedolini, scadenze contributi. Si appoggia ai dati del gestionale che hai collegato.</td>
+    </tr>
+    <tr>
+      <td><code>/run-campaign</code></td>
+      <td>Campagne marketing: drafta i testi, genera le grafiche con Canva, segmenta la lista in HubSpot. Tu approvi prima di pubblicare.</td>
+    </tr>
+    <tr>
+      <td><code>/contract-review</code></td>
+      <td>Revisione contratti: legge un PDF in DocuSign, evidenzia clausole rischiose, suggerisce modifiche.</td>
+    </tr>
+  </tbody>
+</table>
+
+<p>I 15 skill sono blocchi più piccoli che si attivano automaticamente dentro i workflow: <em>cash-flow forecasting</em>, <em>margin analysis</em>, <em>lead triage</em>, <em>customer sentiment</em>, <em>tax prep</em>, <em>hiring packet builder</em>, e altri.</p>
+
+<h4>Le 4 garanzie che lo rendono adatto a un piccolo business</h4>
+
+<ul class="checks">
+  <li><strong>I tuoi permessi si propagano</strong>: se un collaboratore non vede una cosa in QuickBooks o Google Drive col suo account, non la vede neanche tramite Claude. Niente buchi di sicurezza creati dall'AI.</li>
+  <li><strong>Approvazione umana obbligatoria</strong> prima che qualcosa esca: nessuna email viene inviata, nessun pagamento elaborato, nessun post pubblicato senza il tuo "OK".</li>
+  <li><strong>Anthropic non si allena sui tuoi dati di business</strong> nei piani Team e Enterprise. I tuoi numeri restano tuoi.</li>
+  <li><strong>Costo</strong>: zero in più rispetto al piano Claude Cowork Team che paghi comunque. È un plugin gratuito dentro un piano che hai già.</li>
+</ul>
+
+<h4>Nel nostro caso</h4>
+<p>Per lo studio commercialisti, attiviamo il pacchetto e colleghiamo: QuickBooks (contabilità clienti dello studio), Google Workspace (Drive condivisa dove i clienti caricano fatture e ricevute, Gmail per inviare i report mensili), DocuSign (firma dei mandati). I 3 workflow che usiamo subito: <code>/monday-brief</code> per il check del lunedì, <code>/invoice-chaser</code> per i solleciti delle fatture dello studio ai propri clienti, <code>/close-month</code> per la chiusura mensile contabile.</p>
+
+<h4>Cosa fare</h4>
+<ol class="steps">
+  <li><strong>Accedi a Claude Cowork</strong>
+    <div class="note">Apri <code>claude.com/cowork</code>, login. Richiede piano Team. Se hai il piano Pro singolo non vedi Cowork — devi upgradare al Team (~25€/utente/mese).</div>
+  </li>
+  <li><strong>Lancia l'onboarding del pacchetto</strong>
+    <div class="action">/smb-onboard</div>
+    <div class="note">Comando da digitare nella chat di Cowork. Parte la procedura guidata che ti chiede quali tool collegare.</div>
+  </li>
+  <li><strong>Collega i tool del tuo business</strong>
+    <div class="note">Selezioni dall'elenco: QuickBooks, Google Workspace, HubSpot, DocuSign, ecc. Ogni collegamento è un click + login OAuth. <strong>Non serve la console di Google Cloud, non servono credentials.json</strong>: Anthropic ha già pre-registrato l'app, tu dai solo il consenso.</div>
+  </li>
+  <li><strong>Prova il primo workflow</strong>
+    <div class="action">/monday-brief</div>
+    <div class="output">📊 Lunedì 18 maggio. Cassa: €12.450. Fatture in scadenza questa settimana: 4 (totale €3.200). Lead nuovi nel CRM: 7. Suggerimento: chiamare per primo Mario Bianchi (lead caldo da 3 giorni). OK a procedere?</div>
+  </li>
+  <li><strong>Espandi gradualmente</strong>
+    <div class="note">Non collegare tutto subito. Parti con 2-3 tool che usi davvero ogni giorno (es. QuickBooks + Google Workspace). Aggiungi gli altri solo quando ti accorgi che ti servono.</div>
+  </li>
+</ol>
+
+<p class="materiali-link">Guida completa al pacchetto, comandi e troubleshooting: <a href="materiali/docs/claude-for-small-business-howto.md">materiali/docs/claude-for-small-business-howto.md</a> · Annuncio ufficiale Anthropic: <a href="https://www.anthropic.com/news/claude-for-small-business">anthropic.com/news/claude-for-small-business</a></p>
+</section>
+
+<!-- 7. STEP 3 — AGENT VIEW -->
+<section class="block" id="step-3">
+<h3>Step 3 — Agent View: gli agenti custom in parallelo</h3>
+
+<p>Il pacchetto pre-cotto copre tantissimo, ma non tutto. Le cose <em>tue</em> — come categorizzi i clienti, come gestisci le particolarità del tuo settore, come parsi un tipo di documento che nessun altro studio gestisce allo stesso modo — quelle te le devi scrivere tu. Per fortuna, "scrivere" qui significa scrivere un file markdown in linguaggio naturale, non codice.</p>
+
+<div class="concetto-chiave">
+  <strong>Cos'è Agent View:</strong> la dashboard di Claude Code che ti permette di lanciare e gestire più agenti AI in parallelo dalla stessa schermata. La apri con <code>claude agents</code>. Ogni agente è un file markdown in <code>.claude/agents/</code> con un nome, una descrizione, i tool che può usare, e le istruzioni in italiano. Lavorano contemporaneamente — uno controlla una cosa, un altro un'altra — e tu li vedi tutti dalla stessa dashboard.
+</div>
+
+<h4>Nel nostro caso</h4>
+<p>Per lo studio commercialisti, scriviamo 3 sub-agent custom che fanno cose che il pacchetto Anthropic non sa fare perché sono troppo specifiche:</p>
+
+<ul class="checks">
+  <li><strong><code>document-classifier</code></strong>: quando un cliente carica un documento ambiguo (es. una "ricevuta" che potrebbe essere fattura semplificata o scontrino fiscale), lo classifica leggendo regole italiane custom e aggiorna Supabase.</li>
+  <li><strong><code>regime-checker</code></strong>: settimanalmente controlla se qualche cliente ha superato le soglie del proprio regime fiscale (es. forfettario sopra 85k) e logga un alert nella tabella <code>note_interne</code> di Supabase per il commercialista titolare.</li>
+  <li><strong><code>scadenza-allerter</code></strong>: ogni mattina legge <code>scadenze_custom</code> da Supabase e prepara una lista delle scadenze del giorno per i singoli soci dello studio, da consegnare via Slack.</li>
+</ul>
+
+<p>Tutti girano in parallelo dalla stessa dashboard <code>claude agents</code>. Tu li vedi lavorare, li interrompi se serve, leggi i loro log, decidi quando far partire un report manuale.</p>
+
+<h4>Anatomia di un sub-agent (markdown semplice)</h4>
+
+<div class="action">---
+name: regime-checker
+description: Controlla soglie regime fiscale per ogni cliente, alert in Supabase
+tools: Read, Write, Bash, mcp__supabase
+---
+
+# Istruzioni
+
+Sei un agente che ogni settimana controlla i regimi fiscali dei clienti
+dello studio.
+
+1. Leggi tabella `clienti` su Supabase: per ogni cliente prendi
+   `regime_fiscale` e `fatturato_anno_corrente`.
+
+2. Confronta col limite del regime (tabella `regimi_fiscali`):
+   - Forfettario: limite 85.000€
+   - Minimi: limite 30.000€
+   - Ordinario: nessun limite
+
+3. Per ogni cliente che ha superato l'80% del limite:
+   - Inserisci una riga in `note_interne` con tipo "alert_soglia"
+     e testo "Cliente X al N% del limite, valutare cambio regime"
+
+4. Genera un log finale: "controllati N clienti, M alert generati".</div>
+
+<h4>Cosa fare</h4>
+
+<ol class="steps">
+  <li><strong>Verifica che la cartella agenti sia presente</strong>
+    <div class="action">ls .claude/agents/</div>
+    <div class="output">document-classifier.md  regime-checker.md  scadenza-allerter.md</div>
+  </li>
+  <li><strong>Personalizza i sub-agent</strong>
+    <div class="note">Apri i 3 file markdown con VS Code. Cambia le istruzioni per adattarle al tuo studio (regimi che usi, soglie tue, dove vuoi gli alert). È markdown, è italiano, è leggibile da chiunque.</div>
+  </li>
+  <li><strong>Apri Agent View</strong>
+    <div class="action">claude agents</div>
+    <div class="note">Vedi una dashboard coi 3 agenti definiti, ognuno con stato "ready". Click su uno per lanciarlo. Più click per lanciarne più di uno in parallelo.</div>
+  </li>
+  <li><strong>Lancia document-classifier sui documenti ambigui</strong>
+    <div class="note">Mentre lui parsa, lancia anche regime-checker. I 2 girano in parallelo. Quando finiscono, leggi i log dalla dashboard.</div>
+  </li>
+  <li><strong>(Opzionale) Schedula gli agenti con Claude Routines</strong>
+    <div class="note">Se vuoi che girino da soli a orari fissi (es. regime-checker ogni lunedì alle 8) — vedi <code>docs/claude-routines-howto.md</code>.</div>
+  </li>
+</ol>
+
+<p class="materiali-link">Sub-agent pronti da personalizzare: <a href="materiali/.claude/agents/document-classifier.md">document-classifier.md</a>, <a href="materiali/.claude/agents/regime-checker.md">regime-checker.md</a>, <a href="materiali/.claude/agents/scadenza-allerter.md">scadenza-allerter.md</a></p>
+</section>
+
+<!-- 8. INTEGRAZIONE -->
+<section id="integrazione">
+<h2>Tutto insieme: come i 3 strati si parlano</h2>
+
+<p>Ora che ognuno dei 3 strati c'è, vediamo il flusso completo per lo studio commercialisti. Ti racconto il lunedì mattina tipico DOPO che l'infrastruttura è in piedi:</p>
+
+<div class="diagram">
+  09:00 — Tu apri Claude Cowork e digiti `/monday-brief`
+          → il pacchetto legge QuickBooks (cassa, fatture)
+          → e legge Supabase (clienti in alert da regime-checker
+                              della settimana scorsa)
+          → ti dice: "cassa 12k, 4 fatture in scadenza,
+                      e attenzione: 2 clienti sono vicini
+                      al limite del forfettario"
+
+  09:15 — Apri Claude Code e lanci `claude agents`
+          → vedi 3 sub-agent custom dormienti
+          → lanci document-classifier sui PDF che i clienti
+            hanno caricato nel weekend in Drive condivisa
+          → lui li classifica, scrive in `documenti` su Supabase
+          → in parallelo regime-checker ricontrolla i fatturati
+            aggiornati e aggiorna `note_interne`
+
+  09:45 — Torni in Cowork e digiti `/invoice-chaser`
+          → il pacchetto legge le fatture insolute da QuickBooks
+          → MA prima di scrivere l'email, controlla
+            `note_interne` su Supabase (via MCP, che funziona
+            sia in Code che in Cowork): se un cliente ha note
+            tipo "tempo difficile, non sollecitare", salta
+          → ti propone 3 email personalizzate
+          → tu approvi, partono
+
+  Fine mese — Lanci `/close-month`
+              → il pacchetto fa la chiusura standard
+                (QuickBooks + scritture)
+              → e poi legge `scadenze_custom` da Supabase
+                per aggiungere al report le particolarità dello studio
+              → report finale generato e salvato su Drive
+                via il connettore Google Workspace del pacchetto
+</div>
+
+<div class="concetto-chiave">
+  <strong>Il momento in cui tutto si tiene insieme:</strong> Supabase è la <em>fonte di verità del tuo business</em> (i fatti che solo tu conosci), il pacchetto Anthropic è il <em>motore dei workflow comuni</em>, Agent View è il <em>motore dei workflow custom</em>. Il ponte tra i 3 è il connettore MCP di Supabase, che funziona allo stesso modo sia dentro Claude Code (per gli agenti custom) sia dentro Claude Cowork (per il pacchetto). I 3 leggono e scrivono lo stesso DB. Niente silos.
+</div>
+
+<h4>Le 3 regole d'oro per non fare casino</h4>
+
+<ol>
+  <li><strong>Niente dato di business solo nei tool collegati al pacchetto.</strong> QuickBooks ha le fatture, HubSpot ha i lead — ma le note tue, le categorizzazioni custom, gli alert specifici devono stare su Supabase. Altrimenti se cambi gestionale domani perdi tutto.</li>
+  <li><strong>Niente operazione comune scritta a mano in custom.</strong> Se esiste un workflow del pacchetto Anthropic che fa già una cosa (es. chiusura mese, sollecito fatture, briefing), NON ri-scriverlo come sub-agent custom. Il pre-cotto è quasi sempre meglio di quanto faresti tu, e Anthropic lo manterrà nel tempo. I custom servono solo per quello che il pacchetto NON copre.</li>
+  <li><strong>Approvazione umana per le cose che escono.</strong> Standard del pacchetto, da replicare anche nei tuoi agenti custom. Mai dare permessi di "manda email a clienti" senza approvazione esplicita per ciascun invio.</li>
+</ol>
+</section>
+
+<!-- 9. GENERALIZZAZIONE -->
+<section id="oltre">
+<h2>Oltre lo studio commercialisti: dove vale lo stesso schema</h2>
+
+<p>L'architettura "Supabase via MCP + Claude for Small Business + Agent View" è agnostica del settore. Cambiano le tabelle Supabase e i sub-agent custom, ma i 3 strati restano.</p>
+
+<div class="use-case">
+  <strong>Studio legale</strong>
+  Supabase: <em>contratti_in_revisione</em>, <em>clausole_critiche_custom</em>, <em>parti_in_lite</em>. Pacchetto: <code>/contract-review</code> per la revisione standard. Custom: sub-agent che riconosce clausole tipiche del diritto italiano (es. clausole vessatorie ex art. 1341 c.c.) che il pacchetto generico non flagga.
+</div>
+
+<div class="use-case">
+  <strong>E-commerce piccolo (Shopify/WooCommerce)</strong>
+  Supabase: <em>fornitori</em>, <em>listini_storici</em>, <em>margini_per_categoria</em>. Pacchetto: <code>/margin-analyzer</code> e <code>/run-campaign</code> per i margini e le promozioni. Custom: sub-agent che parsa i listini PDF dei tuoi fornitori specifici e aggiorna i prezzi su Supabase prima di lanciare le analisi del pacchetto.
+</div>
+
+<div class="use-case">
+  <strong>Agenzia di comunicazione</strong>
+  Supabase: <em>brief_attivi</em>, <em>creativi_team</em>, <em>brand_guidelines</em>. Pacchetto: <code>/run-campaign</code> per le campagne, <code>/monday-brief</code> per la pianificazione settimanale. Custom: sub-agent che legge le brand guidelines da Supabase e controlla che i creativi generati col pacchetto le rispettino.
+</div>
+
+<div class="use-case">
+  <strong>B&B o struttura ricettiva</strong>
+  Supabase: <em>prenotazioni</em>, <em>preferenze_ospiti_ricorrenti</em>, <em>tasse_soggiorno_per_comune</em>. Pacchetto: <code>/close-month</code> per la chiusura mensile e <code>/monday-brief</code> per il check arrivi. Custom: sub-agent che calcola le tasse di soggiorno con le aliquote specifiche del tuo comune (cosa che il pacchetto generico non sa).
+</div>
+
+<div class="use-case">
+  <strong>Artigiano / officina</strong>
+  Supabase: <em>lavori_attivi</em>, <em>tempistiche_per_tipologia</em>, <em>materiali_consumati</em>. Pacchetto: <code>/plan-payroll</code> per le paghe e <code>/invoice-chaser</code> per i pagamenti. Custom: sub-agent che stima il tempo di un lavoro nuovo confrontandolo con lavori storici simili in Supabase.
+</div>
+</section>
+
+<!-- 10. RIEPILOGO -->
+<section id="riepilogo">
+<h2>Riepilogo</h2>
+
+<p>Cosa ti porti a casa da questo video:</p>
+
+<ul class="checks">
+  <li>Un'infrastruttura AI per piccolo business è fatta di <strong>3 strati</strong>, non un singolo tool: dato custom (Supabase via MCP), workflow comuni (Claude for Small Business), agenti custom (Agent View).</li>
+  <li><strong>Supabase via MCP</strong> sostituisce Excel quando i dati diventano seri: l'MCP connector permette a Claude di leggere e scrivere direttamente nel tuo DB, sia dentro Claude Code che dentro Cowork.</li>
+  <li><strong>Claude for Small Business</strong> (rilasciato il 13 maggio 2026) è il pacchetto che Anthropic ha pre-cotto per te: 15 workflow + 15 skill + 7 connettori, gratuito col piano Cowork Team, con approvazione umana sempre richiesta.</li>
+  <li><strong>Agent View</strong> resta per quello che è solo tuo: i sub-agent custom in markdown coprono i casi specifici del tuo settore che il pre-cotto non conosce.</li>
+  <li>Il <strong>ponte</strong> tra i 3 è l'MCP di Supabase: stesso DB letto e scritto sia dagli agenti custom in Code che dai workflow del pacchetto in Cowork.</li>
+</ul>
+</section>
+
+<!-- 11. MATERIALI -->
+<section id="materiali-overview">
+<h2>Materiali allegati</h2>
+
+<table class="compare">
+  <thead>
+    <tr><th>File</th><th>A cosa serve</th></tr>
+  </thead>
+  <tbody>
+    <tr>
+      <td><code>materiali/schema-aziendale.sql</code></td>
+      <td>4 tabelle Supabase pronte (clienti, regimi_fiscali, scadenze_custom, note_interne) — incolla nel SQL Editor di Supabase, run, fatto.</td>
+    </tr>
+    <tr>
+      <td><code>materiali/.env.example</code></td>
+      <td>Template variabili d'ambiente: Supabase URL/key. Copialo in <code>.env</code> e compila.</td>
+    </tr>
+    <tr>
+      <td><code>materiali/.claude/agents/</code></td>
+      <td>I 3 sub-agent custom: document-classifier, regime-checker, scadenza-allerter. Markdown italiano, modificabili a piacere per il tuo settore.</td>
+    </tr>
+    <tr>
+      <td><code>materiali/.claude/mcp.json</code></td>
+      <td>Configurazione del connettore MCP di Supabase. Personalizzabile via <code>.env</code>.</td>
+    </tr>
+    <tr>
+      <td><code>materiali/prompts/</code></td>
+      <td>I 4 prompt operativi (setup Supabase MCP, attivazione pacchetto Small Business, lancio agenti custom, orchestrazione end-to-end).</td>
+    </tr>
+    <tr>
+      <td><code>materiali/docs/</code></td>
+      <td>How-to dettagliati: MCP Supabase, pacchetto Claude for Small Business, quando usare pacchetto vs custom.</td>
+    </tr>
+    <tr>
+      <td><code>materiali/esempio-output.md</code></td>
+      <td>Come si presenta una giornata-tipo dopo che il sistema gira: i log degli agenti, le righe in Supabase, l'output dei workflow del pacchetto.</td>
+    </tr>
+    <tr>
+      <td><code>materiali/PRINCIPALE.html</code></td>
+      <td>Una copia di questa guida, comoda offline mentre lavori.</td>
+    </tr>
+  </tbody>
+</table>
+</section>
+
+<!-- 12. CTA -->
+<section class="community-box">
+  <h3>Vuoi vedere altri sistemi montati così?</h3>
+  <p>Nella <strong>community Skool</strong> trovi le infrastrutture montate da altri piccoli imprenditori che seguono questo canale — schemi Supabase reali per i vari settori, sub-agent custom funzionanti, configurazioni di Claude for Small Business adattate a casi specifici. È il posto dove rispondo alle domande pratiche e dove gli altri membri postano i loro setup.</p>
+  <p>Se hai un caso aziendale tuo e vuoi capire quali tabelle Supabase ti servono davvero, quali agenti custom valgono la pena scrivere, e quali workflow del pacchetto Anthropic ti convengono per il tuo modello di business — posso aiutarti a disegnare tutto in <strong>consulenza diretta</strong>. Partiamo dal tuo business reale, non da un tutorial generico.</p>
+</section>
+
+<footer>
+  Guida generata per il canale YouTube — AI applicata al business. Replicabile, gratuita, senza fronzoli.
+</footer>
+
+</body>
+</html>

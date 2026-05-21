@@ -1,0 +1,457 @@
+<!DOCTYPE html>
+<html lang="it">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1">
+<title>Claude Agents View: il centro di comando per agenti AI in parallelo — Guida</title>
+<style>
+:root {
+  --primary: #2563eb;
+  --primary-dark: #1d4ed8;
+  --primary-light: #dbeafe;
+  --text: #111827;
+  --muted: #6b7280;
+  --bg: #ffffff;
+  --bg-soft: #fafbfc;
+  --border: #e5e7eb;
+  --code-bg: #f3f4f6;
+  --output-bg: #ecfdf5;
+  --output-border: #10b981;
+  --switch-bg: #eff6ff;
+  --switch-border: #93c5fd;
+  --concetto-bg: #f0f9ff;
+  --concetto-border: #2563eb;
+}
+* { box-sizing: border-box; }
+html { scroll-behavior: smooth; }
+body { font-family: system-ui, -apple-system, "Inter", "Segoe UI", sans-serif; color: var(--text); background: var(--bg); line-height: 1.7; max-width: 900px; margin: 0 auto; padding: 32px 28px 64px; font-size: 16.5px; }
+h1 { font-size: 2.1rem; margin: 0 0 8px; line-height: 1.18; letter-spacing: -0.015em; }
+h2 { font-size: 1.55rem; margin-top: 56px; padding-bottom: 8px; border-bottom: 2px solid var(--primary); letter-spacing: -0.01em; }
+h3 { font-size: 1.25rem; margin-top: 32px; color: var(--primary); }
+h4 { font-size: 1.05rem; margin-top: 22px; color: var(--text); font-weight: 600; }
+p { margin: 12px 0; }
+.subtitle { color: var(--muted); margin-top: 0; font-size: 1.05rem; }
+nav.toc { display: flex; gap: 16px; flex-wrap: wrap; padding: 12px 0; margin: 18px 0 24px; border-top: 1px solid var(--border); border-bottom: 1px solid var(--border); font-size: 0.9rem; }
+nav.toc a { color: var(--primary); text-decoration: none; font-weight: 500; }
+nav.toc a:hover { text-decoration: underline; }
+.metodo-switch { background: var(--switch-bg); border: 1px solid var(--switch-border); border-radius: 8px; padding: 16px 20px; margin: 20px 0; }
+.metodo-switch h2 { margin: 0 0 8px; border: none; padding: 0; font-size: 1.05rem; color: var(--primary-dark); }
+.metodo-switch p { margin: 6px 0; font-size: 0.95rem; }
+.metodo-switch ul { list-style: none; padding-left: 0; margin: 8px 0 0; }
+.metodo-switch li { margin: 4px 0; font-size: 0.95rem; }
+.concetto-chiave { background: var(--concetto-bg); border-left: 4px solid var(--concetto-border); border-radius: 4px; padding: 14px 18px; margin: 16px 0; font-size: 1.08rem; line-height: 1.55; color: #0c4a6e; }
+.concetto-chiave strong { color: var(--primary-dark); }
+.block { background: var(--bg-soft); border: 1px solid var(--border); border-radius: 8px; padding: 22px 26px; margin: 26px 0; }
+.block h3 { margin-top: 0; }
+.action { background: #1e293b; color: #e2e8f0; padding: 10px 14px; border-radius: 6px; font-family: "SF Mono", Menlo, Consolas, monospace; font-size: 0.88rem; margin: 8px 0; overflow-x: auto; white-space: pre-wrap; }
+.action code { background: transparent; padding: 0; color: #38bdf8; }
+.action::before { content: "▶  "; color: #38bdf8; user-select: none; font-weight: 600; }
+.output { background: var(--output-bg); padding: 8px 14px; border-radius: 4px; font-size: 0.9rem; margin: 8px 0; border-left: 3px solid var(--output-border); font-family: "SF Mono", Menlo, monospace; }
+.output::before { content: "✅  "; font-family: system-ui, sans-serif; font-weight: 700; }
+code { background: var(--code-bg); padding: 2px 6px; border-radius: 3px; font-family: "SF Mono", Menlo, monospace; font-size: 0.92em; }
+.diagram { font-family: "SF Mono", Menlo, monospace; background: #0f172a; color: #e2e8f0; padding: 14px; border-radius: 6px; font-size: 0.8rem; white-space: pre; overflow-x: auto; margin: 16px 0; line-height: 1.4; }
+ul.checks { list-style: none; padding-left: 0; }
+ul.checks li { padding: 5px 0; padding-left: 24px; position: relative; }
+ul.checks li::before { content: "✓"; color: var(--output-border); font-weight: 700; position: absolute; left: 0; top: 5px; }
+ul.use-cases { list-style: none; padding-left: 0; }
+ul.use-cases li { padding: 12px 16px; margin: 10px 0; background: #fff; border: 1px solid var(--border); border-radius: 6px; }
+ul.use-cases strong { color: var(--primary-dark); }
+table.compare { width: 100%; border-collapse: collapse; margin: 16px 0; font-size: 0.92rem; }
+table.compare th, table.compare td { padding: 10px 12px; text-align: left; border-bottom: 1px solid var(--border); vertical-align: top; }
+table.compare th { background: var(--bg-soft); font-weight: 600; color: var(--primary-dark); }
+ol.steps { counter-reset: step; list-style: none; padding-left: 0; margin: 14px 0; }
+ol.steps > li { counter-increment: step; position: relative; padding: 8px 0 8px 42px; margin: 4px 0; }
+ol.steps > li::before { content: counter(step); position: absolute; left: 0; top: 6px; width: 28px; height: 28px; background: var(--primary); color: white; border-radius: 50%; font-weight: 700; font-size: 0.88rem; display: flex; align-items: center; justify-content: center; }
+ol.steps > li strong { color: var(--primary-dark); }
+.note-box { background: #f0f9ff; border-left: 4px solid #0ea5e9; padding: 10px 14px; margin: 12px 0; font-size: 0.94rem; border-radius: 4px; }
+.warn-box { background: #fef2f2; border-left: 4px solid #ef4444; padding: 10px 14px; margin: 12px 0; font-size: 0.94rem; border-radius: 4px; }
+.shortcut-table { width: 100%; border-collapse: collapse; margin: 16px 0; font-size: 0.92rem; }
+.shortcut-table th, .shortcut-table td { padding: 8px 12px; text-align: left; border-bottom: 1px solid var(--border); }
+.shortcut-table th { background: var(--bg-soft); font-weight: 600; color: var(--primary-dark); }
+.shortcut-table kbd { background: #1e293b; color: #e2e8f0; padding: 2px 8px; border-radius: 4px; font-family: "SF Mono", Menlo, monospace; font-size: 0.85rem; white-space: nowrap; }
+.prereq-section { background: #fffbeb; border: 1px solid #fcd34d; border-radius: 10px; padding: 24px 26px; margin: 32px 0; }
+.prereq-section h2 { color: #78350f; border-bottom: 2px solid #f59e0b; margin-top: 0; }
+.prereq-section h3 { color: #92400e; margin-top: 28px; }
+.community-box { background: #f0fdf4; border: 1px solid #86efac; border-radius: 8px; padding: 18px 22px; margin: 24px 0; }
+.community-box h3 { margin-top: 0; color: #166534; }
+.community-box p { margin: 8px 0; }
+footer { margin-top: 48px; padding-top: 18px; border-top: 1px solid var(--border); color: var(--muted); font-size: 0.85rem; text-align: center; }
+@media print { body { max-width: none; padding: 0 16px; font-size: 11pt; } nav.toc, footer { display: none; } .block, .metodo-switch, .community-box, .concetto-chiave, .prereq-section { break-inside: avoid; } h2, h3 { break-after: avoid; } .action { background: #f3f4f6; color: #1e293b; border: 1px solid var(--border); } .diagram { background: #f3f4f6; color: #1e293b; } }
+</style>
+</head>
+<body>
+
+<header>
+  <h1>Agent View: il centro di comando per i tuoi agenti AI</h1>
+  <p class="subtitle">Dimostrazione pratica: da zero a 4 agenti in parallelo che costruiscono un globo 3D interattivo.</p>
+</header>
+
+<section class="metodo-switch">
+  <h2>3 versioni di questa guida</h2>
+  <p>Stesso obiettivo &mdash; gestire agenti AI in parallelo &mdash; con 3 approcci diversi:</p>
+  <ul>
+    <li><strong>Stai qui &rarr; Agent View</strong> (dashboard visuale, zero codice)</li>
+    <li><a href="VARIANTE-1.html">Variante 1</a> &rarr; CLI background sessions (<code>claude --bg</code> + comandi shell)</li>
+    <li><a href="VARIANTE-2.html">Variante 2</a> &rarr; Approccio programmatico (Agent SDK da Python)</li>
+  </ul>
+</section>
+
+<nav class="toc">
+  <a href="#step-1">1. Cos'è e come si apre</a>
+  <a href="#step-2">2. Primo agente</a>
+  <a href="#step-3">3. Quattro in parallelo</a>
+  <a href="#step-4">4. Leggere la dashboard</a>
+  <a href="#step-5">5. Peek e Reply</a>
+  <a href="#step-6">6. Attach e Detach</a>
+  <a href="#step-7">7. Organizzare</a>
+  <a href="#step-8">8. Spostare sessioni</a>
+  <a href="#step-9">9. Risultato finale</a>
+  <a href="#oltre">Oltre la demo</a>
+</nav>
+
+<!-- ============================================================ -->
+<section class="prereq-section" id="prerequisiti">
+<h2>Prima di partire: installa Claude Code</h2>
+
+<p>Serve solo Claude Code con un piano Pro ($20/mese) o Max ($100/mese). Nient'altro.</p>
+
+<div class="concetto-chiave">
+<strong>Per Agent View serve la CLI, non l'app Desktop.</strong> Agent View &egrave; una dashboard a tutto schermo che prende il controllo del terminale: scorciatoie da tastiera, righe che si aggiornano in tempo reale, pannelli che si aprono e chiudono. Tutto questo funziona davvero solo dentro un terminale vero (PowerShell, Windows Terminal, macOS Terminal, iTerm). L'app Desktop &egrave; pensata per chat normali, non per interfacce TUI come questa.
+</div>
+
+<p>Il bello &egrave; che installare la CLI &egrave; un'operazione da 2 minuti, una volta sola. Poi scrivi <code>claude</code> da qualunque cartella e parte.</p>
+
+<h3>Installazione in 3 step</h3>
+
+<ol class="steps">
+  <li><strong>Installa Node.js</strong> da <a href="https://nodejs.org" target="_blank">nodejs.org</a> (versione LTS, durante l'installazione spunta "Add to PATH"). Verifica con:
+    <div class="action">node --version</div>
+    <p>Deve uscire un numero &ge; 18.</p>
+  </li>
+  <li><strong>Installa Claude Code via npm:</strong>
+    <div class="action">npm install -g @anthropic-ai/claude-code</div>
+  </li>
+  <li><strong>Accedi al tuo account:</strong>
+    <div class="action">claude</div>
+    <p>Al primo lancio si apre il browser per il login. Accedi col tuo account Anthropic (quello con il piano Pro/Max).</p>
+  </li>
+</ol>
+
+<h3>Verifica</h3>
+
+<p>Agent View richiede la versione 2.1.139 o successiva. Se sei su una versione precedente:</p>
+
+<div class="action">claude update</div>
+
+<div class="note-box"><strong>Quanto consuma?</strong> Le sessioni in background usano la stessa quota delle sessioni normali. 4 in parallelo = ~4x il consumo. Con il piano Pro ci stai tranquillo per sprint da 4-5 agenti.</div>
+</section>
+
+<!-- ============================================================ -->
+<!-- STEP 1 -->
+<section class="block" id="step-1">
+<h3>Step 1 &mdash; Cos'è Agent View e come si apre</h3>
+
+<p>Agent View è una dashboard da cui lanci, supervisioni e gestisci più agenti Claude in parallelo. Invece di lavorare in una sessione alla volta, ne lanci quante vuoi e le controlli da un'unica schermata.</p>
+
+<p>Apriamola:</p>
+
+<div class="action">claude agents</div>
+
+<p>Si apre una schermata a tutto terminale. In alto vedi il modello in uso e la directory corrente. Al centro la tabella delle sessioni (vuota, per ora). In basso l'input dove scriverai i task.</p>
+
+<div class="diagram">  Claude Code v2.1.140 · claude-sonnet-4-6 · ~/progetto
+
+  No sessions yet. Type a prompt below to dispatch your first agent.
+
+  > _</div>
+
+<div class="note-box"><strong>Dove sei?</strong> La directory in alto &egrave; quella da cui hai lanciato <code>claude agents</code>. Gli agenti che dispatchi lavoreranno qui dentro. Per il nostro test, lancia il comando da una cartella di lavoro vuota (es. crea una cartella <code>test-agent-view</code> a parte e lancia <code>claude agents</code> da l&igrave;).</div>
+
+<div class="concetto-chiave">
+Da questo momento, <strong>ogni prompt che scrivi qui sotto lancia un agente indipendente</strong>. Non è una chat: è un dispatcher. Scrivi cosa vuoi, premi Invio, e un agente parte a lavorarci da solo.
+</div>
+
+<p>Per uscire da Agent View: premi <kbd>Esc</kbd>. Le sessioni che hai lanciato continuano a lavorare anche dopo che chiudi.</p>
+</section>
+
+<!-- ============================================================ -->
+<!-- STEP 2 -->
+<section class="block" id="step-2">
+<h3>Step 2 &mdash; Lancia il primo agente</h3>
+
+<p>Partiamo con qualcosa di ambizioso. Oggi costruiamo un <strong>globo 3D interattivo della Terra</strong>, navigabile dal browser, con dati reali per ogni paese. E lo facciamo con 4 agenti in parallelo.</p>
+
+<p>Creiamo prima la cartella del progetto. Scrivi nell'input di Agent View:</p>
+
+<div class="action">crea una cartella "globo-interattivo" e dentro crea un globo 3D della Terra con Three.js: rotazione e zoom col mouse, confini dei paesi visibili, sfondo scuro spaziale</div>
+
+<p>Premi Invio. Succedono due cose:</p>
+
+<ol>
+  <li>Una riga appare nella tabella con lo stato <strong>Working</strong> e un'icona animata</li>
+  <li>L'agente inizia a creare file, installare dipendenze, scrivere codice &mdash; tutto da solo</li>
+</ol>
+
+<div class="diagram">  Working
+    ✽ globo-3d              Creating project structure...                  0m
+
+  > _</div>
+
+<p>Tu non devi fare niente. L'agente lavora, tu guardi la riga aggiornarsi.</p>
+</section>
+
+<!-- ============================================================ -->
+<!-- STEP 3 -->
+<section class="block" id="step-3">
+<h3>Step 3 &mdash; Lancia altri 3 agenti in parallelo</h3>
+
+<p>Mentre il primo agente lavora sul globo, lanciamone altri 3. Ognuno fa una cosa diversa, tutti lavorano contemporaneamente.</p>
+
+<p>Scrivi e Invio, uno dopo l'altro:</p>
+
+<div class="action">nella cartella "globo-interattivo", crea un file countries-data.json con i dati di ogni paese del mondo: nome, capitale, popolazione, PIL, continente, bandiera emoji</div>
+
+<div class="action">nella cartella "globo-interattivo", crea un pannello laterale in HTML/CSS: quando clicchi su un paese nel globo 3D, il pannello mostra la sua scheda con tutti i dati dal JSON. Animazione di apertura smooth</div>
+
+<div class="action">nella cartella "globo-interattivo", costruisci una landing page index.html che contiene il globo, il pannello dati, un titolo "Esplora il Mondo", una barra di ricerca paesi, layout responsive, dark mode elegante</div>
+
+<p>Adesso la dashboard mostra 4 righe. Quattro agenti lavorano contemporaneamente:</p>
+
+<div class="diagram">  Working
+    ✽ globo-3d              Building Three.js scene with country meshes    3m
+    ✽ dati-paesi             Fetching country data, 120/195 done...        2m
+    ✽ pannello-dati          Creating sidebar component with animations    1m
+    ✽ landing-page           Writing index.html with responsive layout     0m
+
+  > _</div>
+
+<div class="concetto-chiave">
+Ecco il punto: <strong>4 agenti che lavorano nello stesso momento</strong>. Ognuno nel suo spazio isolato (worktree git separato), senza pestarsi i piedi. Tu supervisioni da qui.
+</div>
+</section>
+
+<!-- ============================================================ -->
+<!-- STEP 4 -->
+<section class="block" id="step-4">
+<h3>Step 4 &mdash; Leggere la dashboard</h3>
+
+<p>Dopo qualche minuto, la dashboard si riorganizza. Le sessioni si raggruppano per stato: prima quelle che hanno bisogno di te, poi quelle che lavorano, poi quelle finite.</p>
+
+<div class="diagram">  Needs input
+    ✻ pannello-dati          needs input: dark theme or light theme?        4m
+
+  Working
+    ✽ globo-3d              Adding country hover effects and labels        5m
+
+  Completed
+    ✻ dati-paesi             result: 195 countries saved to JSON            3m
+    ✻ landing-page           result: index.html with hero section done      6m</div>
+
+<p>Tutto quello che ti serve è in questa schermata:</p>
+
+<ul>
+  <li><strong>Icona animata <code>✽</code></strong> = l'agente sta lavorando attivamente</li>
+  <li><strong>Icona gialla <code>✻</code></strong> = l'agente ti sta facendo una domanda</li>
+  <li><strong>Icona verde <code>✻</code></strong> = ha finito con successo</li>
+  <li><strong>Icona rossa <code>✻</code></strong> = qualcosa è andato storto</li>
+</ul>
+
+<p>Il riassunto di ogni riga si aggiorna automaticamente ogni 15 secondi. Non devi aprire nessuna sessione per sapere a che punto è.</p>
+</section>
+
+<!-- ============================================================ -->
+<!-- STEP 5 -->
+<section class="block" id="step-5">
+<h3>Step 5 &mdash; Peek e Reply: rispondi senza uscire</h3>
+
+<p>L'agente "pannello-dati" ha bisogno di una risposta. Invece di entrare nella sessione, usiamo il <strong>peek</strong>: un pannello rapido che mostra la domanda e ti fa rispondere senza lasciare la dashboard.</p>
+
+<p>Seleziona la riga "pannello-dati" con le frecce <kbd>&uarr;</kbd><kbd>&darr;</kbd>, poi premi <kbd>Spazio</kbd>:</p>
+
+<div class="diagram">  ┌─ pannello-dati ───────────────────────────────┐
+  │                                                │
+  │  The globe uses a dark space background.       │
+  │  Should the country info panel match?          │
+  │                                                │
+  │  1. Dark theme (matches the globe)             │
+  │  2. Light theme (contrast, easier to read)     │
+  │                                                │
+  │  [1] [2]                                       │
+  │                                                │
+  │  > _                                           │
+  └────────────────────────────────────────────────┘</div>
+
+<p>Premi <kbd>1</kbd> per scegliere dark theme. L'agente riparte subito, tu resti sulla dashboard.</p>
+
+<h4>Altre cose che puoi fare dal peek</h4>
+
+<ul>
+  <li><kbd>&uarr;</kbd> / <kbd>&darr;</kbd> &mdash; scorri tra le sessioni senza chiudere il pannello</li>
+  <li><kbd>Tab</kbd> &mdash; auto-completa con una risposta suggerita, la modifichi e premi Invio</li>
+  <li>Scrivi qualcosa di personalizzato &mdash; es. <em>"dark theme ma con bordi azzurri"</em></li>
+  <li>Prefisso <code>!</code> &mdash; manda un comando da terminale invece di un messaggio</li>
+</ul>
+</section>
+
+<!-- ============================================================ -->
+<!-- STEP 6 -->
+<section class="block" id="step-6">
+<h3>Step 6 &mdash; Attach e Detach: entra dentro una sessione</h3>
+
+<p>A volte il peek non basta e vuoi la conversazione completa. Seleziona una riga e premi <kbd>Invio</kbd> (o <kbd>&rarr;</kbd>):</p>
+
+<p>La dashboard scompare e ti trovi <strong>dentro la sessione</strong>, esattamente come se avessi aperto Claude Code normalmente. Claude ti fa un breve recap di cosa ha fatto mentre eri via.</p>
+
+<p>Da qui puoi fare tutto: dare istruzioni, correggere, chiedere modifiche, lanciare comandi. È una sessione Claude Code completa.</p>
+
+<h4>Per tornare alla dashboard</h4>
+
+<p>Premi <kbd>&larr;</kbd> su un prompt vuoto. Torni alla tabella, la sessione continua a lavorare in background.</p>
+
+<div class="concetto-chiave">
+<strong>Staccarsi non ferma mai la sessione.</strong> <kbd>&larr;</kbd>, <kbd>Ctrl+C</kbd>, <kbd>Ctrl+D</kbd>, <code>/exit</code>: tutti ti riportano alla dashboard ma l'agente continua. L'unico modo per fermarlo davvero è <code>/stop</code>.
+</div>
+
+<div class="note-box"><strong>Scorciatoia:</strong> <kbd>Alt+1</kbd> fino a <kbd>Alt+9</kbd> attacca direttamente alla sessione 1-9 senza selezionarla prima.</div>
+</section>
+
+<!-- ============================================================ -->
+<!-- STEP 7 -->
+<section class="block" id="step-7">
+<h3>Step 7 &mdash; Organizzare la dashboard</h3>
+
+<p>Con molte sessioni la lista si allunga. Ecco come tenerla pulita:</p>
+
+<table class="shortcut-table">
+<tr><th>Scorciatoia</th><th>Cosa fa</th></tr>
+<tr><td><kbd>Ctrl+T</kbd></td><td><strong>Pinna</strong> una sessione in cima &mdash; la ritrovi sempre per prima</td></tr>
+<tr><td><kbd>Ctrl+R</kbd></td><td><strong>Rinomina</strong> una sessione &mdash; utile quando il nome automatico non dice molto</td></tr>
+<tr><td><kbd>Ctrl+S</kbd></td><td><strong>Cambia raggruppamento</strong> &mdash; alterna tra "per stato" e "per cartella"</td></tr>
+<tr><td><kbd>Shift+&uarr;</kbd> / <kbd>Shift+&darr;</kbd></td><td><strong>Riordina</strong> le sessioni dentro un gruppo</td></tr>
+<tr><td><kbd>Ctrl+X</kbd></td><td><strong>Ferma</strong> una sessione &mdash; premilo 2 volte in 2 secondi per <strong>eliminarla</strong></td></tr>
+<tr><td><kbd>?</kbd></td><td>Mostra <strong>tutte le scorciatoie</strong> disponibili</td></tr>
+</table>
+
+<h4>Filtra per trovare subito</h4>
+
+<p>Scrivi nell'input senza premere Invio e la lista si filtra in tempo reale:</p>
+
+<ul>
+  <li><code>s:working</code> &mdash; solo le sessioni attive</li>
+  <li><code>s:blocked</code> &mdash; solo quelle che hanno bisogno di te</li>
+  <li><code>a:nome-agente</code> &mdash; sessioni di un sub-agent specifico</li>
+  <li><code>#123</code> o un URL di PR &mdash; la sessione che lavora su quella pull request</li>
+</ul>
+
+<div class="warn-box"><strong>Attenzione:</strong> quando elimini una sessione (doppio <kbd>Ctrl+X</kbd>), il suo worktree viene cancellato con tutto il codice non salvato. Fai commit o push prima di eliminare.</div>
+</section>
+
+<!-- ============================================================ -->
+<!-- STEP 8 -->
+<section class="block" id="step-8">
+<h3>Step 8 &mdash; Spostare sessioni dentro e fuori Agent View</h3>
+
+<p>Agent View non è un mondo chiuso. Puoi spostare sessioni in entrambe le direzioni.</p>
+
+<h4>Da una sessione normale &rarr; dentro Agent View</h4>
+
+<p>Stai lavorando in una sessione Claude Code classica e vuoi spostarla nella dashboard? Scrivi:</p>
+
+<div class="action">/bg</div>
+
+<p>La sessione diventa una riga in Agent View. Puoi anche dare un'ultima istruzione prima di spostarla:</p>
+
+<div class="action">/bg finisci il refactoring e poi fai commit</div>
+
+<h4>Da Agent View &rarr; sessione normale</h4>
+
+<p>Attacca la sessione (<kbd>Invio</kbd>), poi lavori normalmente. Quando hai finito, <kbd>&larr;</kbd> la rimette nella dashboard.</p>
+
+<h4>Lancia direttamente dal terminale</h4>
+
+<p>Non sei in Agent View ma vuoi lanciare un agente in background:</p>
+
+<div class="action">claude --bg "crea un file README.md per il progetto globo-interattivo"</div>
+
+<div class="output">backgrounded &middot; 7c5dcf5d</div>
+
+<p>La sessione parte subito e la ritrovi nella dashboard la prossima volta che apri <code>claude agents</code>.</p>
+</section>
+
+<!-- ============================================================ -->
+<!-- STEP 9 -->
+<section class="block" id="step-9">
+<h3>Step 9 &mdash; Il risultato finale</h3>
+
+<p>A questo punto la dashboard dovrebbe mostrare tutti gli agenti completati:</p>
+
+<div class="diagram">  Completed
+    ✻ globo-3d              result: 3D globe with country borders ready    12m
+    ✻ dati-paesi             result: 195 countries in JSON                  3m
+    ✻ pannello-dati          result: dark sidebar with smooth animations    8m
+    ✻ landing-page           result: responsive page with search bar       10m</div>
+
+<p>Quattro agenti, tutti verdi. Hanno lavorato contemporaneamente: il tempo totale è quello dell'agente più lento (~12 minuti), non la somma di tutti (~33 minuti).</p>
+
+<p>Apri la cartella <code>globo-interattivo</code> e lancia <code>index.html</code> nel browser. Hai un globo 3D navigabile con dati reali per ogni paese &mdash; costruito in 12 minuti da 4 agenti che non sapevano nemmeno l'uno dell'altro.</p>
+
+<div class="concetto-chiave">
+Il punto non è il globo. Il punto è che hai <strong>gestito 4 lavoratori AI dalla stessa schermata</strong>, hai risposto alle loro domande, hai controllato i risultati, e hai ottenuto in 12 minuti quello che normalmente richiede un'ora. Questo funziona con qualunque progetto.
+</div>
+</section>
+
+<!-- ============================================================ -->
+<section id="oltre">
+<h2>Oltre la demo: dove usare Agent View</h2>
+
+<p>Il globo 3D era la dimostrazione. Agent View funziona ovunque hai <strong>task indipendenti che un AI può fare senza supervisione costante</strong>.</p>
+
+<ul class="use-cases">
+  <li>
+    <strong>Content creation in parallelo</strong> &mdash; Un agente scrive l'articolo, uno prepara i post social, uno crea le email. Supervisioni dalla dashboard, raccogli tutto a fine mattinata.
+  </li>
+  <li>
+    <strong>Ricerca multi-fonte</strong> &mdash; Un agente analizza i competitor, uno raccoglie dati di pricing, uno monitora i social. Ognuno lavora sulla sua fonte, tu raccogli il brief.
+  </li>
+  <li>
+    <strong>Multi-progetto</strong> &mdash; Apri Agent View dalla cartella che contiene tutti i tuoi progetti. Lancia task in repo diversi con <code>@nome-repo</code>. Una dashboard per tutto.
+  </li>
+  <li>
+    <strong>Sprint di sviluppo</strong> &mdash; 5 sessioni su moduli diversi: fix, feature, test, docs, review. I worktree isolati evitano conflitti.
+  </li>
+  <li>
+    <strong>Preparazione di una release</strong> &mdash; Un agente fa review, uno lancia i test, uno aggiorna la documentazione, uno prepara le release notes. Mezza giornata compressa in 15 minuti.
+  </li>
+</ul>
+
+<p>Il pattern è sempre lo stesso: identifica i task indipendenti, lanciali, supervisiona, raccogli.</p>
+</section>
+
+<!-- ============================================================ -->
+<section id="riepilogo">
+<h2>Riepilogo</h2>
+
+<ul class="checks">
+  <li><code>claude agents</code> apre la dashboard &mdash; da lì lanci, supervisioni, gestisci</li>
+  <li>Ogni prompt nell'input lancia un agente indipendente che lavora da solo</li>
+  <li><kbd>Spazio</kbd> per peek e risposte rapide, <kbd>Invio</kbd> per entrare nella sessione</li>
+  <li><kbd>&larr;</kbd> per tornare alla dashboard senza fermare l'agente</li>
+  <li><code>/bg</code> per spostare una sessione esistente dentro Agent View</li>
+  <li><code>claude --bg "prompt"</code> per lanciare dal terminale senza aprire la dashboard</li>
+  <li>Le sessioni continuano anche quando chiudi Agent View</li>
+</ul>
+</section>
+
+<!-- ============================================================ -->
+<section class="community-box">
+<h3>Risorse</h3>
+<p>Vuoi approfondire Agent View e altri pattern di automazione AI? Entra nella nostra <strong>community gratuita Skool</strong>: dentro trovi workflow pronti, esempi di prompt, e una rete di persone che usano Claude Code ogni giorno.</p>
+<p>Se vuoi impostare Agent View per il tuo workflow specifico, <strong>scrivici</strong>: ti aiutiamo a configurare il setup giusto per il tuo lavoro.</p>
+</section>
+
+<footer>
+  <p>Pipeline v3 &middot; PRINCIPALE (Claude Agents View) &middot; 2026-05-13</p>
+</footer>
+
+</body>
+</html>

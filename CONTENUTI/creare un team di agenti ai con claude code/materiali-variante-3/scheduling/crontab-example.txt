@@ -1,0 +1,5 @@
+# Edita con: crontab -e
+# Lancia il team ogni giorno alle 7:05 del mattino, locale.
+# Sostituisci /percorso/al/progetto col percorso reale.
+
+5 7 * * * cd /percorso/al/progetto && /percorso/al/.venv/bin/python team_agenti.py >> logs/run.log 2>&1

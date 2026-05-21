@@ -1,0 +1,22 @@
+{
+  "fonti": [
+    {
+      "nome": "Anthropic News",
+      "url": "https://www.anthropic.com/news",
+      "categoria": "product",
+      "descrizione": "Annunci ufficiali di prodotto, lanci, partnership"
+    },
+    {
+      "nome": "Anthropic Research",
+      "url": "https://www.anthropic.com/research",
+      "categoria": "research",
+      "descrizione": "Paper di ricerca su sicurezza AI, alignment, capability"
+    },
+    {
+      "nome": "Claude Code Changelog",
+      "url": "https://docs.claude.com/en/release-notes/claude-code",
+      "categoria": "changelog",
+      "descrizione": "Note di rilascio di Claude Code (feature, bug fix, breaking changes)"
+    }
+  ]
+}
