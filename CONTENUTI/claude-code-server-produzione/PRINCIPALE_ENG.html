@@ -1,0 +1,205 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8">
+<title>Claude Code in production - Director's guide</title>
+<style>
+  :root { --bg: #fafaf9; --ink: #1a1a1a; --ink-soft: #555; --accent: #d97706; --accent-soft: #fef3c7; --line: #e5e5e5; --green: #15803d; --green-soft: #dcfce7; --blue: #1d4ed8; --blue-soft: #dbeafe; --red: #dc2626; --red-soft: #fee2e2; }
+  * { box-sizing: border-box; }
+  body { font-family: -apple-system, BlinkMacSystemFont, "Segoe UI", Roboto, sans-serif; background: var(--bg); color: var(--ink); max-width: 900px; margin: 0 auto; padding: 40px 24px 120px; line-height: 1.55; font-size: 17px; }
+  h1 { font-size: 32px; margin: 0 0 4px; letter-spacing: -0.02em; }
+  .sottotitolo { color: var(--ink-soft); font-size: 16px; margin-bottom: 32px; }
+  .badge-intro { display: inline-block; background: var(--accent-soft); color: var(--accent); padding: 4px 10px; border-radius: 6px; font-weight: 600; font-size: 13px; text-transform: uppercase; letter-spacing: 0.05em; margin-bottom: 12px; }
+  .step-numero { display: inline-block; background: var(--ink); color: white; padding: 6px 12px; border-radius: 6px; font-weight: 700; font-size: 14px; margin-bottom: 12px; }
+  section.intro { background: linear-gradient(180deg, #fff 0%, var(--accent-soft) 100%); border: 2px solid var(--accent); border-radius: 12px; padding: 28px; margin: 24px 0 40px; }
+  section.step { border: 1px solid var(--line); background: white; border-radius: 10px; padding: 24px; margin: 24px 0; }
+  section.step.problema { border-left: 6px solid var(--red); }
+  section.cta { background: var(--green-soft); border: 2px solid var(--green); border-radius: 12px; padding: 28px; margin: 40px 0 24px; }
+  .blocco { margin: 16px 0; }
+  .blocco-label { font-size: 12px; font-weight: 700; text-transform: uppercase; letter-spacing: 0.08em; color: var(--ink-soft); margin-bottom: 6px; }
+  .blocco.mostrare .blocco-label { color: var(--blue); }
+  .blocco.mostrare { background: var(--blue-soft); border-left: 4px solid var(--blue); padding: 12px 16px; border-radius: 4px; }
+  .blocco.dire { background: #fafafa; border-left: 4px solid var(--ink); padding: 14px 18px; border-radius: 4px; font-size: 18px; line-height: 1.6; }
+  .blocco.dire p { margin: 0 0 12px; }
+  .blocco.dire p:last-child { margin-bottom: 0; }
+  .nota { font-size: 14px; color: var(--ink-soft); font-style: italic; margin-top: 8px; }
+</style>
+</head>
+<body>
+
+<h1>Have you ever put Claude Code on a real production server? I did.</h1>
+<div class="sottotitolo">Director's guide - for recording. Not a public document.</div>
+
+
+<!-- INTRO -->
+<section class="intro">
+  <div class="badge-intro">Intro - under 1 minute</div>
+  <h2 style="margin-top:0">Opening (story, not funnel)</h2>
+  <div class="blocco mostrare">
+    <div class="blocco-label">What to show on screen</div>
+    <p>CAMERA on you. No graphics. Direct eye contact. After 20 seconds, quick cut to a scene: SSH terminal open with Claude Code running, an email notification arriving "Price Report - 7 variations found", a simple API consumption chart. Back to full CAMERA.</p>
+  </div>
+  <div class="blocco dire">
+    <div class="blocco-label">What to say (verbatim)</div>
+    <p>"Four months ago I decided to do something that, from what I see online, few Claude Code users ever actually do: put Claude on a real production server, running twenty-four hours a day without me sitting in front of it. Use case: a competitor price scraper for a client — every night at four in the morning it visits three sites, extracts prices, and if something important changes it emails me."</p>
+    <p>"Thirty days of consecutive execution have passed. Good things: the system works, it found seven significant price variations that would have cost hours of manual analysis. Less good things: I banged my head three times in ways I didn't expect, and I had to learn five rules that I now ALWAYS apply when I put Claude in production."</p>
+    <p>"In this video I'll tell you the honest story — what worked, what blew up, and the five rules at the end. Five rules that, if you follow them, save you a month of mistakes. The config files I used — settings.json, CLAUDE.md, the actual task prompt — are in the materials in description. Let's go."</p>
+  </div>
+  <div class="nota">Voice test: read aloud in 55-65 seconds. Low-medium energy, "honest personal story" tone. The line "I banged my head three times" is essential — opens the curiosity loop and builds credibility. Don't skip it.</div>
+</section>
+
+
+<!-- STEP 1 -->
+<section class="step">
+  <div class="step-numero">STEP 1</div>
+  <h2 style="margin-top:0">Where I started — the client's problem</h2>
+  <div class="blocco mostrare">
+    <div class="blocco-label">What to show on screen</div>
+    <p>CAMERA on you. Maybe a small overlay with a photo/illustration of "sporting goods store" while you tell the case. Nothing more. The story matters, not the graphics.</p>
+  </div>
+  <div class="blocco dire">
+    <div class="blocco-label">What to say (verbatim)</div>
+    <p>"The client in question is a small sporting goods e-commerce — running shoes, technical apparel, accessories. They have three direct competitors they monitor by hand: once a week, the owner's wife opens the three sites, copies the prices of the sixty key products, drops them into an Excel sheet, and circles in red the ones where they're priced above the market."</p>
+    <p>"He tells me: 'Federico, this thing costs my wife one afternoon a week. Can it be automated with our AI friend?'. Easy answer: sure, just scheduled scraping. Real answer, more complicated: yes, but if you want it to run on its own 24/7 with no excuses, you need a production setup, and in the YouTube content out there in Italian no one explains it well."</p>
+    <p>"I decide to do it myself, experiment first-hand, and then tell you about it. That's what you're watching right now."</p>
+  </div>
+</section>
+
+
+<!-- STEP 2 -->
+<section class="step">
+  <div class="step-numero">STEP 2</div>
+  <h2 style="margin-top:0">Initial setup — a 6 dollar VPS</h2>
+  <div class="blocco mostrare">
+    <div class="blocco-label">What to show on screen</div>
+    <p>Sequence:</p>
+    <ul style="margin-top:8px">
+      <li>Screen: digitalocean.com -> Create Droplet -> Ubuntu 22.04 -> Frankfurt -> 6 USD/month</li>
+      <li>Local terminal: `ssh root@<ip>` (show the prompt changing, you're in)</li>
+      <li>`sudo adduser claude` (creating non-root user)</li>
+      <li>`su - claude` (switching to non-root user)</li>
+      <li>NVM + Node + Claude Code install (cut the wait in edit)</li>
+      <li>`claude --version` -> version shows up</li>
+    </ul>
+  </div>
+  <div class="blocco dire">
+    <div class="blocco-label">What to say (verbatim)</div>
+    <p>"First decision: where to run Claude Code. I could have used my home desktop, but if my wife unplugs the outlet or the power goes out, scraping doesn't run. So VPS. DigitalOcean at six dollars a month, Frankfurt region because it's the closest to me geographically — Italian sites respond faster."</p>
+    <p>"Base VPS setup: Ubuntu twenty-two, SSH key, no password — only certificate access. When the VPS is up, I do something I always recommend before touching anything else: I create a dedicated user called 'claude'. I never work as 'root'. This is also rule number one of the five I'll tell you at the end — spoiler: it's the rule that saved me once where it would have been the only thing protecting me."</p>
+    <p>"I install Node Version Manager, Node twenty, and Claude Code. Three commands. Five minutes. Verify with claude dash version — it responds, I'm operational."</p>
+  </div>
+</section>
+
+
+<!-- STEP 3 -->
+<section class="step">
+  <div class="step-numero">STEP 3</div>
+  <h2 style="margin-top:0">Things that work right away — first email report arrives</h2>
+  <div class="blocco mostrare">
+    <div class="blocco-label">What to show on screen</div>
+    <p>Split screen:</p>
+    <ul style="margin-top:8px">
+      <li>Left: VPS terminal showing Claude Code running in headless mode (`claude --headless -f scraper-prompt.md`). Logs show "Reading competitors.json", "Fetching Competitor A...", "Found price 49.90 EUR for product X"</li>
+      <li>Right: after 3 minutes, an email notification arrives on phone / Gmail: subject "Price Report - 5 variations found"</li>
+      <li>Open the mail, show the nicely formatted markdown report: list of variations with before/after</li>
+    </ul>
+  </div>
+  <div class="blocco dire">
+    <div class="blocco-label">What to say (verbatim)</div>
+    <p>"First run, manually. I launch claude dash dash headless with a prompt file I wrote in twenty minutes — show me three competitor URLs, extract prices of listed products, compare with previous database, send email if there are variations. Three minutes of execution. Email lands on my phone: 'five variations found'."</p>
+    <p>"I open it. I find a nicely formatted markdown report — percentage variation, price before, price after, link to the product on the competitor's site. A running shoe of interest dropped by fifteen percent on competitor number two. Stuff my client would have discovered the following week, by hand, too late to react."</p>
+    <p>"In this moment I think: cool, done. I schedule cron at four in the morning, and sleep easy. You got it, right? For the first five days it really went that way. Then the problems started."</p>
+  </div>
+</section>
+
+
+<!-- STEP 4 -->
+<section class="step problema">
+  <div class="step-numero">STEP 4</div>
+  <h2 style="margin-top:0">When things break — the three times I banged my head</h2>
+  <div class="blocco mostrare">
+    <div class="blocco-label">What to show on screen</div>
+    <p>Three short "scenes" in sequence, each with a red icon-tag "PROBLEM 1", "PROBLEM 2", "PROBLEM 3":</p>
+    <ul style="margin-top:8px">
+      <li><b>Problem 1 — broken CSS selectors</b>: show the competitor site that suddenly changed layout, old selector <code>.price-now</code> no longer finds anything, the email report arrives with "60 products scanned, 0 prices extracted"</li>
+      <li><b>Problem 2 — IP ban</b>: competitor three detected the scraping pattern and blocked the VPS's IP. HTTP 403 errors on every request</li>
+      <li><b>Problem 3 — exploded API consumption</b>: one night Claude enters a loop because the site responds slowly, retries forever. Next morning, budget alert at 80% in a single day</li>
+    </ul>
+  </div>
+  <div class="blocco dire">
+    <div class="blocco-label">What to say (verbatim)</div>
+    <p>"Day six, morning, I open my email. Overnight scraping report: 'sixty products scanned, zero prices extracted'. All scrapes failed. I check: competitor number one had changed their site's layout overnight. My CSS selector — the rule saying 'the price lives in this HTML element' — wasn't finding anything anymore. Old scraping problem, I knew it. Cost me an hour of selector readjustment. Fine, lesson learned, first problem solved."</p>
+    <p>"Day seventeen: competitor number three detected the pattern of my visits — always at four in the morning, always from the same VPS IP — and banned me. HTTP four-oh-three on every page. That competitor's scraping was dead. Solution: I had to introduce a proxy that rotates IPs, additional cost ten dollars a month. Moving on."</p>
+    <p>"Day twenty-four: the biggest problem. Wake up at seven in the morning, check the mail. Notification from Anthropic: 'you've reached eighty percent of your monthly budget in a single day'. I go to the logs. One night, competitor one's site was strangely slow, responses coming back in thirty seconds instead of two. Claude retried, and retried, and retried. Infinite loop for hours. Burned a hundred dollars of tokens in one night."</p>
+    <p>"And this is where rule number five was born, the one I now ALWAYS apply: hard budget limit in the Anthropic console. Even in the worst possible bug scenario, the damage is contained. Let's look at all five rules together."</p>
+  </div>
+</section>
+
+
+<!-- STEP 5 -->
+<section class="step">
+  <div class="step-numero">STEP 5</div>
+  <h2 style="margin-top:0">The 5 rules I now apply ALWAYS</h2>
+  <div class="blocco mostrare">
+    <div class="blocco-label">What to show on screen</div>
+    <p>Full-screen, the 5 rules as numbered cards. As you discuss each, highlight the corresponding card. Below each card, a mini-icon of the file that implements it (e.g. settings.json icon, anthropic console icon).</p>
+    <ul style="margin-top:8px">
+      <li><b>Rule 1</b> — Never run as root</li>
+      <li><b>Rule 2</b> — Blocking hooks for destructive commands</li>
+      <li><b>Rule 3</b> — Aggressive logging always</li>
+      <li><b>Rule 4</b> — Dry-run before every deploy</li>
+      <li><b>Rule 5</b> — API budget with alerts and hard limit</li>
+    </ul>
+  </div>
+  <div class="blocco dire">
+    <div class="blocco-label">What to say (verbatim)</div>
+    <p>"Rule one: never run Claude Code as the root user on the VPS. Create a dedicated user with minimum permissions. If Claude one day causes a mess — not out of malice but because the prompt was poorly written — damage is contained. If instead it runs as root, one wrong command is a catastrophe. It happened to me once: Claude tried to run an rm dash rf on a folder because it misinterpreted a prompt instruction. The claude user had no permissions, OS refused, saved. If it had been root, it was over."</p>
+    <p>"Rule two: blocking hooks for destructive commands. In the VPS settings.json file, I add a PreToolUse hook that intercepts every call to the Bash tool and blocks dangerous commands a priori — rm dash rf, sudo, dd, mkfs. Even if Claude tried them, the hook blocks them. Redundancy above OS permissions. The full file, production settings.json, is in the materials."</p>
+    <p>"Rule three: aggressive logging, always. Every execution, Claude writes a detailed log to slash var slash log slash claude dash scraper dot log. Start timestamp, decisions made, commands executed, end timestamp. When something goes wrong in the morning, I have the history of what happened. When everything's fine, I have metrics for tuning the prompt. Without logs, you're blind."</p>
+    <p>"Rule four: dry-run before every deploy. When I modify the prompt or add a new competitor, I always launch FIRST with claude dash dash dry-run. Claude runs all the logic but does NOT write to the database, does NOT send email, does NOT change files. Just logs what it WOULD HAVE done. I read the output. If I'm convinced, I push to production. If not, I revise the prompt."</p>
+    <p>"Rule five: API budget with alerts. In the Anthropic console I set a soft limit of fifty dollars monthly — above which I get email — and a hard limit of two hundred dollars — above which the API key stops working. So even in the worst possible bug scenario, even with an overnight infinite loop, the maximum damage is two hundred dollars. Thirty seconds of setup, sleep easy for six months."</p>
+  </div>
+</section>
+
+
+<!-- STEP 6 -->
+<section class="step">
+  <div class="step-numero">STEP 6</div>
+  <h2 style="margin-top:0">Current state of the system (day thirty-one)</h2>
+  <div class="blocco mostrare">
+    <div class="blocco-label">What to show on screen</div>
+    <p>Three stats on screen, clean dashboard format:</p>
+    <ul style="margin-top:8px">
+      <li><b>Consecutive successful runs</b>: 30</li>
+      <li><b>Price variations identified</b>: 7</li>
+      <li><b>Monthly API consumption</b>: 12 USD (under budget)</li>
+      <li><b>Hours saved for client</b>: ~4 per week</li>
+    </ul>
+    <p>Then back to CAMERA for closing the step.</p>
+  </div>
+  <div class="blocco dire">
+    <div class="blocco-label">What to say (verbatim)</div>
+    <p>"State of the system today, day thirty-one. Thirty consecutive successful executions after the three initial breakages. Seven significant price variations identified — of these, the client acted on four by adjusting their own pricing, and says they recovered measurable margin. Monthly API consumption: twelve dollars. Client time recovered: about four hours a week his wife used to spend on Excel sheets."</p>
+    <p>"Total infrastructure cost: sixteen dollars a month — six VPS, ten proxy rotation. Plus Claude API consumption, which stays under fifteen dollars monthly. Thirty dollars a month for a system that runs on its own, always, that has already paid back the setup many times over."</p>
+    <p>"Final lesson — what I take away from these thirty days. Putting Claude Code in production works, but it's not the same as using it as a personal assistant on your PC. It's a different job. It requires preparation, rules, healthy paranoia. The five rules I gave you are my anti-paranoia kit: if you apply them, you sleep peacefully."</p>
+  </div>
+</section>
+
+
+<!-- FINAL CTA -->
+<section class="cta">
+  <div class="badge-intro" style="background:white;color:var(--green)">Final CTA</div>
+  <h2 style="margin-top:0">Closing</h2>
+  <div class="blocco mostrare">
+    <div class="blocco-label">What to show on screen</div>
+    <p>CAMERA on you. "I told you the story" tone.</p>
+  </div>
+  <div class="blocco dire">
+    <div class="blocco-label">What to say (verbatim)</div>
+    <p>"All the files I used — the production CLAUDE.md, the settings.json with blocking hooks, the full scraper prompt, the disclaimer on VPS and API key security — are free in the link in description. There's also a step-by-step guide to replicate the whole setup, from the DigitalOcean droplet to the first email report, in forty-five minutes."</p>
+    <p>"If this video was useful and you want to keep seeing practical AI cases applied to real work — not playground tutorials — subscribe. The next video I'm dedicating to a problem ALL new Claude Code users face: the agent that floods your folder with useless files. I'll show you five techniques to stop it. See you there."</p>
+  </div>
+</section>
+
+</body>
+</html>

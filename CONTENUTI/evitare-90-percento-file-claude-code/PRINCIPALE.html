@@ -1,0 +1,267 @@
+<!DOCTYPE html>
+<html lang="it">
+<head>
+<meta charset="UTF-8">
+<title>5 tecniche - evitare file Claude Code - Guida regista</title>
+<style>
+  :root { --bg: #fafaf9; --ink: #1a1a1a; --ink-soft: #555; --accent: #d97706; --accent-soft: #fef3c7; --line: #e5e5e5; --green: #15803d; --green-soft: #dcfce7; --blue: #1d4ed8; --blue-soft: #dbeafe; }
+  * { box-sizing: border-box; }
+  body { font-family: -apple-system, BlinkMacSystemFont, "Segoe UI", Roboto, sans-serif; background: var(--bg); color: var(--ink); max-width: 900px; margin: 0 auto; padding: 40px 24px 120px; line-height: 1.55; font-size: 17px; }
+  h1 { font-size: 32px; margin: 0 0 4px; letter-spacing: -0.02em; }
+  .sottotitolo { color: var(--ink-soft); font-size: 16px; margin-bottom: 32px; }
+  .badge-intro { display: inline-block; background: var(--accent-soft); color: var(--accent); padding: 4px 10px; border-radius: 6px; font-weight: 600; font-size: 13px; text-transform: uppercase; letter-spacing: 0.05em; margin-bottom: 12px; }
+  .step-numero { display: inline-block; background: var(--ink); color: white; padding: 6px 12px; border-radius: 6px; font-weight: 700; font-size: 14px; margin-bottom: 12px; }
+  section.intro { background: linear-gradient(180deg, #fff 0%, var(--accent-soft) 100%); border: 2px solid var(--accent); border-radius: 12px; padding: 28px; margin: 24px 0 40px; }
+  section.step { border: 1px solid var(--line); background: white; border-radius: 10px; padding: 24px; margin: 24px 0; }
+  section.cta { background: var(--green-soft); border: 2px solid var(--green); border-radius: 12px; padding: 28px; margin: 40px 0 24px; }
+  .blocco { margin: 16px 0; }
+  .blocco-label { font-size: 12px; font-weight: 700; text-transform: uppercase; letter-spacing: 0.08em; color: var(--ink-soft); margin-bottom: 6px; }
+  .blocco.mostrare .blocco-label { color: var(--blue); }
+  .blocco.mostrare { background: var(--blue-soft); border-left: 4px solid var(--blue); padding: 12px 16px; border-radius: 4px; }
+  .blocco.dire { background: #fafafa; border-left: 4px solid var(--ink); padding: 14px 18px; border-radius: 4px; font-size: 18px; line-height: 1.6; }
+  .blocco.dire p { margin: 0 0 12px; }
+  .blocco.dire p:last-child { margin-bottom: 0; }
+  .nota { font-size: 14px; color: var(--ink-soft); font-style: italic; margin-top: 8px; }
+</style>
+</head>
+<body>
+
+<h1>Le 5 tecniche per evitare il 90% dei file che Claude Code genera (e non ti servono)</h1>
+<div class="sottotitolo">Guida regista - per la registrazione. Non e' un documento pubblico.</div>
+
+
+<!-- INTRO -->
+<section class="intro">
+  <div class="badge-intro">Intro - sotto 1 minuto</div>
+  <h2 style="margin-top:0">Apertura — la scena che riconosci</h2>
+
+  <div class="blocco mostrare">
+    <div class="blocco-label">Cosa mostrare a schermo</div>
+    <p>Schermo registrato: una cartella VS Code con file in vista. Mostra una **vera cartella sporca**: 25-30 file alla rinfusa, mix di file utili (src/, README.md) e cartacce inutili (TEST_, NOTES_, SCRATCH_, summary_, debug_). Mentre la mostri, gli occhi tuoi scorrono i file e scrolli un attimo. Poi torna CAMERA su di te per la voce.</p>
+  </div>
+
+  <div class="blocco dire">
+    <div class="blocco-label">Cosa dire (verbatim)</div>
+    <p>"Questa e' la cartella di un mio progetto, dopo due settimane di lavoro con Claude Code. Guarda. Ho chiesto a Claude semplici cose — aggiungi un campo qua, sistema un bug la' — e a fine giornata mi trovo trenta file nuovi. Test che non ho chiesto, sommari di sommari, note di debug, scratch dei suoi ragionamenti. Ne usero' tre, gli altri ventisette sono rumore."</p>
+    <p>"Se hai mai aperto un progetto e ti sei detto 'ma cosa sono tutti questi file', sei nel posto giusto. In questo video ti mostro cinque tecniche concrete per riprendere il controllo. Applicate insieme, eliminano circa il novanta percento dei file inutili. Vado dalla piu' semplice — dieci minuti di lavoro — alla piu' tecnica, in modo che tu fermi al livello che ti basta."</p>
+    <p>"Tutti i file di configurazione che uso — CLAUDE.md, settings.json, prompt-tipo — li scarichi gratis nel link in descrizione. Iniziamo."</p>
+  </div>
+
+  <div class="nota">Test della voce: leggilo in 55-65 secondi. Il momento clou e' "ne usero' tre, gli altri ventisette sono rumore" — quella frase fa annuire l'audience riconoscente. Non saltarla.</div>
+</section>
+
+
+<!-- STEP 1 - IL PROBLEMA ============== -->
+<section class="step">
+  <div class="step-numero">STEP 1</div>
+  <h2 style="margin-top:0">Perche' Claude lo fa — capire la causa prima della cura</h2>
+
+  <div class="blocco mostrare">
+    <div class="blocco-label">Cosa mostrare a schermo</div>
+    <p>Lavagna o slide. Disegna tre frecce dall'utente ("io chiedo: aggiungi campo email") verso Claude, e poi tre frecce di Claude che producono:</p>
+    <ul style="margin-top:8px">
+      <li>Codice modificato (giusto, lo volevo)</li>
+      <li>TEST_email_validation.md (non chiesto)</li>
+      <li>summary_changes.md (non chiesto)</li>
+      <li>NOTES_2026-05-22.md (non chiesto)</li>
+    </ul>
+    <p>Sotto, evidenzia "Tu vedi 4 cose, ne volevi 1".</p>
+  </div>
+
+  <div class="blocco dire">
+    <div class="blocco-label">Cosa dire (verbatim)</div>
+    <p>"Prima di darti le cinque tecniche, vale la pena spiegare velocemente perche' Claude si comporta cosi'. Non e' un bug: e' una scelta di training. Anthropic ha addestrato il modello con l'incoraggiamento a 'mostrare il proprio lavoro' — generare test, scrivere sommari, lasciare tracce dei propri ragionamenti. L'idea era: aiutare il developer a capire cosa il modello ha fatto."</p>
+    <p>"Per chi e' developer esperto, e' a volte utile. Per chi non e' developer, e' rumore. Tu vedi sette file dove ne volevi due. Cliffhanger psicologico: quale di questi e' importante? E magari ne cancelli uno utile per sbaglio. O semplicemente la cartella diventa illeggibile."</p>
+    <p>"La buona notizia: tutto questo comportamento si DISCIPLINA. Claude e' istruibile. Cinque tecniche da combinare, ognuna agisce a un livello diverso. Andiamo a vederle."</p>
+  </div>
+</section>
+
+
+<!-- STEP 2 - TECNICA 1 -->
+<section class="step">
+  <div class="step-numero">STEP 2 — TECNICA 1</div>
+  <h2 style="margin-top:0">CLAUDE.md con sezione "Output Discipline"</h2>
+
+  <div class="blocco mostrare">
+    <div class="blocco-label">Cosa mostrare a schermo</div>
+    <p>Apri VS Code sul tuo progetto. Mostra:</p>
+    <ul style="margin-top:8px">
+      <li>Il file <code>CLAUDE.md</code> aperto (se non esiste, lo crei)</li>
+      <li>Aggiungi alla fine la sezione "Output Discipline" — incolla dall'esempio dei materiali, scrolla per mostrare la lista dei pattern banditi (TEST_*, NOTES_*, SCRATCH_*, ecc.)</li>
+      <li>Salva. Riavvi Claude Code.</li>
+      <li>Nuovo task piccolo: "aggiungi commento in cima al file index.js". Verifica che Claude esegua e NON crei file extra.</li>
+    </ul>
+  </div>
+
+  <div class="blocco dire">
+    <div class="blocco-label">Cosa dire (verbatim)</div>
+    <p>"Tecnica numero uno, la piu' semplice e la piu' importante: aggiungere una sezione di disciplina output al CLAUDE.md del tuo progetto."</p>
+    <p>"Il CLAUDE.md, te lo ricordo se sei nuovo, e' un file che Claude legge per primo ad ogni sessione. E' la 'costituzione' del progetto. Funziona MOLTO bene se ben scritto — Claude lo rispetta per default."</p>
+    <p>"Aggiungo una sezione che si chiama 'Output Discipline' con tre cose. Prima cosa: lista esplicita di pattern di file che NON deve mai creare — TEST con underscore tutto maiuscolo, NOTES, SCRATCH, debug con underscore, summary con underscore. Seconda cosa: regola sui sommari — non creare mai sommari come file, dimmeli a voce nella chat. Terza cosa: regola sui ragionamenti — se hai bisogno di pensare stati intermedi, usa il thinking interno, non file scratch su disco."</p>
+    <p>"Salvo. Riavvio una nuova sessione di Claude Code per essere sicuro che ricarichi il file. Test piccolo: 'aggiungi un commento in cima al file index.js'. Boom, Claude esegue, modifica un solo file, niente extra. Tecnica uno applicata in dieci minuti, blocca circa il sessanta percento dei file inutili. Buon inizio."</p>
+  </div>
+</section>
+
+
+<!-- STEP 3 - TECNICA 2 -->
+<section class="step">
+  <div class="step-numero">STEP 3 — TECNICA 2</div>
+  <h2 style="margin-top:0">Deny patterns nel settings.json</h2>
+
+  <div class="blocco mostrare">
+    <div class="blocco-label">Cosa mostrare a schermo</div>
+    <p>Sequenza:</p>
+    <ul style="margin-top:8px">
+      <li>Apri <code>.claude/settings.json</code> del progetto (o lo crei). Mostra la sezione "permissions"</li>
+      <li>Aggiungi sezione "deny" coi pattern del file <code>esempio-settings.json</code> dei materiali</li>
+      <li>Salva</li>
+      <li>Test: chiedi a Claude esplicitamente "crea un file NOTES_test.md". Mostra l'errore "Permission denied" — la regola funziona.</li>
+    </ul>
+  </div>
+
+  <div class="blocco dire">
+    <div class="blocco-label">Cosa dire (verbatim)</div>
+    <p>"Tecnica numero due: deny patterns nel settings.json. Questa funziona a un livello completamente diverso dalla prima — non sta nel prompt, sta nel sistema. Claude PUO' tentare di scrivere un file vietato, ma il tool Write fallisce con 'Permission denied' e lui se ne accorge."</p>
+    <p>"Aggiungo al file settings.json del progetto una sezione 'permissions' con 'deny' e dentro la lista di pattern, scritta in formato glob — quindi con asterischi. Tipo Write tra parentesi due asterischi slash TEST underscore asterisco. Tradotto: 'in qualsiasi sottocartella, nessun file il cui nome inizia con TEST underscore'."</p>
+    <p>"La cosa potente di questa tecnica: bypassa il problema della 'dimenticanza' della tecnica uno. Anche se Claude, in una sessione lunga, dimentica per un momento le regole del CLAUDE.md e tenta di scrivere un file TEST underscore, il sistema lo blocca prima."</p>
+    <p>"Verifico: chiedo esplicitamente a Claude 'crea un file NOTES underscore test punto md'. Lo prova. Tool Write torna errore 'Permission denied'. Claude se ne accorge, mi dice 'non posso creare quel file perche' e' bloccato dalle tue permissions'. Funziona. Tecnica due applicata in cinque minuti."</p>
+  </div>
+</section>
+
+
+<!-- STEP 4 - TECNICA 3 -->
+<section class="step">
+  <div class="step-numero">STEP 4 — TECNICA 3</div>
+  <h2 style="margin-top:0">Hook PreToolUse Write — il guardiano attivo</h2>
+
+  <div class="blocco mostrare">
+    <div class="blocco-label">Cosa mostrare a schermo</div>
+    <p>Stessa schermata settings.json. Mostra l'aggiunta della sezione "hooks":</p>
+    <ul style="margin-top:8px">
+      <li>Sezione hooks.PreToolUse.matcher = "Write"</li>
+      <li>Hook che chiama uno script Node esterno (es. ~/.claude/check-write-discipline.js)</li>
+      <li>Apri lo script in VS Code, mostra la logica: legge il filename, blocca se pattern vietato</li>
+      <li>Test: chiedi a Claude "crea un file di ragionamento sui prossimi step". Mostra che Claude prova, hook lo blocca, e Claude desiste senza creare niente.</li>
+    </ul>
+    <p>NB: lo script <code>check-write-discipline.js</code> non e' nei materiali (e' nel video, gist GitHub linkato). Per il regista: tieni il gist pronto durante la registrazione.</p>
+  </div>
+
+  <div class="blocco dire">
+    <div class="blocco-label">Cosa dire (verbatim)</div>
+    <p>"Tecnica numero tre — questa e' la piu' tecnica delle cinque, ma anche la piu' potente per chi vuole il massimo controllo. Si chiama hook PreToolUse Write."</p>
+    <p>"In sintesi: un hook e' un piccolo script che Claude Code chiama PRIMA di eseguire un certo tool. Nel nostro caso, prima di ogni Write. Lo script puo' guardare cosa Claude sta per scrivere — nome file, contenuto — e decidere se lasciarlo passare o bloccarlo."</p>
+    <p>"Apro il file ~/.claude/check-write-discipline.js. E' uno script Node piccolo, una trentina di righe. La logica: prende il filename dalla richiesta di Write, controlla se matcha i pattern banditi che ho elencato, e se matcha stampa 'BLOCKED' e ritorna un exit code di errore. Claude vede l'errore e desiste."</p>
+    <p>"Test: chiedo a Claude 'scrivi un file di ragionamento sui prossimi tre step del progetto'. Claude prova a creare 'ragionamento underscore prossimi step punto md'. L'hook intercetta, controlla, BLOCK. Claude torna nel suo thinking e mi spiega cosa pensa direttamente nella chat. Esattamente quello che volevo."</p>
+    <p>"Lo script completo lo trovi in un gist GitHub linkato nei materiali — quindici minuti di setup, controllo massimo per sempre."</p>
+  </div>
+</section>
+
+
+<!-- STEP 5 - TECNICA 4 -->
+<section class="step">
+  <div class="step-numero">STEP 5 — TECNICA 4</div>
+  <h2 style="margin-top:0">Skill personalizzata "Output minimalista" — la versione portatile</h2>
+
+  <div class="blocco mostrare">
+    <div class="blocco-label">Cosa mostrare a schermo</div>
+    <p>Mostra:</p>
+    <ul style="margin-top:8px">
+      <li>Apri terminale: <code>mkdir -p ~/.claude/skills/output-minimalista</code></li>
+      <li><code>code ~/.claude/skills/output-minimalista/SKILL.md</code></li>
+      <li>Mostra il contenuto del file con frontmatter (name, description) e regole</li>
+      <li>Salva. La skill ora e' a livello utente — vale per TUTTI i tuoi progetti</li>
+      <li>Test rapido su un secondo progetto diverso: verifica che la skill si attivi automaticamente quando Claude rileva opportunita'</li>
+    </ul>
+  </div>
+
+  <div class="blocco dire">
+    <div class="blocco-label">Cosa dire (verbatim)</div>
+    <p>"Tecnica numero quattro — la versione portatile delle prime tre. Se le tecniche uno, due, tre vanno bene per UN progetto specifico, la skill personalizzata e' la stessa idea ma a livello del tuo USER profile, quindi vale per tutti i progetti."</p>
+    <p>"Cos'e' una skill, breve riassunto. Le Claude Skills sono pacchetti di expertise che Claude carica automaticamente quando riconosce che servono. Sono nate per cose grosse — tipo 'gestione PDF' o 'pacchetto di workflow business'. Ma puoi crearne di tue, semplici, per i tuoi scopi."</p>
+    <p>"Creo la cartella tilde slash punto claude slash skills slash output trattino minimalista. Dentro creo un file SKILL.md con un frontmatter — nome della skill, description — e poi le regole, le stesse che gia' conosci ma in forma di skill."</p>
+    <p>"Vantaggio rispetto a CLAUDE.md: questa la porto su tutti i miei progetti senza dover ripetere la sezione output discipline ovunque. Vantaggio rispetto a settings.json: piu' espressiva, posso scrivere logiche piu' sfumate in linguaggio naturale."</p>
+    <p>"Svantaggio: meno deterministica. Le skill 'si attivano quando Claude pensa che servano'. Funzionano bene il novanta percento delle volte, ma se vuoi blindare al cento percento, abbinala alle tecniche uno e due. Sinergia, non sostituzione."</p>
+  </div>
+</section>
+
+
+<!-- STEP 6 - TECNICA 5 -->
+<section class="step">
+  <div class="step-numero">STEP 6 — TECNICA 5</div>
+  <h2 style="margin-top:0">Prompt iniziale rinforzato — il richiamo che funziona sempre</h2>
+
+  <div class="blocco mostrare">
+    <div class="blocco-label">Cosa mostrare a schermo</div>
+    <p>Mostra:</p>
+    <ul style="margin-top:8px">
+      <li>Apri Claude Code, inizia una nuova sessione</li>
+      <li>Come primo messaggio incolla il blocco "Output Discipline regole di sessione" preso dal file <code>prompt-tipo.md</code> dei materiali</li>
+      <li>Sotto il blocco, scrivi la tua richiesta vera</li>
+      <li>Mostra che Claude conferma le regole e poi esegue il task pulito</li>
+      <li>Sotto, in basso, mostra un overlay: "DISCIPLINE keyword per richiamo veloce in sessione lunga"</li>
+    </ul>
+  </div>
+
+  <div class="blocco dire">
+    <div class="blocco-label">Cosa dire (verbatim)</div>
+    <p>"Tecnica numero cinque, l'ultima — il prompt iniziale rinforzato. E' la cima dello stack. La metti SOPRA tutto il resto."</p>
+    <p>"Idea semplice: ogni volta che inizi una sessione importante, il PRIMO messaggio che mandi non e' la tua richiesta — e' un blocco di reminder delle regole di output discipline. Tre paragrafi, copia-incolla, ci metti dieci secondi."</p>
+    <p>"Cosa contiene il blocco. Riassunto delle regole — niente file scratch, niente notes, niente debug. Eccezioni esplicite — 'se ti chiedo crea il file X, fallo'. E una keyword di richiamo che io uso, si chiama 'DISCIPLINE'. Se durante la sessione vedo che Claude sta tornando alle vecchie abitudini, gli mando in chat solo la parola 'DISCIPLINE' e lui ricarica le regole."</p>
+    <p>"Funziona molto bene su sessioni LUNGHE. Quando Claude lavora per un'ora di seguito su un task complesso, a volte la pressione del task lo fa 'dimenticare' delle regole del CLAUDE.md. La parola di richiamo lo riporta in carreggiata in due secondi."</p>
+    <p>"Il blocco completo, incluso il prompt-tipo, lo trovi nei materiali in descrizione. Lo salvo come snippet nel mio VS Code — lo lancio in due tasti."</p>
+  </div>
+</section>
+
+
+<!-- STEP 7 - STACK FINALE + PRIMA E DOPO -->
+<section class="step">
+  <div class="step-numero">STEP 7</div>
+  <h2 style="margin-top:0">Lo stack finale + il prima e dopo</h2>
+
+  <div class="blocco mostrare">
+    <div class="blocco-label">Cosa mostrare a schermo</div>
+    <p>Schermo split verticale:</p>
+    <ul style="margin-top:8px">
+      <li>Sinistra: <b>PRIMA</b> — la cartella con i 32 file di cui 25 inutili (la stessa dell'intro)</li>
+      <li>Destra: <b>DOPO</b> — la stessa cartella dopo 2 settimane di lavoro con tutte e 5 le tecniche attive, 8 file totali, tutti utili</li>
+    </ul>
+    <p>Sotto, una piccola riga di consigli su quale livello dello stack applicare in base al tuo profilo:</p>
+    <ul>
+      <li>Solo Tecnica 1 + 2 -> "Voglio risolvere il 70%, in 15 minuti"</li>
+      <li>Tecniche 1+2+5 -> "80%, 20 minuti"</li>
+      <li>Tecniche 1+2+3+5 -> "90%, 30 minuti (livello del video)"</li>
+      <li>Tutte e 5 + skill cross-project -> "95%, 45 minuti, copre tutti i progetti futuri"</li>
+    </ul>
+  </div>
+
+  <div class="blocco dire">
+    <div class="blocco-label">Cosa dire (verbatim)</div>
+    <p>"Ricapitolando: le cinque tecniche lavorano in stack. Piu' ne applichi, piu' Claude sta nei binari. Te le ridico in ordine di setup time."</p>
+    <p>"Se vuoi il minimo sforzo per il massimo effetto: tecniche uno e due — il CLAUDE.md con la sezione di output discipline e il settings.json con i deny patterns. Quindici minuti totali. Risolvi circa il settanta percento del problema."</p>
+    <p>"Se vuoi salire ancora: aggiungi la tecnica cinque, il prompt iniziale rinforzato. Altri cinque minuti di setup, e ogni volta che inizi una sessione importante incolli il blocco. Ottanta percento risolto."</p>
+    <p>"Se vuoi blindare al massimo: aggiungi anche la tecnica tre, l'hook PreToolUse Write. Quindici minuti extra di setup tecnico, novanta percento risolto. Questo e' il livello che uso io e che ti faccio vedere nel prima-dopo."</p>
+    <p>"E poi c'e' la tecnica quattro, la skill personalizzata, che ti porta tutto il pacchetto su OGNI progetto futuro senza dover ripetere il setup. Quella la fai una sola volta nella vita."</p>
+    <p>"Risultato finale: dalla cartella sporca con trentadue file di cui venticinque inutili — vedi qui a sinistra — alla cartella pulita con otto file tutti utili che vedi a destra. Stesso progetto, stesso flusso di lavoro, dopo due settimane con le tecniche attive."</p>
+  </div>
+</section>
+
+
+<!-- CTA -->
+<section class="cta">
+  <div class="badge-intro" style="background:white;color:var(--green)">CTA finale</div>
+  <h2 style="margin-top:0">Chiusura</h2>
+
+  <div class="blocco mostrare">
+    <div class="blocco-label">Cosa mostrare a schermo</div>
+    <p>CAMERA su di te. Tono "te l'ho raccontata".</p>
+  </div>
+
+  <div class="blocco dire">
+    <div class="blocco-label">Cosa dire (verbatim)</div>
+    <p>"Tutti i file di configurazione che ho usato — il CLAUDE.md con la sezione output discipline pronta, il settings.json con i deny patterns gia' scritti, il prompt iniziale da incollare in due tasti — li scarichi gratis dal link in descrizione. Copia, incolla, salva. Trenta minuti e hai trasformato Claude da agente disordinato in collaboratore disciplinato."</p>
+    <p>"Se questo video ti e' stato utile, iscriviti — il prossimo video lo dedico a un caso d'uso che vedo poco coperto in italiano: come usare i sub-agent di Claude Code come se fossero il tuo team di stagisti specializzati. Ci vediamo li'."</p>
+  </div>
+</section>
+
+</body>
+</html>

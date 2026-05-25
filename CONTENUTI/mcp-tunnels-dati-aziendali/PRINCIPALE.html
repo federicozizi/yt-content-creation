@@ -1,0 +1,319 @@
+<!DOCTYPE html>
+<html lang="it">
+<head>
+<meta charset="UTF-8">
+<title>MCP Tunnels - Magazzino in Claude - Guida regista</title>
+<style>
+  :root {
+    --bg: #fafaf9;
+    --ink: #1a1a1a;
+    --ink-soft: #555;
+    --accent: #d97706;
+    --accent-soft: #fef3c7;
+    --line: #e5e5e5;
+    --green: #15803d;
+    --green-soft: #dcfce7;
+    --blue: #1d4ed8;
+    --blue-soft: #dbeafe;
+  }
+  * { box-sizing: border-box; }
+  body {
+    font-family: -apple-system, BlinkMacSystemFont, "Segoe UI", Roboto, sans-serif;
+    background: var(--bg);
+    color: var(--ink);
+    max-width: 900px;
+    margin: 0 auto;
+    padding: 40px 24px 120px;
+    line-height: 1.55;
+    font-size: 17px;
+  }
+  h1 { font-size: 32px; margin: 0 0 4px; letter-spacing: -0.02em; }
+  .sottotitolo { color: var(--ink-soft); font-size: 16px; margin-bottom: 32px; }
+  .badge-intro {
+    display: inline-block;
+    background: var(--accent-soft);
+    color: var(--accent);
+    padding: 4px 10px;
+    border-radius: 6px;
+    font-weight: 600;
+    font-size: 13px;
+    text-transform: uppercase;
+    letter-spacing: 0.05em;
+    margin-bottom: 12px;
+  }
+  .step-numero {
+    display: inline-block;
+    background: var(--ink);
+    color: white;
+    padding: 6px 12px;
+    border-radius: 6px;
+    font-weight: 700;
+    font-size: 14px;
+    margin-bottom: 12px;
+  }
+  section.intro {
+    background: linear-gradient(180deg, #fff 0%, var(--accent-soft) 100%);
+    border: 2px solid var(--accent);
+    border-radius: 12px;
+    padding: 28px;
+    margin: 24px 0 40px;
+  }
+  section.step {
+    border: 1px solid var(--line);
+    background: white;
+    border-radius: 10px;
+    padding: 24px;
+    margin: 24px 0;
+  }
+  section.cta {
+    background: var(--green-soft);
+    border: 2px solid var(--green);
+    border-radius: 12px;
+    padding: 28px;
+    margin: 40px 0 24px;
+  }
+  .blocco { margin: 16px 0; }
+  .blocco-label {
+    font-size: 12px;
+    font-weight: 700;
+    text-transform: uppercase;
+    letter-spacing: 0.08em;
+    color: var(--ink-soft);
+    margin-bottom: 6px;
+  }
+  .blocco.mostrare .blocco-label { color: var(--blue); }
+  .blocco.mostrare {
+    background: var(--blue-soft);
+    border-left: 4px solid var(--blue);
+    padding: 12px 16px;
+    border-radius: 4px;
+  }
+  .blocco.dire {
+    background: #fafafa;
+    border-left: 4px solid var(--ink);
+    padding: 14px 18px;
+    border-radius: 4px;
+    font-size: 18px;
+    line-height: 1.6;
+  }
+  .blocco.dire p { margin: 0 0 12px; }
+  .blocco.dire p:last-child { margin-bottom: 0; }
+  .nota {
+    font-size: 14px;
+    color: var(--ink-soft);
+    font-style: italic;
+    margin-top: 8px;
+  }
+</style>
+</head>
+<body>
+
+<h1>Il magazzino parla con Claude — e mi ha trovato i soldi fermi al deposito</h1>
+<div class="sottotitolo">Guida regista - per la registrazione. Non e' un documento pubblico.</div>
+
+
+<!-- ============== INTRO ============== -->
+<section class="intro">
+  <div class="badge-intro">Intro - sotto 1 minuto</div>
+  <h2 style="margin-top:0">Apertura</h2>
+
+  <div class="blocco mostrare">
+    <div class="blocco-label">Cosa mostrare a schermo</div>
+    <p>CAMERA su di te per i primi quindici secondi. Poi taglio veloce: split con a sinistra te, a destra una chat di Claude dove appare il prompt "Ho prodotti che stanno per esaurirsi senza che me ne accorga?" e una tabella che si materializza con tre nomi di vini. Poi torna full CAMERA su di te.</p>
+  </div>
+
+  <div class="blocco dire">
+    <div class="blocco-label">Cosa dire (verbatim)</div>
+    <p>"C'e' una conversazione che ho almeno una volta al mese con un cliente. Mi dice: 'Federico, voglio mettere Claude dentro la mia azienda, ma i miei dati sono in un database che il mio reparto IT non vuole far toccare da fuori.' E ogni volta la mia risposta e' la stessa: si puo' fare. Anzi, in quindici minuti. Senza aprire una sola porta sul firewall."</p>
+    <p>"Oggi te lo dimostro su un caso vero. Ho costruito il magazzino di una cantina online — trenta vini, dati realistici di vendite, come se fosse il tuo gestionale. Dentro, di proposito, ho nascosto cinque tipi di problemi che ogni titolare di e-commerce vive ma spesso non vede: prodotti che vende sotto costo senza saperlo, scorte che stanno per finire, capitale fermo al deposito da mesi."</p>
+    <p>"Vediamo insieme due cose: come si collega un database a Claude in pratica, e cosa succede quando gli fai le domande giuste sul tuo magazzino. Alla fine del video Claude avra' identificato problemi reali per piu' di mille euro. Tutti i file che uso li scarichi dal link in descrizione. Iniziamo."</p>
+  </div>
+
+  <div class="nota">Test della voce: leggilo a voce in 55-65 secondi. Se sei sopra, taglia la seconda frase del primo paragrafo. Energia bassa-media, tono "amico che ti spiega una cosa interessante", non venditore.</div>
+</section>
+
+
+<!-- ============== STEP 1 - CONCETTO ============== -->
+<section class="step">
+  <div class="step-numero">STEP 1</div>
+  <h2 style="margin-top:0">Cos'e' un MCP — il Bluetooth dell'AI</h2>
+
+  <div class="blocco mostrare">
+    <div class="blocco-label">Cosa mostrare a schermo</div>
+    <p>Lavagna (digitale su tablet va benissimo). Disegna in diretta:</p>
+    <ul style="margin-top:8px">
+      <li>Sinistra: omino "Claude" con bolla "ho una domanda sui prodotti"</li>
+      <li>Centro: rettangolo grande etichettato "MCP" — sopra scrivi tra parentesi "(il citofono)"</li>
+      <li>Destra: una scatola "DATABASE" con dentro tabelle stilizzate</li>
+      <li>Una freccia bidirezionale Claude <-> MCP <-> DATABASE</li>
+      <li>Sotto la scena, una muraglia con scritto "FIREWALL" e l'MCP la attraversa senza romperla — sottolinea il punto in cui non viene rotta</li>
+    </ul>
+  </div>
+
+  <div class="blocco dire">
+    <div class="blocco-label">Cosa dire (verbatim)</div>
+    <p>"Adesso una cosa che sembra noiosa, ma resta con me trenta secondi perche' cambia tutto. Negli ultimi due anni i grandi del mondo AI — Anthropic, OpenAI, Microsoft, Google — si sono messi d'accordo su un linguaggio comune con cui le intelligenze artificiali parlano alle app aziendali. Si chiama MCP. Tradotto: e' il Bluetooth dell'AI. Lo conosci, il Bluetooth — quando l'hanno introdotto, di colpo ogni cuffia parlava con ogni telefono, senza che tu installassi software."</p>
+    <p>"Sta succedendo la stessa cosa qua. Oggi qualsiasi nuova app aziendale — Supabase, HubSpot, Notion, Google Drive — esce gia' col Bluetooth dell'AI integrato. Tu non scrivi codice, non apri porte, non configuri proxy. Clicchi un interruttore — che si chiama 'connector' — e Claude vede il sistema."</p>
+    <p>"L'analogia per capire la sicurezza: pensalo come al citofono del palazzo. Claude e' il fattorino. Dal pianerottolo dice 'mi serve la lista dei prodotti esauriti'. Tu rispondi dal citofono. Lui non entra in casa, non apre gli armadi, non vede gli scaffali — vede solo cio' che il citofono — l'MCP — decide di rispondere. Sicuro per default."</p>
+    <p>"Una novita' che riguarda chi ha database fisici in ufficio: si chiama MCP Tunnel, e' uscita il diciannove maggio, quattro giorni fa. Se il tuo gestionale sta su un server reale dentro l'azienda, non in cloud, questa feature crea un canale temporaneo Claude-tuo-server, dura solo la conversazione, e si chiude. Niente IT da disturbare. Niente VPN. Setup iniziale un po' piu' tecnico, una mano dal tuo informatico per due ore, e poi va da solo."</p>
+  </div>
+</section>
+
+
+<!-- ============== STEP 2 - SUPABASE SETUP ============== -->
+<section class="step">
+  <div class="step-numero">STEP 2</div>
+  <h2 style="margin-top:0">Costruiamo il magazzino della cantina (su Supabase)</h2>
+
+  <div class="blocco mostrare">
+    <div class="blocco-label">Cosa mostrare a schermo</div>
+    <p>Browser su <code>supabase.com</code>. Mostra il flusso:</p>
+    <ul style="margin-top:8px">
+      <li>Click "Start your project" - signup con GitHub</li>
+      <li>Click "New project" - compila Name = "cantina-vini-demo", Region = Frankfurt</li>
+      <li>Generate password — fai uno zoom rapido sul warning "save this password" ma COPRI la password con un rettangolo nero in post</li>
+      <li>Click Create new project — taglia in montaggio l'attesa</li>
+    </ul>
+  </div>
+
+  <div class="blocco dire">
+    <div class="blocco-label">Cosa dire (verbatim)</div>
+    <p>"Per il video uso Supabase perche' e' la cosa piu' veloce per partire — ti da' un database gratis in cloud in due minuti. Vai su supabase punto com, ti registri con Google o GitHub, niente carta di credito. Clicchi New project."</p>
+    <p>"Nome: cantina-vini-demo. Regione: Frankfurt, e' la piu' vicina all'Italia. Il sistema ti genera una password per il database — questa password e' importante, e' la chiave che apre tutto. Annotala subito in un gestore di password, tipo 1Password o Bitwarden. Io a video ovviamente non la mostro per ovvi motivi di sicurezza."</p>
+    <p>"Click Create. Aspetto due minuti che Supabase prepari il database — taglio in montaggio, non e' interessante. Quando torno, ho un database PostgreSQL gratuito, protetto da password, pronto per essere usato. Mi sembra anche carino dirlo a voce: questa stessa cosa, dieci anni fa, voleva dire chiamare l'IT, parlare due settimane, pagare un setup. Adesso te la fai da solo nel tempo di prendere un caffe'."</p>
+  </div>
+</section>
+
+
+<!-- ============== STEP 3 - POPOLA IL MAGAZZINO ============== -->
+<section class="step">
+  <div class="step-numero">STEP 3</div>
+  <h2 style="margin-top:0">Popoliamo il magazzino — 30 vini e 80 vendite</h2>
+
+  <div class="blocco mostrare">
+    <div class="blocco-label">Cosa mostrare a schermo</div>
+    <p>SPLIT veloce:</p>
+    <ul style="margin-top:8px">
+      <li>VS Code sul tuo schermo con <code>schema-magazzino.sql</code> aperto</li>
+      <li>Pannello Supabase, SQL Editor aperto</li>
+      <li>Copia tutto, incolla, Run. "Success." Le tabelle sono create.</li>
+      <li>Ripeti con <code>esempio-magazzino.sql</code></li>
+      <li>Vai al Table Editor di Supabase, mostra le 30 righe dei prodotti (Barolo, Brunello, Chianti...) e poi la tabella vendite</li>
+    </ul>
+    <p>Durante il browse, indugia su qualche prodotto interessante — Barolo, Champagne — perche' tra qualche minuto Claude tirera' fuori cose su di loro.</p>
+  </div>
+
+  <div class="blocco dire">
+    <div class="blocco-label">Cosa dire (verbatim)</div>
+    <p>"Adesso popoliamo il database con dati di esempio. Apri VS Code col file schema-magazzino punto sql — lo trovi nei materiali. Copia tutto. Vai su Supabase, sidebar a sinistra, SQL Editor, incolla, Run."</p>
+    <p>"Cosa fa questo file: crea due tabelle. Una si chiama 'prodotti' — il catalogo dei vini, con nome, produttore, regione, prezzo di vendita, costo di acquisto, giacenza. La struttura che troveresti in qualsiasi gestionale di e-commerce. La seconda si chiama 'vendite' — ogni riga e' un ordine cliente, con quantita', data, canale. Roba che ti aspetti dal tuo gestionale ma di solito non hai accesso facile."</p>
+    <p>"Stessa cosa col secondo file, esempio-magazzino punto sql, che ti inserisce trenta vini italiani — cantine inventate, ma realistici. Run. Trenta vini in catalogo, e ottanta vendite distribuite negli ultimi dodici mesi. Adesso ho un magazzino vero da interrogare."</p>
+    <p>"Una nota onesta: dentro questo magazzino ho deliberatamente nascosto cinque tipi di problemi. Errori di tariffa, scorte critiche, capitale fermo. Servono per il video, per farti vedere cosa succede quando metti Claude su dati reali invece che su dati puliti da slide PowerPoint."</p>
+  </div>
+</section>
+
+
+<!-- ============== STEP 4 - COLLEGA CLAUDE ============== -->
+<section class="step">
+  <div class="step-numero">STEP 4</div>
+  <h2 style="margin-top:0">Colleghiamo Supabase a Claude</h2>
+
+  <div class="blocco mostrare">
+    <div class="blocco-label">Cosa mostrare a schermo</div>
+    <p>Browser su <code>claude.ai</code>:</p>
+    <ul style="margin-top:8px">
+      <li>Click avatar in alto a destra -> Settings</li>
+      <li>Sidebar -> Connectors</li>
+      <li>Cerca "Supabase" — mostra l'icona, la presenza nella lista, il bottone Connect</li>
+      <li>Click Connect</li>
+      <li>OAuth Supabase: seleziona scope "Read-only" e progetto cantina-vini-demo</li>
+      <li>Conferma. Mostra il badge verde "Connected".</li>
+    </ul>
+  </div>
+
+  <div class="blocco dire">
+    <div class="blocco-label">Cosa dire (verbatim)</div>
+    <p>"Adesso la parte che cambia tutto. Vai su claude punto ai, in alto a destra clicca il tuo avatar, poi Settings, poi Connectors. Cerca Supabase nella lista. Click Connect."</p>
+    <p>"Si apre una finestra Supabase che ti chiede: 'Vuoi dare a Claude accesso ai tuoi progetti?' E qui regola d'oro scritta col sangue, e te la ripeto perche' e' importante: la prima volta che colleghi qualsiasi cosa a Claude — questo, il CRM, il tuo gestionale, ogni cosa — gli dai solo le chiavi di lettura. Lui puo' guardare, non puo' toccare. E' la stessa logica del nuovo stagista che entra in azienda: il primo mese guarda, dopo gli dai i tasti grossi. Stessa cosa qua. Seleziono Read-only."</p>
+    <p>"Seleziono il progetto cantina-vini-demo, confermo. Torno su Claude e vedo il badge verde 'Connected'. Ed ecco fatto: zero porte aperte, zero proxy, zero credenziali sul mio PC. Quello che e' successo dietro le quinte e' che Supabase ha dato a Claude una chiave specifica per questo singolo progetto. Chiave che puoi revocare in qualsiasi momento con un click. Andiamo a vedere cosa Claude trova nel mio magazzino."</p>
+  </div>
+</section>
+
+
+<!-- ============== STEP 5 - L'ANALISI VERA ============== -->
+<section class="step">
+  <div class="step-numero">STEP 5</div>
+  <h2 style="margin-top:0">La parte interessante — Claude trova i problemi reali</h2>
+
+  <div class="blocco mostrare">
+    <div class="blocco-label">Cosa mostrare a schermo</div>
+    <p>Nuova chat su claude.ai. Lancio i prompt in ordine, mostrando le risposte e facendo zoom dove emerge il problema. Tempistica suggerita:</p>
+    <ul style="margin-top:8px">
+      <li><b>Prompt 1</b> (warm-up): "Che tabelle ho nel database collegato?" — mostra come Claude capisce la struttura</li>
+      <li><b>Prompt 2</b> (bestseller): "Quali sono i 5 vini che hanno venduto di piu' negli ultimi 30 giorni?" — risposta normale, tabella ordinata</li>
+      <li><b>Prompt 3</b> (PUNTO CHIAVE): "Ho prodotti che stanno per esaurirsi senza che me ne accorga? Considera 'a rischio' i prodotti dove la giacenza coprira' meno di 21 giorni di vendita." — Claude trova Chianti, Vermentino, Lambrusco. **Zoom sulla tabella**.</li>
+      <li><b>Prompt 4</b> (errore in cassa): "Verifica se ci sono prodotti dove sto vendendo sotto costo." — Claude scopre Barolo e Champagne. **Pausa, lascia che lo spettatore digerisca**.</li>
+      <li><b>Prompt 5</b> (esauriti ancora visibili): "Ci sono prodotti esauriti che pero' risultano ancora ordinabili online?" — Claude trova Prosecco, Pinot Grigio, Moscato. Spiega che il sito sta accettando ordini impossibili.</li>
+      <li><b>Prompt 6</b> (sintesi): "Generami una dashboard 'salute magazzino'. Le 5 cose da sistemare questa settimana, in ordine di impatto economico." — Claude mette tutto insieme. **Mostra l'output finale come momento "ok ho il piano della settimana"**.</li>
+    </ul>
+  </div>
+
+  <div class="blocco dire">
+    <div class="blocco-label">Cosa dire (verbatim)</div>
+    <p>"Apro una nuova chat. Primo prompt, semplice: 'Che tabelle ho nel database collegato?' Claude consulta, capisce, mi spiega che ho un catalogo prodotti e uno storico vendite. Sa gia' che e' una cantina. Non ha bisogno che io glielo dica."</p>
+    <p>"Secondo prompt, qualcosa di utile: 'Quali sono i cinque vini che hanno venduto di piu' negli ultimi trenta giorni?' Tira fuori la classifica con quantita', ordini, ricavo. Pronto da mettere in una presentazione. Niente di sconvolgente — questo lo fa anche un foglio Excel ben fatto."</p>
+    <p>"Terzo prompt — qui le cose si fanno interessanti. 'Ho prodotti che stanno per esaurirsi senza che me ne accorga? Considera a rischio quelli dove la giacenza coprira' meno di ventuno giorni di vendita.' Claude analizza vendite e scorte, fa il calcolo, mi torna con Chianti, Vermentino, Lambrusco. Sotto soglia, vendite intense. Tradotto: se non riordino questa settimana, fra dieci giorni il sito mi dice 'esaurito' e perdo fatturato vivo. Questo, da un foglio Excel, non lo tiri fuori facilmente."</p>
+    <p>"Quarto prompt — e qui prendo un respiro perche' e' la roba che fa male: 'Verifica se ci sono prodotti dove sto vendendo sotto costo.' Claude controlla. E mi tira fuori due nomi: Barolo, che vendo a venticinque ma costa trentadue. Champagne, vendo a cinquantotto, costa sessantacinque. Sto perdendo soldi per ogni bottiglia. Nessuno se ne era accorto. Probabilmente errori di battitura del listino nell'ultimo aggiornamento prezzi. Claude calcola anche quanto ho gia' perso negli ultimi novanta giorni — quattrocentoventi euro su Barolo, centoquaranta su Champagne. Numero piccolo per chi ha una catena grossa, numero che fa la differenza per una cantina di paese."</p>
+    <p>"Quinto prompt: 'Ci sono prodotti esauriti che pero' risultano ancora ordinabili online?' Trova Prosecco, Pinot Grigio, Moscato d'Asti. Tre vini che il mio sito sta promettendo ai clienti senza poterli consegnare. Reclami in arrivo. Recensioni a una stella. Tradotto in azione: questo pomeriggio nascondo i tre prodotti dal listino online finche' non arriva il nuovo carico."</p>
+    <p>"Sesto prompt — quello che porto via dal video: 'Generami una dashboard salute magazzino. Le cinque cose da sistemare questa settimana, in ordine di impatto economico.' Claude mette insieme tutto quello che ha trovato fino a qui, lo prioritizza in euro, mi consegna un piano operativo da cinque punti. Il mio lunedi' mattina e' finito. Cinque minuti, dashboard pronta, decisioni da prendere. Senza che io abbia scritto una sola query, senza che io abbia aperto Excel."</p>
+  </div>
+
+  <div class="nota">In questo step la regia conta tantissimo. Per ogni prompt: digita lento, lascia che lo spettatore legga la domanda, dai tre secondi di "vedere Claude pensare" prima della risposta. Non andare di fretta — la lentezza qui fa percepire la potenza dello strumento.</div>
+</section>
+
+
+<!-- ============== STEP 6 - COMBINAZIONI ============== -->
+<section class="step">
+  <div class="step-numero">STEP 6</div>
+  <h2 style="margin-top:0">Bonus — Claude scrive le email ai produttori</h2>
+
+  <div class="blocco mostrare">
+    <div class="blocco-label">Cosa mostrare a schermo</div>
+    <p>Stessa chat. Mostra:</p>
+    <ul style="margin-top:8px">
+      <li>Prompt: "Per ogni prodotto in esaurimento del prompt 3, scrivi una bozza email al produttore per ordinare le scorte. Salvala come bozza Gmail. Non inviare."</li>
+      <li>Claude lavora, mostra le 3 email generate (toni cordiali ma professionali, ognuna personalizzata per produttore)</li>
+      <li>Apri Gmail, vai in Drafts, mostra che le 3 bozze sono effettivamente li' pronte da revisione</li>
+    </ul>
+    <p>NB: questo step richiede di aver collegato Google Workspace come connector — falla prima della registrazione, in modo che la richiesta funzioni al primo colpo.</p>
+  </div>
+
+  <div class="blocco dire">
+    <div class="blocco-label">Cosa dire (verbatim)</div>
+    <p>"Una cosa che mi piace di Claude quando lo metti su piu' tool insieme: gli puoi chiedere di non solo trovare il problema, ma di iniziare a risolverlo. Vediamo. Prompt: 'Per ogni prodotto in esaurimento del prompt tre, scrivi una bozza email al produttore per ordinare le scorte. Salvala come bozza Gmail.'"</p>
+    <p>"Claude prende i tre vini — Chianti, Vermentino, Lambrusco — e scrive tre email separate, ognuna indirizzata al produttore giusto, ognuna con il tono giusto. Le salva nella mia cartella bozze su Gmail. E qui ci tengo a sottolineare una cosa: non le invia, le mette come bozza. Tu vai, le rileggi, eventualmente correggi qualcosa, e poi clicchi Invia tu. Mai automazione cieca. Sempre la tua revisione finale per cose che vanno fuori."</p>
+    <p>"Risultato: un lavoro che mi sarebbe costato venti minuti la settimana — recuperare i contatti, scrivere ogni email, gestire i toni — fatto in trenta secondi. Esempio piccolo, ma se lo replichi su dieci aspetti operativi del tuo lavoro, il tempo che torni a casa con te ogni settimana e' importante."</p>
+  </div>
+</section>
+
+
+<!-- ============== CTA FINALE ============== -->
+<section class="cta">
+  <div class="badge-intro" style="background:white;color:var(--green)">CTA finale</div>
+  <h2 style="margin-top:0">Chiusura</h2>
+
+  <div class="blocco mostrare">
+    <div class="blocco-label">Cosa mostrare a schermo</div>
+    <p>CAMERA su di te. Energia bassa-media, tono "ti racconto come finisce". Niente urli e niente esagerazioni.</p>
+  </div>
+
+  <div class="blocco dire">
+    <div class="blocco-label">Cosa dire (verbatim)</div>
+    <p>"Ricapitolando: in quindici minuti abbiamo collegato un database a Claude senza scrivere codice, senza aprire porte, senza disturbare nessuno. Abbiamo fatto sei domande e Claude ha trovato cinque tipi di problemi reali — sotto costo, esaurimento, magazzino morto — e ha anche iniziato a risolverli scrivendo le email ai fornitori. Il pattern e' identico se al posto del magazzino di una cantina hai il CRM del tuo studio professionale, il gestionale del tuo negozio, o l'archivio delle pratiche del tuo ufficio. Cambia la tabella, non cambia il metodo."</p>
+    <p>"Tutti i file che ho usato — gli script per popolare il database, la lista dei prompt che ho lanciato, una guida step-by-step per replicare tutto a casa tua — li scarichi gratis dal link in descrizione. Ci sono anche le indicazioni per chi vuole farlo sul proprio gestionale aziendale, incluso il caso del database fisico in ufficio con MCP Tunnel."</p>
+    <p>"Se questo video ti e' stato utile e vuoi continuare a vedere casi pratici di AI applicata al tuo lavoro — pensata per chi NON e' developer — iscriviti. Il prossimo lo dedico ai quindici workflow pronti dentro Claude per piccole imprese, quelli che probabilmente paghi gia' col tuo abbonamento e non sapevi che esistessero. Ci vediamo li."</p>
+  </div>
+</section>
+
+</body>
+</html>
