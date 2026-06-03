@@ -87,10 +87,37 @@ proprio output e decide se serve un altro giro**. È la differenza tra uno scrip
    Apri con una riga di riepilogo (match totali, categorie coperte, decisione del valutatore).
 2. Rigenera la dashboard: `python orchestrator.py --no-open --skip-scrape`
    (riusa i JSON esistenti e include la sintesi).
-3. Scrivi il report giornaliero nel formato del progetto, in:
-   `../../../IDEE/ricerche-auto/YYYY-MM-DD-{mattina|sera}.md`
-   con: data, n. trend raccolti, n. match rilevanti per categoria, le idee migliori (5-8),
-   e una riga su eventuali rilanci effettuati e categorie rimaste scoperte.
+3. Scrivi il report giornaliero in `../../../IDEE/ricerche-auto/YYYY-MM-DD-{mattina|sera}.md`
+   usando il **formato canonico** atteso dal resto del sistema (lo stesso definito in
+   `RICERCA_AUTOMATICA/prompt-ricerca.md`, sezione "Formato obbligatorio del file"):
+
+   ```markdown
+   # Ricerca contenuti — YYYY-MM-DD [mattina|sera]
+
+   > Esecuzione automatica (sistema a 10 agenti). Fonti: Hacker News, Reddit, Dev.to,
+   > Product Hunt, Medium, GitHub Trending, Lobste.rs, YouTube, Google News IT, Hugging Face Papers.
+
+   ## Polso del momento
+   - **[Trend]**: descrizione 1-2 righe + 1 fonte cliccabile REALE (URL dal JSON o da WebSearch). (3-5 trend)
+
+   ## Idee proposte
+
+   ### 1. [Titolo che segue una delle 4 template format]
+   - **Format**: Listicle / Storia personale / Problem-solver / Build dimostrativa (uno solo)
+   - **Angolo nuovo**: perché non è una copia banale
+   - **Ispirato da**: [link reale]
+   - **Hook potenziale**: una frase di apertura
+   - **Cosa costruisce concretamente lo spettatore**: 1-2 righe
+   - **Target**: chi è lo spettatore
+   ### 2. ... (5-8 idee; distribuzione ~40% Listicle, 30% Build, 20% Problem-solver, 10% Storia personale)
+
+   ## Note esecuzione
+   - Distribuzione format nelle idee proposte (conteggio esplicito)
+   - Match per categoria + eventuali rilanci effettuati + categorie rimaste scoperte
+   - Idee scartate e perché
+   ```
+
+   Prima di scrivere, leggi i 3 file più recenti in `IDEE/ricerche-auto/` per non duplicare idee già proposte.
 
 ---
 

@@ -1,5 +1,19 @@
 # RICERCA_AUTOMATICA/
 
+> **AGGIORNAMENTO (2026-05-30): meccanismo sostituito.** Le 2 routine cloud legacy
+> (`yt-ricerca-idee-mattina` + `-sera`, basate su WebSearch + `prompt-ricerca.md`, su Sonnet 4.6)
+> sono state **disabilitate**. Le sostituisce **una sola routine** — `Ricerca idee YouTube — 10 agenti (mattina)`
+> (Sonnet 4.6, 1x/giorno ~8:00) — basata sul sistema a 10 scraper + sub-agenti in
+> `CONTENUTI/claude-4-8-dynamic-workflows-10-agenti-paralleli/materiali/`.
+> L'output finisce sempre in `IDEE/ricerche-auto/YYYY-MM-DD-mattina.md` nello **stesso formato**
+> (definito qui in `prompt-ricerca.md`), quindi il resto del sistema (`lavora sull'idea X`) non cambia.
+> `prompt-ricerca.md` resta come **specifica del formato di output** (ancora la fonte di verità del template).
+> Le routine legacy restano archiviate su claude.ai e si possono riattivare se serve.
+
+La descrizione sotto si riferisce al **meccanismo legacy** (storico, ora disattivato).
+
+---
+
 Configurazione dello **scheduling remoto** che 2 volte al giorno (mattina + sera) genera nuove idee di contenuto basate sulla scansione di cosa sta diventando virale online nel mio settore.
 
 ## Cosa fa

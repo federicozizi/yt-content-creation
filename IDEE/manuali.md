@@ -39,3 +39,9 @@ Video di integrazione tra due tool AI. Premessa: alle persone piacciono le integ
 Video "step by step" che monta l'infrastruttura AI minima per un piccolo business (studio professionale, e-commerce, agenzia, consulenza, artigianato). Tre strati che si parlano: (1) **Supabase via MCP connector** per i dati custom — il connettore MCP ufficiale permette a Claude di leggere/scrivere direttamente nel DB Postgres senza scrivere codice middleware. Confronto col foglio Excel (query, multi-utente, audit, scalabilità). (2) **Claude for Small Business**, il pacchetto Anthropic rilasciato il 13 maggio 2026 dentro Claude Cowork: 15 workflow pronti (`/monday-brief`, `/close-month`, `/invoice-chaser`, `/plan-payroll`, `/run-campaign`, `/contract-review` ecc.) + 15 skill + 7 connettori (QuickBooks, PayPal, HubSpot, Canva, DocuSign, Google Workspace, Microsoft 365). Approvazione umana obbligatoria, permessi che si propagano, no training sui dati business. (3) **Agent View** di Claude Code per i sub-agent custom in markdown che fanno le cose specifiche del settore che il pre-cotto non sa fare. Case study: studio commercialisti con tabelle Supabase per regimi fiscali e scadenze custom, sub-agent `regime-checker`, `document-classifier`, `scadenza-allerter`. Il ponte tra i 3 strati è l'MCP di Supabase, leggibile sia da Code che da Cowork. Sezione finale "tutto insieme" mostra il flusso lunedì-mattina end-to-end. Durata: 18-22 minuti. Pubblico: piccoli imprenditori non-developer che usano già Claude Code.
 
 ---
+
+## Online scraper — versione aggiornata
+
+PROMEMORIA: fare un contenuto YouTube sull'online scraper in versione aggiornata. Da sviluppare: definire cosa "versione aggiornata" significa (nuovo tool/approccio rispetto alla versione precedente del contenuto già fatto), scegliere il format ad alta performance, dettagliare angolo e demo.
+
+---

@@ -8,3 +8,6 @@ __pycache__/
 
 # Claude Code — stato locale macchina (i permessi shared vanno in settings.json)
 .claude/settings.local.json
+
+# Dashboard locale "idee del giorno" generata dall'avviso all'accensione (rigenerata ogni volta)
+dashboard-oggi.html
