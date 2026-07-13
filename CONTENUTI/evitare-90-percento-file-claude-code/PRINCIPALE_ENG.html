@@ -2,246 +2,422 @@
 <html lang="en">
 <head>
 <meta charset="UTF-8">
-<title>5 techniques to avoid Claude Code file bloat - Director's guide</title>
+<title>How to avoid 90% of the useless files Claude Code generates — Method explainer</title>
 <style>
-  :root { --bg: #fafaf9; --ink: #1a1a1a; --ink-soft: #555; --accent: #d97706; --accent-soft: #fef3c7; --line: #e5e5e5; --green: #15803d; --green-soft: #dcfce7; --blue: #1d4ed8; --blue-soft: #dbeafe; }
+  :root { --bg: #fafaf9; --ink: #1a1a1a; --ink-soft: #555; --accent: #d97706; --accent-soft: #fef3c7; --line: #e5e5e5; --green: #15803d; --green-soft: #dcfce7; --blue: #1d4ed8; --blue-soft: #dbeafe; --red: #dc2626; --red-soft: #fee2e2; --purple:#7c3aed; --purple-soft:#ede9fe; }
   * { box-sizing: border-box; }
-  body { font-family: -apple-system, BlinkMacSystemFont, "Segoe UI", Roboto, sans-serif; background: var(--bg); color: var(--ink); max-width: 900px; margin: 0 auto; padding: 40px 24px 120px; line-height: 1.55; font-size: 17px; }
+  body { font-family: -apple-system, BlinkMacSystemFont, "Segoe UI", Roboto, sans-serif; background: var(--bg); color: var(--ink); max-width: 960px; margin: 0 auto; padding: 40px 24px 120px; line-height: 1.6; font-size: 17px; }
   h1 { font-size: 32px; margin: 0 0 4px; letter-spacing: -0.02em; }
-  .sottotitolo { color: var(--ink-soft); font-size: 16px; margin-bottom: 32px; }
-  .badge-intro { display: inline-block; background: var(--accent-soft); color: var(--accent); padding: 4px 10px; border-radius: 6px; font-weight: 600; font-size: 13px; text-transform: uppercase; letter-spacing: 0.05em; margin-bottom: 12px; }
-  .step-numero { display: inline-block; background: var(--ink); color: white; padding: 6px 12px; border-radius: 6px; font-weight: 700; font-size: 14px; margin-bottom: 12px; }
-  section.intro { background: linear-gradient(180deg, #fff 0%, var(--accent-soft) 100%); border: 2px solid var(--accent); border-radius: 12px; padding: 28px; margin: 24px 0 40px; }
-  section.step { border: 1px solid var(--line); background: white; border-radius: 10px; padding: 24px; margin: 24px 0; }
-  section.cta { background: var(--green-soft); border: 2px solid var(--green); border-radius: 12px; padding: 28px; margin: 40px 0 24px; }
-  .blocco { margin: 16px 0; }
-  .blocco-label { font-size: 12px; font-weight: 700; text-transform: uppercase; letter-spacing: 0.08em; color: var(--ink-soft); margin-bottom: 6px; }
-  .blocco.mostrare .blocco-label { color: var(--blue); }
-  .blocco.mostrare { background: var(--blue-soft); border-left: 4px solid var(--blue); padding: 12px 16px; border-radius: 4px; }
-  .blocco.dire { background: #fafafa; border-left: 4px solid var(--ink); padding: 14px 18px; border-radius: 4px; font-size: 18px; line-height: 1.6; }
-  .blocco.dire p { margin: 0 0 12px; }
-  .blocco.dire p:last-child { margin-bottom: 0; }
-  .nota { font-size: 14px; color: var(--ink-soft); font-style: italic; margin-top: 8px; }
+  h2 { font-size: 23px; margin: 0 0 4px; letter-spacing: -0.01em; }
+  .sottotitolo { color: var(--ink-soft); font-size: 16px; margin-bottom: 8px; }
+  .serie-tag { display:inline-block; background: var(--blue-soft); color: var(--blue); padding: 4px 10px; border-radius: 6px; font-weight: 700; font-size: 12px; text-transform: uppercase; letter-spacing: 0.06em; margin-bottom: 24px; }
+  .ruolo-doc { background: var(--accent-soft); border: 1px solid var(--accent); border-radius: 10px; padding: 14px 18px; font-size: 15px; color: #7c4a06; margin: 8px 0 36px; }
+  .ruolo-doc strong { color: var(--accent); }
+  section { border: 1px solid var(--line); background: white; border-radius: 12px; padding: 26px; margin: 22px 0; }
+  section.goal { border-left: 6px solid var(--green); }
+  .kicker { display:inline-block; font-size: 12px; font-weight: 700; text-transform: uppercase; letter-spacing: 0.08em; color: var(--blue); margin-bottom: 10px; }
+  .goal .kicker { color: var(--green); }
+  .problema .kicker { color: var(--red); }
+  p { margin: 0 0 14px; }
+  p:last-child { margin-bottom: 0; }
+  .diagramma { width: 100%; margin: 8px 0 4px; }
+  .legenda { display: flex; flex-wrap: wrap; gap: 16px; font-size: 14px; color: var(--ink-soft); margin-top: 10px; }
+  .legenda span { display: inline-flex; align-items: center; gap: 7px; }
+  .dot { width: 13px; height: 13px; border-radius: 3px; display:inline-block; }
+  .strato { display: grid; grid-template-columns: 44px 1fr; gap: 16px; align-items: start; padding: 16px 0; border-top: 1px dashed var(--line); }
+  .strato:first-of-type { border-top: none; }
+  .strato .num { width: 44px; height: 44px; border-radius: 10px; color: white; font-weight: 800; font-size: 19px; display:flex; align-items:center; justify-content:center; }
+  .strato h3 { margin: 4px 0 6px; font-size: 18px; }
+  .strato p { font-size: 16px; }
+  .tag-costo { display:inline-block; font-size: 12px; font-weight: 700; padding: 2px 8px; border-radius: 20px; margin-left: 8px; vertical-align: middle; }
+  .bar-row { display: grid; grid-template-columns: 210px 1fr; gap: 14px; align-items: center; margin: 12px 0; }
+  .bar-label { font-size: 15px; font-weight: 600; text-align: right; }
+  .bar-track { background: #f0f0ef; border-radius: 8px; height: 38px; position: relative; overflow: hidden; }
+  .bar-fill { height: 100%; border-radius: 8px; display: flex; align-items: center; padding: 0 12px; color: white; font-weight: 800; font-size: 15px; white-space: nowrap; }
+  .grafico-nota { font-size: 14px; color: var(--ink-soft); font-style: italic; margin-top: 12px; }
+  table { width: 100%; border-collapse: collapse; margin: 8px 0; font-size: 16px; }
+  th, td { text-align: left; padding: 10px 12px; border-bottom: 1px solid var(--line); }
+  th { font-size: 13px; text-transform: uppercase; letter-spacing: 0.05em; color: var(--ink-soft); }
+  td.num, th.num { text-align: right; font-variant-numeric: tabular-nums; }
+  code { background:#f0f0ef; padding:1px 6px; border-radius:4px; font-size:0.9em; }
+  .nota-onesta { background: var(--red-soft); border-left: 4px solid var(--red); border-radius: 4px; padding: 14px 18px; font-size: 16px; }
+  section.test { border-left: 6px solid var(--blue); margin-top: 40px; }
+  .test .kicker { color: var(--blue); }
+  ol.passi { margin: 6px 0; padding: 0; counter-reset: passo; list-style: none; }
+  ol.passi li { counter-increment: passo; position: relative; padding: 9px 0 9px 44px; border-top: 1px dashed var(--line); font-size: 16px; }
+  ol.passi li:first-child { border-top: none; }
+  ol.passi li::before { content: counter(passo); position: absolute; left: 0; top: 8px; width: 28px; height: 28px; background: var(--blue); color: #fff; border-radius: 50%; font-weight: 800; font-size: 14px; display: flex; align-items: center; justify-content: center; }
+  pre.term { background: #1a1a1a; color: #e5e5e5; border-radius: 8px; padding: 16px 18px; font-family: ui-monospace, "SF Mono", Menlo, Consolas, monospace; font-size: 13px; line-height: 1.5; overflow-x: auto; margin: 12px 0; }
+  pre.term .ok { color: #4ade80; font-weight: 700; }
+  .check { background: var(--green-soft); border: 1px solid var(--green); border-radius: 8px; padding: 14px 18px; margin: 14px 0; font-size: 16px; }
+  .check ul { margin: 8px 0 0; padding-left: 20px; }
+  .check li { margin: 7px 0; }
 </style>
 </head>
 <body>
 
-<h1>The 5 techniques to avoid 90% of the files Claude Code generates (and you don't need)</h1>
-<div class="sottotitolo">Director's guide - for recording. Not a public document.</div>
+<div class="serie-tag">Problem-solver &middot; Claude Code</div>
+<h1>How to avoid 90% of the useless files Claude Code generates</h1>
+<div class="sottotitolo">Method explainer: the 5 levers that discipline the output</div>
+
+<div class="ruolo-doc">
+  <strong>What this document is.</strong> Supporting material to understand and explain the method while I record:
+  how it's built, where each of the 5 techniques acts, and — above all — <em>how far it drives down the number of
+  files</em>, which is the point of the video. It is not a script to read out: it's the mental model + the charts
+  to keep in front of me (and to show on screen). I say the lines off the cuff.
+</div>
 
 
-<!-- INTRO -->
-<section class="intro">
-  <div class="badge-intro">Intro - under 1 minute</div>
-  <h2 style="margin-top:0">Opening — the scene you recognize</h2>
-  <div class="blocco mostrare">
-    <div class="blocco-label">What to show on screen</div>
-    <p>Screen capture: a VS Code folder view. Show a **truly messy folder**: 25-30 files mixed, useful (src/, README.md) and useless (TEST_, NOTES_, SCRATCH_, summary_, debug_). While you show it, eyes scan the files, scroll a bit. Then back to CAMERA for the voice.</p>
-  </div>
-  <div class="blocco dire">
-    <div class="blocco-label">What to say (verbatim)</div>
-    <p>"This is one of my project folders, after two weeks working with Claude Code. Look. I asked Claude simple things — add a field here, fix a bug there — and at the end of the day I find thirty new files. Tests I didn't ask for, summaries of summaries, debug notes, scratch of his reasoning. I'll use three, the other twenty-seven are noise."</p>
-    <p>"If you've ever opened a project and thought 'what are all these files', you're in the right place. In this video I'll show you five concrete techniques to take back control. Applied together, they remove about ninety percent of useless files. I go from the simplest — ten minutes of work — to the most technical, so you can stop at the level that's enough for you."</p>
-    <p>"All the configuration files I use — CLAUDE.md, settings.json, prompt template — are free in the link in description. Let's go."</p>
-  </div>
-  <div class="nota">Voice test: read aloud in 55-65 seconds. The peak moment is "I'll use three, the other twenty-seven are noise" — that line makes the audience nod in recognition. Don't skip it.</div>
+<!-- ============== THE PROBLEM ============== -->
+<section class="problema">
+  <span class="kicker">The problem</span>
+  <h2>Why Claude Code clutters the folder</h2>
+  <p>It's not a bug: it's a training choice. The model is encouraged to <strong>"show its work"</strong> — it
+  writes test plans, leaves notes, summaries of changes, scratch files of its reasoning. For an experienced
+  developer that's sometimes useful; for a non-developer it's <strong>noise</strong>.</p>
+  <p>The result: you ask for something simple ("add a field to the form") and you end up with 5 files you never
+  asked for (<code>TEST_*.md</code>, <code>NOTES_*.md</code>, <code>scratch_*.py</code>, <code>debug_*.md</code>,
+  <code>summary_*.md</code>). After two weeks the folder is unreadable: hard to tell the real files apart, hard to
+  make clean commits, and sometimes you delete the right one by mistake. The good news: this behavior <strong>can
+  be disciplined</strong>. Claude is instructable — you just need the right levers, in the right spots.</p>
 </section>
 
 
-<!-- STEP 1 -->
-<section class="step">
-  <div class="step-numero">STEP 1</div>
-  <h2 style="margin-top:0">Why Claude does it — understand the cause before the cure</h2>
-  <div class="blocco mostrare">
-    <div class="blocco-label">What to show on screen</div>
-    <p>Whiteboard or slide. Draw three arrows from user ("I ask: add email field") to Claude, then three arrows from Claude producing:</p>
-    <ul style="margin-top:8px">
-      <li>Modified code (correct, what I wanted)</li>
-      <li>TEST_email_validation.md (not asked)</li>
-      <li>summary_changes.md (not asked)</li>
-      <li>NOTES_2026-05-22.md (not asked)</li>
-    </ul>
-    <p>Below, highlight "You see 4 things, you wanted 1".</p>
+<!-- ============== THE METHOD'S ARCHITECTURE ============== -->
+<section>
+  <span class="kicker">Where you act</span>
+  <h2>The method's architecture</h2>
+  <p>Between your request and the file written to disk there are <strong>three spots</strong> where a useless file
+  can be stopped. The 5 techniques aren't in a row: they're <strong>5 nets with different mesh sizes</strong>
+  placed on those three spots. The more nets you set, the less gets through.</p>
+
+  <svg class="diagramma" viewBox="0 0 900 340" xmlns="http://www.w3.org/2000/svg" role="img" aria-label="Diagram: where the five techniques act in the file-writing flow">
+    <defs>
+      <marker id="arrow" markerWidth="10" markerHeight="10" refX="8" refY="3" orient="auto" markerUnits="strokeWidth">
+        <path d="M0,0 L8,3 L0,6 Z" fill="#555"></path>
+      </marker>
+    </defs>
+
+    <!-- Main horizontal flow -->
+    <!-- You ask -->
+    <rect x="8" y="150" width="150" height="74" rx="10" fill="#fff" stroke="#cfcfcf" stroke-width="1.5"></rect>
+    <text x="83" y="182" text-anchor="middle" font-size="13" font-weight="700" fill="#1a1a1a">You ask</text>
+    <text x="83" y="201" text-anchor="middle" font-size="11.5" fill="#555">"add a field"</text>
+
+    <!-- Spot A: the prompt -->
+    <rect x="206" y="150" width="182" height="74" rx="10" fill="#dbeafe" stroke="#1d4ed8" stroke-width="1.5"></rect>
+    <text x="297" y="174" text-anchor="middle" font-size="12" font-weight="800" fill="#1d4ed8">SPOT A · the instructions</text>
+    <text x="297" y="193" text-anchor="middle" font-size="12.5" fill="#1a1a1a">what Claude INTENDS to do</text>
+    <text x="297" y="210" text-anchor="middle" font-size="11.5" fill="#555">Techniques 1 · 4 · 5</text>
+
+    <!-- Spot B: the permission -->
+    <rect x="436" y="150" width="182" height="74" rx="10" fill="#fef3c7" stroke="#d97706" stroke-width="1.5"></rect>
+    <text x="527" y="174" text-anchor="middle" font-size="12" font-weight="800" fill="#b45309">SPOT B · the permission</text>
+    <text x="527" y="193" text-anchor="middle" font-size="12.5" fill="#1a1a1a">the system REFUSES</text>
+    <text x="527" y="210" text-anchor="middle" font-size="11.5" fill="#555">Technique 2 (deny)</text>
+
+    <!-- Spot C: the hook -->
+    <rect x="666" y="150" width="182" height="74" rx="10" fill="#ede9fe" stroke="#7c3aed" stroke-width="1.5"></rect>
+    <text x="757" y="174" text-anchor="middle" font-size="12" font-weight="800" fill="#7c3aed">SPOT C · the guard</text>
+    <text x="757" y="193" text-anchor="middle" font-size="12.5" fill="#1a1a1a">inspects and BLOCKS</text>
+    <text x="757" y="210" text-anchor="middle" font-size="11.5" fill="#555">Technique 3 (hook)</text>
+
+    <!-- Main flow arrows -->
+    <line x1="158" y1="187" x2="204" y2="187" stroke="#555" stroke-width="2" marker-end="url(#arrow)"></line>
+    <line x1="388" y1="187" x2="434" y2="187" stroke="#555" stroke-width="2" marker-end="url(#arrow)"></line>
+    <line x1="618" y1="187" x2="664" y2="187" stroke="#555" stroke-width="2" marker-end="url(#arrow)"></line>
+
+    <!-- Clean folder (output, bottom right) -->
+    <rect x="700" y="266" width="150" height="60" rx="10" fill="#dcfce7" stroke="#15803d" stroke-width="1.5"></rect>
+    <text x="775" y="291" text-anchor="middle" font-size="12.5" font-weight="800" fill="#15803d">Clean folder</text>
+    <text x="775" y="309" text-anchor="middle" font-size="11.5" fill="#1a1a1a">only the useful files</text>
+    <path d="M757,224 C757,245 770,255 775,264" fill="none" stroke="#15803d" stroke-width="2" marker-end="url(#arrow)"></path>
+
+    <!-- Useless file blocked: discarded downward -->
+    <rect x="380" y="270" width="200" height="54" rx="9" fill="#fee2e2" stroke="#dc2626" stroke-width="1.5"></rect>
+    <text x="480" y="293" text-anchor="middle" font-size="12" font-weight="700" fill="#dc2626">Useless file stopped here</text>
+    <text x="480" y="310" text-anchor="middle" font-size="11" fill="#b91c1c">TEST_ · NOTES_ · scratch_ · summary_</text>
+    <!-- discard arrows from the spots toward the bin -->
+    <path d="M297,224 C320,250 360,275 378,288" fill="none" stroke="#dc2626" stroke-width="1.6" stroke-dasharray="4 3" marker-end="url(#arrow)"></path>
+    <path d="M527,224 C520,245 510,260 505,268" fill="none" stroke="#dc2626" stroke-width="1.6" stroke-dasharray="4 3" marker-end="url(#arrow)"></path>
+
+    <!-- level labels -->
+    <text x="297" y="128" text-anchor="middle" font-size="11" fill="#888" font-style="italic">instruction level</text>
+    <text x="527" y="128" text-anchor="middle" font-size="11" fill="#888" font-style="italic">system level</text>
+    <text x="757" y="128" text-anchor="middle" font-size="11" fill="#888" font-style="italic">active level</text>
+  </svg>
+
+  <div class="legenda">
+    <span><span class="dot" style="background:#1d4ed8"></span> Spot A — instructions (Techniques 1, 4, 5)</span>
+    <span><span class="dot" style="background:#d97706"></span> Spot B — permission denied (Technique 2)</span>
+    <span><span class="dot" style="background:#7c3aed"></span> Spot C — hook that blocks (Technique 3)</span>
+    <span><span class="dot" style="background:#dc2626"></span> Useless file stopped</span>
+    <span><span class="dot" style="background:#15803d"></span> Clean folder</span>
   </div>
-  <div class="blocco dire">
-    <div class="blocco-label">What to say (verbatim)</div>
-    <p>"Before I give you the five techniques, it's worth quickly explaining why Claude behaves this way. It's not a bug: it's a training choice. Anthropic trained the model with encouragement to 'show its work' — generate tests, write summaries, leave traces of its reasoning. The idea was: help the developer understand what the model did."</p>
-    <p>"For experienced developers, it's sometimes useful. For non-developers, it's noise. You see seven files where you wanted two. Psychological cliffhanger: which of these is important? You might delete a useful one by mistake. Or the folder simply becomes unreadable."</p>
-    <p>"Good news: all this behavior can be DISCIPLINED. Claude is trainable. Five techniques to combine, each working at a different level. Let's look at them."</p>
+  <p class="grafico-nota">The three techniques at Spot A convince Claude not to <em>want</em> the file. If for some
+  reason it tries anyway (long sessions, "forgetting"), Spot B refuses it at the system level and Spot C catches
+  it with a script. It's defense in layers: redundant on purpose.</p>
+</section>
+
+
+<!-- ============== THE TECHNIQUES, ONE BY ONE ============== -->
+<section>
+  <span class="kicker">Piece by piece</span>
+  <h2>The 5 techniques, one by one</h2>
+
+  <div class="strato">
+    <div class="num" style="background:#1d4ed8">1</div>
+    <div>
+      <h3>Output Discipline in the CLAUDE.md <span class="tag-costo" style="background:var(--blue-soft);color:var(--blue)">Spot A · 10 min</span></h3>
+      <p><strong>What it is:</strong> an <code>## Output Discipline</code> section in the project's
+      <code>CLAUDE.md</code> — the file Claude reads first every session, the project's "constitution."
+      <strong>Why it works:</strong> Claude respects the CLAUDE.md by default, so this is the lever with the best
+      effort-to-effect ratio. <strong>How it's built:</strong> three rules — (a) an explicit list of banned names
+      (<code>TEST_*.md</code>, <code>NOTES_*.md</code>, <code>SCRATCH_*</code>, <code>debug_*</code>,
+      <code>summary_*</code>, duplicates like <code>README_NEW.md</code>); (b) no summary as a file, it gives it in
+      chat; (c) no "reasoning" files — for intermediate state use <code>TodoWrite</code>, not files on disk.
+      Ready-made block in <code>esempio-claude-md.md</code>. <em>Limit:</em> on long tasks it sometimes "forgets"
+      it — which is why you need #2.</p>
+    </div>
+  </div>
+
+  <div class="strato">
+    <div class="num" style="background:#d97706">2</div>
+    <div>
+      <h3>Deny patterns in the settings.json <span class="tag-costo" style="background:var(--accent-soft);color:var(--accent)">Spot B · 5 min</span></h3>
+      <p><strong>What it is:</strong> a <code>permissions.deny</code> section in <code>.claude/settings.json</code>
+      that refuses writes to certain file names. <strong>Why it works:</strong> it acts at the <em>system</em>
+      level, not the prompt level — even if Claude tries to write the file, the Write tool fails with "Permission
+      denied" and it notices. It bypasses the "forgetting" of Technique 1. <strong>How it's built:</strong> the
+      names are written in glob format (with asterisks): <code>Write(**/TEST_*)</code>,
+      <code>Write(**/NOTES_*)</code>, <code>Write(**/scratch*.*)</code>, and so on. A twin <code>allow</code>
+      section protects your real tests (<code>**/*.test.js</code>, <code>**/tests/**</code>) so you don't block
+      them by mistake. Ready-made file: <code>esempio-settings.json</code>. Active as soon as you save, no restart
+      needed.</p>
+    </div>
+  </div>
+
+  <div class="strato">
+    <div class="num" style="background:#7c3aed">3</div>
+    <div>
+      <h3>PreToolUse Write hook — the active guard <span class="tag-costo" style="background:var(--purple-soft);color:var(--purple)">Spot C · 15 min</span></h3>
+      <p><strong>What it is:</strong> a small script that Claude Code runs <em>before</em> every write. The most
+      technical of the five, but also the most powerful. <strong>Why it works:</strong> Technique 2's deny only
+      looks at the name; the hook also looks at the <em>context</em> — how many <code>.md</code> files are already
+      in the folder, whether it's a duplicate (<code>_v2</code>, <code>_copy</code>), the content.
+      <strong>How it's built:</strong> in <code>settings.json</code>, <code>hooks.PreToolUse</code> with
+      <code>matcher: "Write"</code> calls <code>node ~/.claude/check-write-discipline.js</code>. The script reads
+      the request, and if it violates the rules it prints "BLOCKED" and returns an error: Claude backs off and
+      explains everything in chat. <em>Director's note:</em> the full script isn't in the materials — it's in the
+      video with a linked GitHub gist. Keep it ready while recording.</p>
+    </div>
+  </div>
+
+  <div class="strato">
+    <div class="num" style="background:#0e7490">4</div>
+    <div>
+      <h3>"Output minimalista" Skill — the portable version <span class="tag-costo" style="background:#cffafe;color:#0e7490">Spot A · 15 min</span></h3>
+      <p><strong>What it is:</strong> the same rules packaged into a user-level <em>skill</em>
+      (<code>~/.claude/skills/output-minimalista/SKILL.md</code>) that applies to <strong>all</strong> your
+      projects. <strong>Why it works:</strong> skills activate on their own when Claude recognizes they're needed,
+      without repeating the output-discipline section in every CLAUDE.md. You set it up once.
+      <strong>How it's built:</strong> a <code>SKILL.md</code> file with frontmatter (<code>name</code> +
+      <code>description</code> stating when to activate it) and the list of rules + the exception "if the user
+      explicitly asks for a file, create it." <em>Limit:</em> less deterministic than the deny — it works most of
+      the time, but to lock things down 100% pair it with Techniques 1 and 2. Synergy, not replacement.</p>
+    </div>
+  </div>
+
+  <div class="strato">
+    <div class="num" style="background:#1d4ed8">5</div>
+    <div>
+      <h3>Reinforced initial prompt — the recall that always works <span class="tag-costo" style="background:var(--blue-soft);color:var(--blue)">Spot A · 10 sec</span></h3>
+      <p><strong>What it is:</strong> the top of the stack. The <em>first</em> message of an important session
+      isn't the request, it's a block reminding Claude of the output-discipline rules. <strong>Why it works:</strong>
+      on long sessions the pressure of the task makes the CLAUDE.md rules "slip"; the reminder puts them back front
+      of mind. <strong>How it's built:</strong> three things — a rules recap, explicit exceptions ("if I ask you to
+      create file X, do it"), and a <strong>recall word</strong>: <code>DISCIPLINE</code>. If during the session
+      Claude drifts back to old habits, I send just that word and it re-reads the rules. Ready-made block in
+      <code>prompt-tipo.md</code> (with the "brutal task" variant for long sessions).</p>
+    </div>
   </div>
 </section>
 
 
-<!-- STEP 2 — TECHNIQUE 1 -->
-<section class="step">
-  <div class="step-numero">STEP 2 — TECHNIQUE 1</div>
-  <h2 style="margin-top:0">CLAUDE.md with "Output Discipline" section</h2>
-  <div class="blocco mostrare">
-    <div class="blocco-label">What to show on screen</div>
-    <p>Open VS Code on your project. Show:</p>
-    <ul style="margin-top:8px">
-      <li>The <code>CLAUDE.md</code> file open (if it doesn't exist, create it)</li>
-      <li>Add at the end the "Output Discipline" section — paste from the materials example, scroll to show the list of banned patterns (TEST_*, NOTES_*, SCRATCH_*, etc.)</li>
-      <li>Save. Restart Claude Code.</li>
-      <li>Small test: "add a comment at the top of index.js". Verify Claude executes and does NOT create extra files.</li>
-    </ul>
+<!-- ============== HOW MUCH YOU SAVE (THE POINT) ============== -->
+<section class="goal">
+  <span class="kicker">The point of the video</span>
+  <h2>How far the file count drops</h2>
+  <p>The method is purely <strong>numeric and visual</strong>: you go from a messy folder to a clean one. The
+  numbers below are the real case shown in the video — <strong>the same project</strong>
+  (<code>progetto-cliente-XYZ/</code>), before and after two weeks with the techniques on.</p>
+
+  <p style="margin-top:22px"><strong>Before vs after</strong> — total number of files in the folder:</p>
+  <div class="bar-row">
+    <div class="bar-label">Before (no techniques)</div>
+    <div class="bar-track"><div class="bar-fill" style="width:100%;background:#dc2626">32 files &nbsp;·&nbsp; ~25 useless</div></div>
   </div>
-  <div class="blocco dire">
-    <div class="blocco-label">What to say (verbatim)</div>
-    <p>"Technique number one, the simplest and most important: add an output-discipline section to your project's CLAUDE.md."</p>
-    <p>"CLAUDE.md, in case you're new, is a file Claude reads first in every session. It's the project's 'constitution'. Works VERY well if written well — Claude respects it by default."</p>
-    <p>"I add a section called 'Output Discipline' with three things. First: explicit list of file patterns it must NEVER create — TEST with underscore all caps, NOTES, SCRATCH, debug with underscore, summary with underscore. Second: rule on summaries — never create summaries as files, give them to me by voice in chat. Third: rule on reasoning — if you need to think about intermediate states, use internal thinking, not scratch files on disk."</p>
-    <p>"Save. Restart a new Claude Code session to make sure it reloads the file. Small test: 'add a comment at the top of index.js'. Boom, Claude executes, modifies one file, no extras. Technique one applied in ten minutes, blocks about sixty percent of useless files. Good start."</p>
+  <div class="bar-row">
+    <div class="bar-label">After (5 techniques on)</div>
+    <div class="bar-track"><div class="bar-fill" style="width:25%;background:#15803d">8 files &nbsp;·&nbsp; all useful</div></div>
   </div>
+  <p class="grafico-nota">From <strong>32 to 8 files</strong> total (&minus;24). But the number that matters is the
+  <em>useless</em> files: they were ~25, they go to ~0. That's <strong>~90% of the noise eliminated</strong> — the
+  title's promise, taken literally.</p>
+
+  <p style="margin-top:26px"><strong>How much each layer stops</strong> — % of useless files avoided as you stack
+  the techniques (levels shown in the video):</p>
+  <div class="bar-row">
+    <div class="bar-label">Technique 1 only</div>
+    <div class="bar-track"><div class="bar-fill" style="width:60%;background:#1d4ed8">~60%</div></div>
+  </div>
+  <div class="bar-row">
+    <div class="bar-label">Techniques 1 + 2</div>
+    <div class="bar-track"><div class="bar-fill" style="width:70%;background:#1d4ed8">~70%</div></div>
+  </div>
+  <div class="bar-row">
+    <div class="bar-label">Techniques 1 + 2 + 5</div>
+    <div class="bar-track"><div class="bar-fill" style="width:80%;background:#d97706">~80%</div></div>
+  </div>
+  <div class="bar-row">
+    <div class="bar-label">Techniques 1 + 2 + 3 + 5</div>
+    <div class="bar-track"><div class="bar-fill" style="width:90%;background:#15803d">~90% &nbsp;·&nbsp; the video's level</div></div>
+  </div>
+  <div class="bar-row">
+    <div class="bar-label">All 5 + cross-project skill</div>
+    <div class="bar-track"><div class="bar-fill" style="width:95%;background:#15803d">~95% &nbsp;·&nbsp; every future project</div></div>
+  </div>
+  <p class="grafico-nota">Indicative percentages (a field example, not a lab measurement): they're there to show
+  the viewer <em>how far to climb</em> based on how much control they want. Techniques 1+2 alone already grab the
+  bulk of it, in ~15 minutes.</p>
 </section>
 
 
-<!-- STEP 3 — TECHNIQUE 2 -->
-<section class="step">
-  <div class="step-numero">STEP 3 — TECHNIQUE 2</div>
-  <h2 style="margin-top:0">Deny patterns in settings.json</h2>
-  <div class="blocco mostrare">
-    <div class="blocco-label">What to show on screen</div>
-    <p>Sequence:</p>
-    <ul style="margin-top:8px">
-      <li>Open <code>.claude/settings.json</code> of the project (or create it). Show the "permissions" section</li>
-      <li>Add "deny" section with patterns from <code>esempio-settings.json</code> in materials</li>
-      <li>Save</li>
-      <li>Test: explicitly ask Claude "create a file NOTES_test.md". Show the "Permission denied" error — the rule works.</li>
-    </ul>
-  </div>
-  <div class="blocco dire">
-    <div class="blocco-label">What to say (verbatim)</div>
-    <p>"Technique number two: deny patterns in settings.json. This works at a completely different level from the first one — it's not in the prompt, it's in the system. Claude CAN try to write a banned file, but the Write tool fails with 'Permission denied' and he notices."</p>
-    <p>"I add to the project's settings.json a 'permissions' section with 'deny' and inside the list of patterns, written in glob format — so with asterisks. Something like Write parenthesis two asterisks slash TEST underscore asterisk. Translated: 'in any subfolder, no file whose name starts with TEST underscore'."</p>
-    <p>"The powerful thing about this technique: it bypasses the 'forgetfulness' problem of technique one. Even if Claude, in a long session, momentarily forgets the CLAUDE.md rules and tries to write a TEST underscore file, the system blocks it first."</p>
-    <p>"I verify: I explicitly ask Claude 'create a file NOTES underscore test dot md'. He tries. Write tool returns 'Permission denied'. Claude notices, tells me 'I can't create that file because it's blocked by your permissions'. Works. Technique two applied in five minutes."</p>
-  </div>
+<!-- ============== THE STACK AT A GLANCE ============== -->
+<section>
+  <span class="kicker">Recap</span>
+  <h2>The stack at a glance</h2>
+  <p>The five techniques by action spot, setup effort, and how long they last:</p>
+  <table>
+    <thead>
+      <tr><th>#</th><th>Technique</th><th>Where it acts</th><th>Setup</th><th>Persistence</th></tr>
+    </thead>
+    <tbody>
+      <tr><td>1</td><td>Output Discipline in <code>CLAUDE.md</code></td><td>Spot A — instructions</td><td>~10 min</td><td>Set once</td></tr>
+      <tr><td>2</td><td>Deny patterns in <code>settings.json</code></td><td>Spot B — permission</td><td>~5 min</td><td>Set once</td></tr>
+      <tr><td>3</td><td><code>PreToolUse</code> Write hook</td><td>Spot C — guard</td><td>~15 min</td><td>Set once</td></tr>
+      <tr><td>4</td><td>"Output minimalista" Skill</td><td>Spot A — cross-project</td><td>~15 min</td><td>Once for all</td></tr>
+      <tr><td>5</td><td>Reinforced initial prompt</td><td>Spot A — session</td><td>~10 sec</td><td>Every time</td></tr>
+    </tbody>
+  </table>
+  <p>1 and 2 are "set and forget" and on their own already deliver the bulk of the result. #5 is "apply every
+  time" but it costs ten seconds. #4 you do once in your life and it covers every future project.</p>
 </section>
 
 
-<!-- STEP 4 — TECHNIQUE 3 -->
-<section class="step">
-  <div class="step-numero">STEP 4 — TECHNIQUE 3</div>
-  <h2 style="margin-top:0">PreToolUse Write hook — the active guard</h2>
-  <div class="blocco mostrare">
-    <div class="blocco-label">What to show on screen</div>
-    <p>Same settings.json screen. Show adding the "hooks" section:</p>
-    <ul style="margin-top:8px">
-      <li>hooks.PreToolUse.matcher = "Write"</li>
-      <li>Hook calling an external Node script (e.g. ~/.claude/check-write-discipline.js)</li>
-      <li>Open the script in VS Code, show the logic: reads filename, blocks if banned pattern</li>
-      <li>Test: ask Claude "create a reasoning file on the next steps". Show Claude trying, hook blocking, Claude giving up without creating anything.</li>
-    </ul>
-    <p>NB: the <code>check-write-discipline.js</code> script isn't in the materials (it's in the video, linked GitHub gist). For the director: have the gist ready during recording.</p>
-  </div>
-  <div class="blocco dire">
-    <div class="blocco-label">What to say (verbatim)</div>
-    <p>"Technique number three — this is the most technical of the five, but also the most powerful for those wanting maximum control. It's called PreToolUse Write hook."</p>
-    <p>"In short: a hook is a small script that Claude Code calls BEFORE executing a certain tool. In our case, before every Write. The script can look at what Claude is about to write — filename, content — and decide whether to let it pass or block it."</p>
-    <p>"I open the file ~/.claude/check-write-discipline.js. It's a small Node script, about thirty lines. Logic: takes the filename from the Write request, checks if it matches the banned patterns I listed, and if it matches prints 'BLOCKED' and returns an error exit code. Claude sees the error and gives up."</p>
-    <p>"Test: I ask Claude 'write a reasoning file on the next three project steps'. Claude tries to create 'reasoning underscore next steps dot md'. The hook intercepts, checks, BLOCK. Claude returns to his thinking and explains what he thinks directly in chat. Exactly what I wanted."</p>
-    <p>"The full script is in a GitHub gist linked in the materials — fifteen minutes of setup, max control forever."</p>
+<!-- ============== LIMITS / HONESTY ============== -->
+<section>
+  <span class="kicker">Honesty</span>
+  <h2>When NOT to apply the method</h2>
+  <div class="nota-onesta">
+    <p><strong>Sometimes those files really are useful.</strong> If you're a developer and you use the test plans
+    or debug logs to work, tailor the banned-name list — don't ban what you need.</p>
+    <p><strong>The explicit exception is sacred.</strong> Every technique lets the file through if you ask for it
+    ("create file X"): that's intentional. The method disciplines <em>unrequested</em> files, it doesn't tie your
+    hands.</p>
+    <p><strong>Deny patterns are touchy.</strong> A badly written glob blocks nothing (or blocks too much): test
+    with a single pattern first and verify it actually works. And protect your real tests with the
+    <code>allow</code> section.</p>
+    <p style="margin-bottom:0"><strong>The skill isn't 100% deterministic.</strong> It activates "when Claude
+    thinks it's needed": great as a portable net, but to lock down a single project keep Techniques 1 and 2
+    anyway.</p>
   </div>
 </section>
 
+<!-- ============== WHAT'S IN THE MATERIALS ============== -->
+<section>
+  <span class="kicker">The folder you hand over</span>
+  <h2>What's in the materials</h2>
+  <p>It's the <code>materiali/</code> folder the viewer downloads and that you zip up at the end of the video. It's
+  not a program to run: it's <strong>ready-made examples and rules</strong>, to copy into the right places in your
+  project. Here's how it's laid out and where each piece goes.</p>
 
-<!-- STEP 5 — TECHNIQUE 4 -->
-<section class="step">
-  <div class="step-numero">STEP 5 — TECHNIQUE 4</div>
-  <h2 style="margin-top:0">Custom "Output minimalist" skill — the portable version</h2>
-  <div class="blocco mostrare">
-    <div class="blocco-label">What to show on screen</div>
-    <p>Show:</p>
-    <ul style="margin-top:8px">
-      <li>Open terminal: <code>mkdir -p ~/.claude/skills/output-minimalist</code></li>
-      <li><code>code ~/.claude/skills/output-minimalist/SKILL.md</code></li>
-      <li>Show the file content with frontmatter (name, description) and rules</li>
-      <li>Save. The skill is now at user level — applies to ALL your projects</li>
-      <li>Quick test on a second different project: verify the skill activates automatically when Claude detects opportunity</li>
-    </ul>
-  </div>
-  <div class="blocco dire">
-    <div class="blocco-label">What to say (verbatim)</div>
-    <p>"Technique number four — the portable version of the first three. If techniques one, two, three are good for ONE specific project, the custom skill is the same idea but at your USER profile level, so it applies to all projects."</p>
-    <p>"What's a skill, quick recap. Claude Skills are expertise packages that Claude loads automatically when it recognizes they're needed. They were born for big things — like 'PDF management' or 'business workflow bundle'. But you can create your own, simple ones, for your purposes."</p>
-    <p>"I create the folder tilde slash dot claude slash skills slash output dash minimalist. Inside I create a SKILL.md file with a frontmatter — skill name, description — and then the rules, the same you already know but in skill form."</p>
-    <p>"Advantage over CLAUDE.md: I carry this to all my projects without repeating the output discipline section everywhere. Advantage over settings.json: more expressive, I can write more nuanced logic in natural language."</p>
-    <p>"Drawback: less deterministic. Skills 'activate when Claude thinks they're needed'. They work well ninety percent of the time, but if you want one hundred percent lockdown, pair with techniques one and two. Synergy, not replacement."</p>
-  </div>
+  <table>
+    <thead>
+      <tr><th>File</th><th>What it is / what it's for</th></tr>
+    </thead>
+    <tbody>
+      <tr><td><code>README.md</code></td><td>The step-by-step guide for the public: the 5 techniques in operational form, with the summary table, the before/after of the folder, and the links to the documentation. It's the starting point from which to read everything else.</td></tr>
+      <tr><td><code>esempio-claude-md.md</code></td><td>A ready-made example <code>CLAUDE.md</code> (<strong>Technique 1</strong>). It contains the <code>## Output Discipline</code> block with the banned names and the rules. You copy it as <code>CLAUDE.md</code> into the root of your project: it's the "constitution" Claude reads first.</td></tr>
+      <tr><td><code>esempio-settings.json</code></td><td>An example <code>settings.json</code> (<strong>Techniques 2 and 3</strong>). Inside: the <code>permissions.deny</code> section with the file patterns to refuse, the <code>allow</code> section that protects your real tests, and the <code>PreToolUse</code> Write hook. You copy it to <code>.claude/settings.json</code> (in the project) or <code>~/.claude/settings.json</code> (for all projects).</td></tr>
+      <tr><td><code>prompt-tipo.md</code></td><td>The reminder block to paste at the start of a session (<strong>Technique 5</strong>), including the "brutal task" variant for long sessions. You don't copy it into a config file: you keep it handy and paste it as the <em>first message</em> when you start an important task.</td></tr>
+    </tbody>
+  </table>
+
+  <p>In one line: the pieces don't form an "input → program → output" flow, but a <strong>layered defense</strong>
+  you assemble in your own project. The block of rules in <code>esempio-claude-md.md</code> goes into your project's
+  <code>CLAUDE.md</code> (Point A); the deny patterns and the hook in <code>esempio-settings.json</code> go into
+  <code>.claude/settings.json</code> (Points B and C); <code>prompt-tipo.md</code> you paste at the start of long
+  sessions (Point A). The <code>README.md</code> is the map that explains which piece goes where.
+  <strong>Technique 4</strong> (the portable skill) is described in the <code>README</code> but has no dedicated
+  file: you create it yourself in <code>~/.claude/skills/</code> following the instructions.</p>
 </section>
 
 
-<!-- STEP 6 — TECHNIQUE 5 -->
-<section class="step">
-  <div class="step-numero">STEP 6 — TECHNIQUE 5</div>
-  <h2 style="margin-top:0">Reinforced initial prompt — the reminder that always works</h2>
-  <div class="blocco mostrare">
-    <div class="blocco-label">What to show on screen</div>
-    <p>Show:</p>
-    <ul style="margin-top:8px">
-      <li>Open Claude Code, start a new session</li>
-      <li>As first message paste the "Output Discipline session rules" block from <code>prompt-tipo.md</code> in materials</li>
-      <li>Below the block, write your actual request</li>
-      <li>Show Claude confirming the rules and then executing the task cleanly</li>
-      <li>At the bottom, an overlay: "DISCIPLINE keyword for quick recall in long sessions"</li>
-    </ul>
-  </div>
-  <div class="blocco dire">
-    <div class="blocco-label">What to say (verbatim)</div>
-    <p>"Technique number five, the last one — the reinforced initial prompt. It's the top of the stack. You put it ABOVE everything else."</p>
-    <p>"Simple idea: every time you start an important session, the FIRST message you send isn't your request — it's a reminder block of output discipline rules. Three paragraphs, copy-paste, ten seconds."</p>
-    <p>"What the block contains. Summary of rules — no scratch files, no notes, no debug. Explicit exceptions — 'if I ask create file X, do it'. And a recall keyword I use, called 'DISCIPLINE'. If during the session I see Claude reverting to old habits, I send him in chat just the word 'DISCIPLINE' and he reloads the rules."</p>
-    <p>"Works very well on LONG sessions. When Claude works for an hour straight on a complex task, sometimes task pressure makes him 'forget' the CLAUDE.md rules. The recall word brings him back in two seconds."</p>
-    <p>"The full block, including the prompt template, is in the materials in description. I save it as a snippet in my VS Code — launch in two keystrokes."</p>
-  </div>
-</section>
+<!-- ============== HOW TO TEST (operational section, separate) ============== -->
+<section class="test">
+  <span class="kicker">Try it &mdash; operational part</span>
+  <h2>How to test the method (with the course materials)</h2>
+  <p>There's no program to run here: there's a <strong>method</strong>. The test is meant to show, with your own
+  eyes, that the techniques <em>really do bring the file count down</em>. Everything you need is in the
+  <code>materiali/</code> folder (<code>esempio-claude-md.md</code>, <code>esempio-settings.json</code>,
+  <code>prompt-tipo.md</code>). You run it on a throwaway test project, so you risk nothing of your own.</p>
 
+  <ol class="passi">
+    <li>Create an empty test folder (e.g. <code>progetto-cavia/</code>) and open it in VS Code. It's the testing ground: whatever you generate here you can throw away.</li>
+    <li>Apply the materials. Copy the <code>## Output Discipline</code> block from <code>esempio-claude-md.md</code> into a <code>CLAUDE.md</code> in the folder; copy <code>esempio-settings.json</code> to <code>.claude/settings.json</code> (these are the <em>deny patterns</em> from Technique&nbsp;2, plus the <code>PreToolUse</code> hook from Technique&nbsp;3). Save: they take effect right away, no restart.</li>
+    <li>Give Claude Code a task that usually messes up the folder &mdash; something like: <em>&ldquo;add an email field to the form and give me a summary&rdquo;</em>. It's the kind of request that, without discipline, would leave behind <code>summary_*.md</code>, <code>NOTES_*.md</code>, scratch files.</li>
+    <li>Watch and count. Check that the usual useless files do NOT show up; also try explicitly asking for a junk file (e.g. <em>&ldquo;write a file summary_modifiche.md&rdquo;</em>) and watch the deny/hook refuse the write. Count the files before and after.</li>
+  </ol>
 
-<!-- STEP 7 -->
-<section class="step">
-  <div class="step-numero">STEP 7</div>
-  <h2 style="margin-top:0">The final stack + before-and-after</h2>
-  <div class="blocco mostrare">
-    <div class="blocco-label">What to show on screen</div>
-    <p>Vertical split screen:</p>
-    <ul style="margin-top:8px">
-      <li>Left: <b>BEFORE</b> — the folder with 32 files of which 25 useless (the same as intro)</li>
-      <li>Right: <b>AFTER</b> — same folder after 2 weeks of work with all 5 techniques active, 8 files total, all useful</li>
-    </ul>
-    <p>Below, a small tip row about which stack level to apply based on your profile:</p>
+  <p style="margin-top:18px"><strong>What you should see</strong> &mdash; when Claude tries to write a banned file,
+  the <code>Write</code> tool is refused at the system level (real example from the patterns in
+  <code>esempio-settings.json</code>):</p>
+  <pre class="term">&gt; add an email field to the form, then write a file summary_modifiche.md
+
+  Editing the form...  <span class="ok">OK</span>  (registrazione.js updated)
+
+  Write(progetto-cavia/summary_modifiche.md)
+  -- Permission denied: "Write(**/summary_*)" is in the deny list (settings.json)
+
+  I've updated the form with the email field.
+  I'll give you the summary of changes here in chat, not as a file:
+   - added "email" (required) field to the registration form
+   - added client-side and server-side validation
+
+No extra files created.  <span class="ok">summary_modifiche.md  ->  BLOCKED</span></pre>
+
+  <div class="check">
+    <strong>Proof that the method works:</strong>
     <ul>
-      <li>Only Technique 1 + 2 -> "I want 70% solved, 15 minutes"</li>
-      <li>Techniques 1+2+5 -> "80%, 20 minutes"</li>
-      <li>Techniques 1+2+3+5 -> "90%, 30 minutes (the video's level)"</li>
-      <li>All 5 + cross-project skill -> "95%, 45 minutes, covers all future projects"</li>
+      <li>The folder stays <strong>clean</strong>: after the task there are only the real files (the edited form, the <code>CLAUDE.md</code>), no <code>summary_*</code> / <code>NOTES_*</code> / scratch &rarr; the Point&nbsp;A techniques convinced Claude not to want them.</li>
+      <li>Junk Writes get <strong>blocked</strong>: even when you force a banned name, the <code>Write</code> returns &ldquo;Permission denied&rdquo; and Claude backs off &rarr; the Technique&nbsp;2 deny holds up against &ldquo;forgetfulness&rdquo;.</li>
+      <li>The <strong>file count stays low</strong>: on the same project from the video it goes from <strong>~32 to ~8 files</strong> (of which the useless ones: from ~25 to ~0) &rarr; that's the <strong>~90% of noise removed</strong>, the title's promise.</li>
     </ul>
   </div>
-  <div class="blocco dire">
-    <div class="blocco-label">What to say (verbatim)</div>
-    <p>"Recap: the five techniques work in stack. The more you apply, the more Claude stays on rails. Let me list them by setup time."</p>
-    <p>"If you want minimum effort for maximum effect: techniques one and two — CLAUDE.md with output discipline section and settings.json with deny patterns. Fifteen minutes total. Solves about seventy percent of the problem."</p>
-    <p>"If you want to go higher: add technique five, the reinforced initial prompt. Another five minutes of setup, and every time you start an important session you paste the block. Eighty percent solved."</p>
-    <p>"If you want to lock it down: also add technique three, the PreToolUse Write hook. Fifteen extra minutes of technical setup, ninety percent solved. This is the level I use, what I show in the before-and-after."</p>
-    <p>"And then there's technique four, the custom skill, which brings the whole package to EVERY future project without repeating the setup. Do that once in a lifetime."</p>
-    <p>"End result: from the messy folder with thirty-two files of which twenty-five useless — see on the left — to the clean folder with eight files all useful that you see on the right. Same project, same workflow, after two weeks with the techniques active."</p>
-  </div>
-</section>
 
+  <p style="margin-top:18px"><strong>Two extra checks (optional):</strong></p>
+  <p>&bull; <strong>Turn one net off and on.</strong> Temporarily remove <code>esempio-settings.json</code>
+  (rename it) and re-run the same task: the junk files start getting through again. Put it back: they vanish.
+  You've seen Technique&nbsp;2 switch on and off.</p>
+  <p>&bull; <strong>The exception is sacred.</strong> Explicitly ask for a file you actually need (e.g.
+  <em>&ldquo;create <code>guida-utente.md</code>&rdquo;</em>): it gets created with no trouble. The method
+  disciplines the <em>unrequested</em> files, it doesn't tie your hands.</p>
 
-<!-- CTA -->
-<section class="cta">
-  <div class="badge-intro" style="background:white;color:var(--green)">Final CTA</div>
-  <h2 style="margin-top:0">Closing</h2>
-  <div class="blocco mostrare">
-    <div class="blocco-label">What to show on screen</div>
-    <p>CAMERA on you. "I told you the story" tone.</p>
-  </div>
-  <div class="blocco dire">
-    <div class="blocco-label">What to say (verbatim)</div>
-    <p>"All the configuration files I used — the CLAUDE.md with output discipline section ready, the settings.json with deny patterns already written, the initial prompt to paste in two keystrokes — are free in the link in description. Copy, paste, save. Thirty minutes and you've turned Claude from disorderly agent into disciplined collaborator."</p>
-    <p>"If this video was useful, subscribe — the next video I'm dedicating to a use case I see poorly covered in Italian: how to use Claude Code sub-agents as if they were your team of specialized interns. See you there."</p>
-  </div>
+  <p class="grafico-nota">Note: the numbers 32 &rarr; 8 are the real case from the video (the
+  <code>progetto-cliente-XYZ/</code> folder); the per-level percentages (~60% &rarr; ~90%) are indicative, meant to
+  show how far up to go. The test has no cost in euros: everything runs locally, the only spend is the normal use of
+  Claude Code for the test task.</p>
 </section>
 
 </body>

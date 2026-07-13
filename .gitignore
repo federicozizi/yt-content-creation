@@ -1,3 +1,19 @@
+# === SEGRETI: mai committare credenziali reali (regola globale, tutte le cartelle) ===
+# Ignora ogni file di credenziali in QUALSIASI sottocartella.
+# I file .env.example / .env.sample (solo placeholder) restano tracciati apposta.
+.env
+.env.*
+!.env.example
+!.env.sample
+**/.env
+**/.env.*
+!**/.env.example
+!**/.env.sample
+*.pem
+*.key
+secrets.json
+service-account*.json
+
 # Credenziali OAuth Google (legacy)
 credentials.json
 token.json

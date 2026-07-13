@@ -1,0 +1,11 @@
+# MAI committare la chiave vera
+.env
+
+# Roba di Python
+__pycache__/
+*.pyc
+.venv/
+venv/
+
+# Cache di Headroom
+.headroom/

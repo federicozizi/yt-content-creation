@@ -1,0 +1,37 @@
+#!/usr/bin/env bash
+# Guard anti-segreti: blocca il commit se tra le righe AGGIUNTE compare
+# una chiave che ha la forma di un segreto REALE (non un placeholder).
+#
+# Attivazione (una volta sola, per ogni clone del repo):
+#   git config core.hooksPath .githooks
+#
+# Bypass di emergenza (solo se sei SICURO che sia un falso positivo):
+#   git commit --no-verify
+set -u
+
+# Pattern di segreti reali. Volutamente stretti: cercano la struttura + entropia
+# di chiavi vere, non le stringhe-esempio.
+PATTERNS='sk-ant-(api03-)?[A-Za-z0-9_-]{40,}|sk-or-v1-[A-Za-z0-9]{40,}|AIzaSy[A-Za-z0-9_-]{30,}|ghp_[A-Za-z0-9]{36}|github_pat_[A-Za-z0-9_]{50,}|xox[baprs]-[A-Za-z0-9-]{10,}|AKIA[0-9A-Z]{16}|-----BEGIN[A-Z ]+PRIVATE KEY-----'
+
+# Stringhe che identificano un PLACEHOLDER: se la riga le contiene, non e' un segreto.
+PLACEHOLDER='xxxx|XXXX|\.\.\.|FAKE|DEMO|EXAMPLE|example|placeholder|INCOLLA|LA_TUA|YOUR_|REPLACE|<.*>'
+
+# Solo le righe aggiunte nello staging, senza intestazioni del diff.
+added="$(git diff --cached --no-color -U0 | grep -E '^\+' | grep -Ev '^\+\+\+')"
+
+hits="$(printf '%s\n' "$added" | grep -En "$PATTERNS" | grep -Ev "$PLACEHOLDER" || true)"
+
+if [ -n "$hits" ]; then
+  echo "=============================================================="
+  echo " COMMIT BLOCCATO: sembra esserci una CHIAVE REALE tra le modifiche."
+  echo "--------------------------------------------------------------"
+  printf '%s\n' "$hits"
+  echo "--------------------------------------------------------------"
+  echo " Se e' un vero segreto:"
+  echo "   1. toglilo dal file (usa un placeholder o mettilo in .env)"
+  echo "   2. se era gia' online: REVOCA e rigenera la chiave subito"
+  echo " Se e' un falso positivo, bypassa con:  git commit --no-verify"
+  echo "=============================================================="
+  exit 1
+fi
+exit 0

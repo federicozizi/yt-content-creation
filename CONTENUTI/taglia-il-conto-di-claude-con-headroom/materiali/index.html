@@ -1,0 +1,210 @@
+<!doctype html>
+<html lang="it">
+<head>
+<meta charset="utf-8" />
+<meta name="viewport" content="width=device-width, initial-scale=1" />
+<title>Headroom — con vs senza</title>
+<style>
+  :root {
+    --bg: #0b0f17; --panel: #121826; --line: #1f2937;
+    --text: #e5e7eb; --muted: #94a3b8;
+    --senza: #f87171; --con: #34d399; --accent: #60a5fa;
+    --mono: ui-monospace, "SF Mono", Menlo, Consolas, monospace;
+  }
+  * { box-sizing: border-box; }
+  body {
+    margin: 0; background: var(--bg); color: var(--text);
+    font-family: system-ui, -apple-system, Segoe UI, Roboto, sans-serif;
+    min-height: 100vh; display: flex; justify-content: center;
+    padding: 40px 20px;
+  }
+  .wrap { width: 100%; max-width: 880px; }
+  h1 { font-size: 26px; margin: 0 0 4px; letter-spacing: -0.02em; }
+  .sub { color: var(--muted); margin: 0 0 28px; font-size: 15px; }
+  .btn {
+    appearance: none; border: 0; cursor: pointer;
+    background: linear-gradient(180deg, #2563eb, #1d4ed8);
+    color: white; font-size: 17px; font-weight: 600;
+    padding: 16px 26px; border-radius: 12px; width: 100%;
+    box-shadow: 0 6px 20px rgba(37,99,235,.35);
+    transition: transform .06s ease, opacity .2s ease;
+  }
+  .btn:hover { transform: translateY(-1px); }
+  .btn:disabled { opacity: .55; cursor: progress; transform: none; }
+
+  .cards { display: grid; grid-template-columns: 1fr 1fr; gap: 16px; margin-top: 26px; }
+  .card { background: var(--panel); border: 1px solid var(--line); border-radius: 14px; padding: 20px; }
+  .card h2 { margin: 0 0 12px; font-size: 14px; text-transform: uppercase; letter-spacing: .08em; }
+  .card.senza h2 { color: var(--senza); }
+  .card.con h2 { color: var(--con); }
+  .big { font-size: 40px; font-weight: 700; font-family: var(--mono); }
+  .big small { font-size: 15px; color: var(--muted); font-weight: 400; }
+  .row { display: flex; justify-content: space-between; padding: 7px 0; border-top: 1px solid var(--line); font-size: 14px; }
+  .row span:last-child { font-family: var(--mono); }
+
+  .verdict {
+    margin-top: 22px; text-align: center; font-size: 19px; font-weight: 600;
+    padding: 18px; border-radius: 12px; background: rgba(52,211,153,.08);
+    border: 1px solid rgba(52,211,153,.3); color: var(--con);
+  }
+  .verdict b { font-size: 26px; }
+
+  details { margin-top: 22px; }
+  summary { cursor: pointer; color: var(--muted); font-size: 14px; }
+  pre {
+    background: #060a12; border: 1px solid var(--line); border-radius: 10px;
+    padding: 16px; overflow: auto; font-family: var(--mono); font-size: 12.5px;
+    line-height: 1.55; color: #c8d3e0; max-height: 360px; white-space: pre-wrap;
+  }
+  .hint { color: var(--muted); font-size: 13px; margin-top: 8px; }
+  .answers { display: grid; grid-template-columns: 1fr 1fr; gap: 14px; margin-top: 14px; }
+  .answers .a { background: #060a12; border: 1px solid var(--line); border-radius: 10px; padding: 14px; font-size: 13px; }
+  .answers .a strong { display: block; margin-bottom: 6px; }
+  .hidden { display: none; }
+  @media (max-width: 640px) { .cards, .answers { grid-template-columns: 1fr; } }
+</style>
+</head>
+<body>
+<div class="wrap">
+  <h1>Stessa domanda a Claude Opus. Stessa risposta. Meno token.</h1>
+  <p class="sub">Un pacchetto incidente (testo + JSON + codice) mandato a Opus in due modi:
+    intero, e dopo averlo passato in <b>Headroom</b>. Premi e guarda la differenza.</p>
+
+  <button id="go" class="btn">▶ Confronta: con e senza Headroom</button>
+  <p class="hint">I log dettagliati appaiono nella <b>console del browser</b> (F12) e nel
+    <b>terminale</b> dove gira <code>app.py</code>.</p>
+
+  <div id="risultati" class="hidden">
+    <div class="cards">
+      <div class="card senza">
+        <h2>Senza Headroom</h2>
+        <div class="big"><span id="in-senza">—</span> <small>token input</small></div>
+        <div class="row"><span>token output</span><span id="out-senza">—</span></div>
+        <div class="row"><span>costo stimato</span><span id="costo-senza">—</span></div>
+      </div>
+      <div class="card con">
+        <h2>Con Headroom</h2>
+        <div class="big"><span id="in-con">—</span> <small>token input</small></div>
+        <div class="row"><span>token output</span><span id="out-con">—</span></div>
+        <div class="row"><span>costo stimato</span><span id="costo-con">—</span></div>
+      </div>
+    </div>
+
+    <div id="verdict" class="verdict"></div>
+
+    <h3 style="margin:26px 0 10px;font-size:15px;color:var(--muted);font-weight:600;">
+      Cosa ha fatto Headroom, per tipo di contenuto</h3>
+    <table id="tabella-tipi" style="width:100%;border-collapse:collapse;font-size:14px;">
+      <thead><tr style="color:var(--muted);text-align:left;">
+        <th style="padding:8px 0;">Contenuto</th>
+        <th>Compressore</th>
+        <th style="text-align:right;">Token prima</th>
+        <th style="text-align:right;">Token dopo</th>
+        <th style="text-align:right;">Risparmio</th>
+      </tr></thead>
+      <tbody id="tipi-body"></tbody>
+    </table>
+
+    <div class="answers">
+      <div class="a"><strong style="color:var(--senza)">Risposta (senza)</strong><span id="risp-senza"></span></div>
+      <div class="a"><strong style="color:var(--con)">Risposta (con)</strong><span id="risp-con"></span></div>
+    </div>
+
+    <details open>
+      <summary>Log completo (gli stessi che vedi nel terminale)</summary>
+      <pre id="log"></pre>
+    </details>
+  </div>
+</div>
+
+<script>
+const $ = (id) => document.getElementById(id);
+const btn = $("go");
+
+btn.addEventListener("click", async () => {
+  btn.disabled = true;
+  btn.textContent = "⏳ Sto interrogando Opus due volte...";
+  console.clear();
+  console.log("%c[Headroom] avvio confronto…", "color:#60a5fa;font-weight:bold");
+
+  try {
+    const r = await fetch("/api/confronto", { method: "POST" });
+    const d = await r.json();
+
+    // 1) Tutti i log riga per riga nella console del browser
+    (d.log || []).forEach((riga) => console.log(riga));
+
+    if (!d.ok) {
+      $("log").textContent = (d.log || []).join("\n") + "\n\nERRORE: " + d.errore;
+      $("risultati").classList.remove("hidden");
+      return;
+    }
+
+    $("log").textContent = (d.log || []).join("\n");
+    $("risultati").classList.remove("hidden");
+
+    // Tabella per tipo di contenuto (sempre, anche senza chiave API)
+    const nomiCompressore = {
+      smart_crusher: "SmartCrusher (dati)",
+      kompress: "Kompress (testo)",
+      text: "testo",
+      code_aware: "AST (codice)",
+    };
+    const tbody = $("tipi-body");
+    tbody.innerHTML = "";
+    (d.dettagli_compressione || []).forEach((x) => {
+      const risp = x.token_prima === 0 ? 0 : Math.round((1 - x.token_dopo / x.token_prima) * 100);
+      const forte = risp >= 1;
+      const tr = document.createElement("tr");
+      tr.style.borderTop = "1px solid var(--line)";
+      tr.innerHTML =
+        '<td style="padding:9px 0;font-weight:600;">' + x.tipo + "</td>" +
+        "<td>" + (nomiCompressore[x.compressore] || x.compressore) + "</td>" +
+        '<td style="text-align:right;font-family:var(--mono);">' + x.token_prima.toLocaleString() + "</td>" +
+        '<td style="text-align:right;font-family:var(--mono);">' + x.token_dopo.toLocaleString() + "</td>" +
+        '<td style="text-align:right;font-family:var(--mono);color:' +
+          (forte ? "var(--con)" : "var(--muted)") + ';">' +
+          (forte ? "-" + risp + "%" : "intatto") + "</td>";
+      tbody.appendChild(tr);
+    });
+
+    if (d.con_api) {
+      $("in-senza").textContent = d.input_senza.toLocaleString();
+      $("in-con").textContent = d.input_con.toLocaleString();
+      $("out-senza").textContent = d.output_senza.toLocaleString();
+      $("out-con").textContent = d.output_con.toLocaleString();
+      $("costo-senza").textContent = "$" + d.costo_senza.toFixed(4);
+      $("costo-con").textContent = "$" + d.costo_con.toFixed(4);
+      $("risp-senza").textContent = d.risposta_senza;
+      $("risp-con").textContent = d.risposta_con;
+      $("verdict").innerHTML =
+        "Token in input: <b>-" + d.risparmio_input_pct + "%</b>" +
+        " &nbsp;·&nbsp; costo: <b>-" + d.risparmio_costo_pct + "%</b>";
+
+      // 2) Il riepilogo della differenza token, evidenziato in console
+      console.log(
+        "%c[Headroom] INPUT %d -> %d token  (-%s%%)",
+        "color:#34d399;font-weight:bold",
+        d.input_senza, d.input_con, d.risparmio_input_pct
+      );
+      console.table({
+        "token input":  { senza: d.input_senza,  con: d.input_con },
+        "token output": { senza: d.output_senza, con: d.output_con },
+        "costo USD":    { senza: d.costo_senza,   con: d.costo_con },
+      });
+    } else {
+      $("verdict").textContent =
+        "Compressione locale eseguita. Aggiungi la chiave in .env per vedere i token reali di Opus.";
+    }
+  } catch (e) {
+    console.error(e);
+    $("risultati").classList.remove("hidden");
+    $("log").textContent = "Errore di rete: " + e;
+  } finally {
+    btn.disabled = false;
+    btn.textContent = "▶ Confronta di nuovo";
+  }
+});
+</script>
+</body>
+</html>

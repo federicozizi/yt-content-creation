@@ -23,29 +23,27 @@ Contenuto MINIMO obbligatorio:
 Contenuto opzionale (solo se il video lo richiede):
 - File concreti che servono al video (script, prompt, config, esempi). Tutti al root della cartella, niente sottocartelle numerate.
 
-### 2. `PRINCIPALE.html` — guida regista per registrare
+### 2. `PRINCIPALE.html` — spiegazione del sistema (materiale di supporto)
 
-Guida **per me** durante la registrazione. **Non** e' per il pubblico, **non** e' una slide pubblica, **non** e' un documento pubblicabile. E' solo la scaletta che leggo/guardo mentre registro.
+Documento **per me**: spiega il **sistema** che si costruisce nel video — com'e' fatto, a livello tecnico ma comprensibile — e **con diagrammi/grafici** rende evidente il punto centrale del video (es. per l'Ep2: *perche' costa poco*). NON e' un copione da leggere parola per parola ("banale script"): e' lo schema mentale + i visual che tengo davanti mentre registro, e che posso anche mostrare a schermo. Le frasi da pronunciare le dico a braccio, da esperto del dominio.
 
-Struttura obbligatoria:
+Struttura tipica (adattala al contenuto):
 
-1. **Intro persuasiva (max 1 minuto)** — stile Liam Ottley / Nate Herk:
-   - Hook secco
-   - Cosa faremo nel video, elencato (quasi sempre)
-   - Promessa concreta che invoglia a guardare fino alla fine
-   - Tono: corto, denso, efficace. MAI sopra il minuto.
+1. **Cos'e' questo documento** — una riga che ricorda: materiale di supporto, spiegazione del sistema, non copione.
+2. **Cosa costruiamo** — il sistema in 2-3 frasi.
+3. **Architettura del sistema** — un **diagramma** (SVG o HTML/CSS inline) dei componenti e di come si parlano.
+4. **Come funziona, pezzo per pezzo** — ogni componente: cos'e', cosa fa, com'e' fatto. Tecnico ma chiaro: qui i termini tecnici si possono usare, **spiegandoli**.
+5. **Perche' funziona / perche' conviene** (LO SCOPO del video) — con **grafici** che dimostrano la tesi: per un video sui costi, barre "sistema vs modo ingenuo" e "dove va la spesa"; per altri video, il grafico che prova il punto (es. file prima/dopo, tempo prima/dopo).
+6. **I numeri** — tabella con dati reali (prezzi, quantita') se rilevante.
+7. **Limiti / onesta'** — cosa il sistema NON e' / NON fa.
+8. **Cosa c'è nei materiali** — mappa della cartella che lo spettatore scarica: ogni file cos'e' / a cosa serve, e come i pezzi si parlano (input → programma → output). Tabella + una riga di sintesi. Va **prima** della sezione "Come testare".
+9. **Come testare il tutto** — ultima sezione, **chiaramente separata** dal resto (sezione operativa, stile visivo distinto): la sequenza esatta per provare il sistema **coi materiali del corso** — comandi passo-passo, output atteso (anche un blocco "terminale"), e come verificare che ogni pezzo faccia la sua parte. E' l'unica sezione "fai questo", il resto del documento spiega.
 
-2. **Step 1, 2, ..., N** — ogni step contiene **esattamente 2 cose**:
-   - **Cosa mostrare a schermo**: cosa disegnare sulla lavagna (se e' uno step concettuale) o cosa far vedere a schermo (se e' uno step pratico).
-   - **Cosa dire**: testo verbatim di quello che pronuncio. **Niente riferimenti temporali** (no "per 30 secondi", no "ora prendi 2 minuti", no marker di durata). Solo testo da leggere.
-
-3. **CTA finale** — chiusura del video.
-
-Niente altro nel PRINCIPALE.html: no preparazione PRE-REC, no checklist montaggio, no varianti tecniche, no metadati extra. Tutto quello che serve PRIMA della registrazione (account, credenziali, artefatti) lo gestisco fuori dal file.
+Niente blocchi "Cosa dire" verbatim, niente scaletta parola-per-parola. Il valore del file e' la **comprensione visiva del sistema** + la prova pratica finale. Riferimento canonico: `CONTENUTI/serie-agenti-ai-aziende/ep2-agenti-ai-sostenibili/PRINCIPALE.html`.
 
 ### 3. `PRINCIPALE_ENG.html` — traduzione inglese del PRINCIPALE
 
-Stessa struttura, **tutto tradotto in inglese** (intro + step + CTA), per valutare se rifare il video anche in lingua inglese.
+Stessa struttura, **tutto tradotto in inglese** (tutte le sezioni: spiegazione del sistema, diagrammi, grafici), per valutare se rifare il video anche in lingua inglese.
 
 Vive nella stessa cartella del PRINCIPALE.html italiano. Non e' bilingue per audience — e' un'opzione per me.
 
@@ -128,14 +126,25 @@ Claude trova l'idea, genera la cartella `CONTENUTI/<slug>/` con le 3 cose (mater
    - di non committare il `.env`
    - di **revocare e rigenerare** le credenziali se per sbaglio sono finite su GitHub (cancellarle dalla storia git da sole non basta — i bot scansionano).
 
+## API e modelli (REGOLA GLOBALE)
+
+Per i progetti pratici che chiamano i modelli **via codice**, si usa **OpenRouter** (non l'API diretta di un singolo provider):
+
+- **Una sola chiave** (`OPENROUTER_API_KEY`, da [openrouter.ai/keys](https://openrouter.ai/keys)) dà accesso a tutti i modelli. Più facile, e si cambia modello/produttore cambiando una riga.
+- Endpoint **compatibile OpenAI**: si usa la libreria `openai` con `base_url="https://openrouter.ai/api/v1"`. NON l'SDK Anthropic (OpenRouter non parla il protocollo nativo Anthropic).
+- **Modelli da usare: Anthropic o Google** (restiamo su questi due produttori salvo motivo specifico), col prefisso del produttore: `anthropic/claude-opus-4-8`, `anthropic/claude-haiku-4-5`, `google/gemini-...`, ecc.
+- **Structured output**: `response_format` con json_schema (il `.parse()` del client OpenAI con un modello Pydantic funziona). **Reasoning/thinking**: parametro `reasoning` di OpenRouter (`{"effort": "..."}` o `{"max_tokens": ...}`) via `extra_body`, non il `thinking` nativo Anthropic.
+- **Unica eccezione**: un contenuto il cui *argomento è proprio l'SDK ufficiale Anthropic* (es. Ep1 "Cos'è il Claude SDK" con `tool_runner`) può restare sull'SDK Anthropic con `ANTHROPIC_API_KEY` — lì l'SDK è il punto del video, non un dettaglio.
+- Riferimento canonico: `CONTENUTI/serie-agenti-ai-aziende/ep2-agenti-ai-sostenibili/materiali/analizza_recensioni.py`.
+
 ## Stile del PRINCIPALE.html (regole non negoziabili)
 
-1. **Solo per me come regista** — non pubblicabile, non self-contained per pubblico esterno.
-2. **Niente riferimenti temporali** (no minuti, no "per X secondi", no timer).
-3. **Ogni step = 2 sezioni soltanto**: cosa mostrare + cosa dire. Punto.
-4. **Intro sotto 1 minuto** (parametro qualitativo: si legge in ~50-70 secondi a voce normale).
-5. **HTML self-contained** (CSS inline, nessuna dipendenza esterna).
-6. **Tono leggibile a colpo d'occhio** mentre registro — font grandi, sezioni evidenti.
+1. **E' materiale di supporto, non un copione** — spiega il sistema (com'e' fatto, perche' funziona/conviene), non le frasi da pronunciare. Niente blocchi "Cosa dire" verbatim.
+2. **Spiegazione tecnica ma comprensibile** — qui i termini tecnici si possono usare, sempre spiegandoli; il livello e' "capisco com'e' fatto", non "lo so gia'".
+3. **Almeno un diagramma dell'architettura** e — quando il video ha una tesi dimostrabile coi numeri (costi, tempo, file...) — **almeno un grafico** che la prova. Diagrammi/grafici in SVG o HTML/CSS inline.
+4. **HTML self-contained** (CSS inline, nessuna dipendenza esterna, nessuna libreria JS di grafici).
+5. **Leggibile e scansionabile** — sezioni evidenti, un'idea per blocco, il visual prima del testo lungo.
+6. **Puo' essere mostrato a schermo** nel video (diagrammi e grafici sono pensati anche per quello).
 
 ## Stile del README.md dentro materiali/ (regole non negoziabili)
 
@@ -206,9 +215,11 @@ Tono di riferimento: **divulgativo accessibile con sano effetto nerd**. Tipo Pie
 
 ### Check finale prima di consegnare un PRINCIPALE.html
 
-Leggi a voce alta, da regista, il blocco "Cosa dire". Domanda di controllo: "Se lo dicessi questa sera a cena a un amico imprenditore non tecnico, lui mi capirebbe e penserebbe che e' interessante, oppure mi guarderebbe con l'aria 'di che parli'?"
+Guarda il documento e immagina di spiegare il sistema a un amico imprenditore non tecnico usando **solo** i diagrammi e i grafici. Domanda di controllo: "Con questi visual davanti, riesco a fargli capire com'e' fatto il sistema e perche' funziona/conviene, e li trova chiari e interessanti?"
 
-Se la risposta e' la seconda, riscrivi.
+Se per spiegarlo devo scusarmi del gergo, o manca il grafico che prova la tesi del video, riscrivi.
+
+> Nota: la Voice Guide qui sopra governa il **parlato** (le frasi a braccio davanti alla camera) e il README per il pubblico. Il PRINCIPALE.html invece e' materiale tecnico di supporto: i termini tecnici si usano, spiegandoli.
 
 ---
 

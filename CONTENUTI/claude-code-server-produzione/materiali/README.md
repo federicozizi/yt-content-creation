@@ -128,7 +128,7 @@ nano ~/.claude/env       # ti apre l'editor nano
 Incolla (sostituisci `sk-ant-...` con la tua chiave da [https://console.anthropic.com](https://console.anthropic.com)):
 
 ```
-export ANTHROPIC_API_KEY="sk-ant-XXXXXXXXXXXXXXXXXXXXXXXXX"
+export ANTHROPIC_API_KEY="<incolla-qui-la-tua-chiave-anthropic>"
 ```
 
 Salva (Ctrl+O, Invio, Ctrl+X).

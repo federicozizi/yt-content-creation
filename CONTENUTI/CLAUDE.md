@@ -6,7 +6,7 @@ Output prodotto: una cartella per ogni video da registrare. Ogni cartella ha **e
 
 ```
 CONTENUTI/<slug>/
-|-- PRINCIPALE.html            <- guida regista (italiano)
+|-- PRINCIPALE.html            <- spiegazione del sistema + diagrammi/grafici (italiano)
 |-- PRINCIPALE_ENG.html        <- traduzione inglese
 `-- materiali/                 <- cartella zippabile per il pubblico
     |-- README.md              <- guida step-by-step (obbligatorio)
@@ -33,7 +33,7 @@ L'utente dice "lavora sull'idea X". Claude:
 4. Compila i 3 artefatti:
    - `materiali/README.md` — guida step-by-step a prova di idiota
    - `materiali/DISCLAIMER.md` — **solo se** il contenuto usa `.env` o credenziali; altrimenti rimuovi il file
-   - `PRINCIPALE.html` — intro persuasiva sotto 1 minuto + step (cosa mostrare + cosa dire) + CTA
+   - `PRINCIPALE.html` — spiegazione del sistema (architettura + come funziona) con diagrammi e grafici che provano la tesi del video. NON un copione verbatim. Riferimento: `serie-agenti-ai-aziende/ep2-agenti-ai-sostenibili/PRINCIPALE.html`
    - `PRINCIPALE_ENG.html` — traduzione integrale del PRINCIPALE
 5. Se il contenuto include file pratici (script, prompt, config), li mette al root di `materiali/`, mai in sottocartelle numerate
 

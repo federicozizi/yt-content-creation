@@ -2,203 +2,441 @@
 <html lang="en">
 <head>
 <meta charset="UTF-8">
-<title>Claude Code in production - Director's guide</title>
+<title>Claude Code in production — System explainer</title>
 <style>
-  :root { --bg: #fafaf9; --ink: #1a1a1a; --ink-soft: #555; --accent: #d97706; --accent-soft: #fef3c7; --line: #e5e5e5; --green: #15803d; --green-soft: #dcfce7; --blue: #1d4ed8; --blue-soft: #dbeafe; --red: #dc2626; --red-soft: #fee2e2; }
+  :root { --bg: #fafaf9; --ink: #1a1a1a; --ink-soft: #555; --accent: #d97706; --accent-soft: #fef3c7; --line: #e5e5e5; --green: #15803d; --green-soft: #dcfce7; --blue: #1d4ed8; --blue-soft: #dbeafe; --red: #dc2626; --red-soft: #fee2e2; --purple:#7c3aed; --purple-soft:#ede9fe; }
   * { box-sizing: border-box; }
-  body { font-family: -apple-system, BlinkMacSystemFont, "Segoe UI", Roboto, sans-serif; background: var(--bg); color: var(--ink); max-width: 900px; margin: 0 auto; padding: 40px 24px 120px; line-height: 1.55; font-size: 17px; }
+  body { font-family: -apple-system, BlinkMacSystemFont, "Segoe UI", Roboto, sans-serif; background: var(--bg); color: var(--ink); max-width: 960px; margin: 0 auto; padding: 40px 24px 120px; line-height: 1.6; font-size: 17px; }
   h1 { font-size: 32px; margin: 0 0 4px; letter-spacing: -0.02em; }
-  .sottotitolo { color: var(--ink-soft); font-size: 16px; margin-bottom: 32px; }
-  .badge-intro { display: inline-block; background: var(--accent-soft); color: var(--accent); padding: 4px 10px; border-radius: 6px; font-weight: 600; font-size: 13px; text-transform: uppercase; letter-spacing: 0.05em; margin-bottom: 12px; }
-  .step-numero { display: inline-block; background: var(--ink); color: white; padding: 6px 12px; border-radius: 6px; font-weight: 700; font-size: 14px; margin-bottom: 12px; }
-  section.intro { background: linear-gradient(180deg, #fff 0%, var(--accent-soft) 100%); border: 2px solid var(--accent); border-radius: 12px; padding: 28px; margin: 24px 0 40px; }
-  section.step { border: 1px solid var(--line); background: white; border-radius: 10px; padding: 24px; margin: 24px 0; }
-  section.step.problema { border-left: 6px solid var(--red); }
-  section.cta { background: var(--green-soft); border: 2px solid var(--green); border-radius: 12px; padding: 28px; margin: 40px 0 24px; }
-  .blocco { margin: 16px 0; }
-  .blocco-label { font-size: 12px; font-weight: 700; text-transform: uppercase; letter-spacing: 0.08em; color: var(--ink-soft); margin-bottom: 6px; }
-  .blocco.mostrare .blocco-label { color: var(--blue); }
-  .blocco.mostrare { background: var(--blue-soft); border-left: 4px solid var(--blue); padding: 12px 16px; border-radius: 4px; }
-  .blocco.dire { background: #fafafa; border-left: 4px solid var(--ink); padding: 14px 18px; border-radius: 4px; font-size: 18px; line-height: 1.6; }
-  .blocco.dire p { margin: 0 0 12px; }
-  .blocco.dire p:last-child { margin-bottom: 0; }
-  .nota { font-size: 14px; color: var(--ink-soft); font-style: italic; margin-top: 8px; }
+  h2 { font-size: 23px; margin: 0 0 4px; letter-spacing: -0.01em; }
+  .sottotitolo { color: var(--ink-soft); font-size: 16px; margin-bottom: 8px; }
+  .serie-tag { display:inline-block; background: var(--blue-soft); color: var(--blue); padding: 4px 10px; border-radius: 6px; font-weight: 700; font-size: 12px; text-transform: uppercase; letter-spacing: 0.06em; margin-bottom: 24px; }
+  .ruolo-doc { background: var(--accent-soft); border: 1px solid var(--accent); border-radius: 10px; padding: 14px 18px; font-size: 15px; color: #7c4a06; margin: 8px 0 36px; }
+  .ruolo-doc strong { color: var(--accent); }
+  section { border: 1px solid var(--line); background: white; border-radius: 12px; padding: 26px; margin: 22px 0; }
+  section.goal { border-left: 6px solid var(--green); }
+  .kicker { display:inline-block; font-size: 12px; font-weight: 700; text-transform: uppercase; letter-spacing: 0.08em; color: var(--blue); margin-bottom: 10px; }
+  .goal .kicker { color: var(--green); }
+  p { margin: 0 0 14px; }
+  p:last-child { margin-bottom: 0; }
+  .diagramma { width: 100%; margin: 8px 0 4px; }
+  .legenda { display: flex; flex-wrap: wrap; gap: 16px; font-size: 14px; color: var(--ink-soft); margin-top: 10px; }
+  .legenda span { display: inline-flex; align-items: center; gap: 7px; }
+  .dot { width: 13px; height: 13px; border-radius: 3px; display:inline-block; }
+  .strato { display: grid; grid-template-columns: 44px 1fr; gap: 16px; align-items: start; padding: 16px 0; border-top: 1px dashed var(--line); }
+  .strato:first-of-type { border-top: none; }
+  .strato .num { width: 44px; height: 44px; border-radius: 10px; color: white; font-weight: 800; font-size: 19px; display:flex; align-items:center; justify-content:center; }
+  .strato h3 { margin: 4px 0 6px; font-size: 18px; }
+  .strato p { font-size: 16px; }
+  .tag-costo { display:inline-block; font-size: 12px; font-weight: 700; padding: 2px 8px; border-radius: 20px; margin-left: 8px; vertical-align: middle; }
+  .barriera { display: grid; grid-template-columns: 170px 1fr; gap: 14px; align-items: center; margin: 12px 0; }
+  .barriera-label { font-size: 14px; font-weight: 700; text-align: right; }
+  .barriera-track { background: #f0f0ef; border-radius: 8px; height: 44px; position: relative; overflow: hidden; }
+  .barriera-fill { height: 100%; border-radius: 8px; display: flex; align-items: center; padding: 0 14px; color: white; font-weight: 700; font-size: 14px; }
+  .grafico-nota { font-size: 14px; color: var(--ink-soft); font-style: italic; margin-top: 12px; }
+  table { width: 100%; border-collapse: collapse; margin: 8px 0; font-size: 16px; }
+  th, td { text-align: left; padding: 10px 12px; border-bottom: 1px solid var(--line); }
+  th { font-size: 13px; text-transform: uppercase; letter-spacing: 0.05em; color: var(--ink-soft); }
+  td.num, th.num { text-align: right; font-variant-numeric: tabular-nums; }
+  code { background:#f0f0ef; padding:1px 6px; border-radius:4px; font-size:0.9em; }
+  .nota-onesta { background: var(--red-soft); border-left: 4px solid var(--red); border-radius: 4px; padding: 14px 18px; font-size: 16px; }
+  section.test { border-left: 6px solid var(--blue); margin-top: 40px; }
+  .test .kicker { color: var(--blue); }
+  ol.passi { margin: 6px 0; padding: 0; counter-reset: passo; list-style: none; }
+  ol.passi li { counter-increment: passo; position: relative; padding: 9px 0 9px 44px; border-top: 1px dashed var(--line); font-size: 16px; }
+  ol.passi li:first-child { border-top: none; }
+  ol.passi li::before { content: counter(passo); position: absolute; left: 0; top: 8px; width: 28px; height: 28px; background: var(--blue); color: #fff; border-radius: 50%; font-weight: 800; font-size: 14px; display: flex; align-items: center; justify-content: center; }
+  pre.term { background: #1a1a1a; color: #e5e5e5; border-radius: 8px; padding: 16px 18px; font-family: ui-monospace, "SF Mono", Menlo, Consolas, monospace; font-size: 13px; line-height: 1.5; overflow-x: auto; margin: 12px 0; }
+  pre.term .ok { color: #4ade80; font-weight: 700; }
+  .check { background: var(--green-soft); border: 1px solid var(--green); border-radius: 8px; padding: 14px 18px; margin: 14px 0; font-size: 16px; }
+  .check ul { margin: 8px 0 0; padding-left: 20px; }
+  .check li { margin: 7px 0; }
 </style>
 </head>
 <body>
 
-<h1>Have you ever put Claude Code on a real production server? I did.</h1>
-<div class="sottotitolo">Director's guide - for recording. Not a public document.</div>
+<div class="serie-tag">Personal story &middot; Claude Code in production</div>
+<h1>Have you ever put Claude Code on a real production server?</h1>
+<div class="sottotitolo">System explainer: the nightly scraper that runs on its own on a VPS</div>
+
+<div class="ruolo-doc">
+  <strong>What this document is.</strong> Supporting material to understand and explain the system while I record:
+  how the scraper that runs on its own on an always-on server is built and — above all — <em>why it's acceptable to
+  let it run with nobody watching</em>, which is the heart of the video. It is not a script to read out: it's the
+  mental model + the diagrams to keep in front of me (and to show on screen). I say the lines off the cuff.
+</div>
 
 
-<!-- INTRO -->
-<section class="intro">
-  <div class="badge-intro">Intro - under 1 minute</div>
-  <h2 style="margin-top:0">Opening (story, not funnel)</h2>
-  <div class="blocco mostrare">
-    <div class="blocco-label">What to show on screen</div>
-    <p>CAMERA on you. No graphics. Direct eye contact. After 20 seconds, quick cut to a scene: SSH terminal open with Claude Code running, an email notification arriving "Price Report - 7 variations found", a simple API consumption chart. Back to full CAMERA.</p>
-  </div>
-  <div class="blocco dire">
-    <div class="blocco-label">What to say (verbatim)</div>
-    <p>"Four months ago I decided to do something that, from what I see online, few Claude Code users ever actually do: put Claude on a real production server, running twenty-four hours a day without me sitting in front of it. Use case: a competitor price scraper for a client — every night at four in the morning it visits three sites, extracts prices, and if something important changes it emails me."</p>
-    <p>"Thirty days of consecutive execution have passed. Good things: the system works, it found seven significant price variations that would have cost hours of manual analysis. Less good things: I banged my head three times in ways I didn't expect, and I had to learn five rules that I now ALWAYS apply when I put Claude in production."</p>
-    <p>"In this video I'll tell you the honest story — what worked, what blew up, and the five rules at the end. Five rules that, if you follow them, save you a month of mistakes. The config files I used — settings.json, CLAUDE.md, the actual task prompt — are in the materials in description. Let's go."</p>
-  </div>
-  <div class="nota">Voice test: read aloud in 55-65 seconds. Low-medium energy, "honest personal story" tone. The line "I banged my head three times" is essential — opens the curiosity loop and builds credibility. Don't skip it.</div>
+<!-- ============== WHAT WE BUILD ============== -->
+<section>
+  <span class="kicker">In one sentence</span>
+  <h2>What this is about</h2>
+  <p>I put Claude Code on a <strong>real, always-on server</strong> (a small VPS costing a few euros a month) and
+  let it work <strong>on its own, every night, for 30 days</strong>. The job: visit three of a client's competitor
+  websites, read the prices, and send an email only when something actually changes.</p>
+  <p>The difference from the "normal" use of Claude Code on your PC is huge: here <strong>nobody is
+  watching</strong>. It runs at four in the morning while I sleep. So the real question of the video isn't "how do
+  you install it", it's: <strong>why do I trust letting it run on its own?</strong> The answer isn't "because I
+  trust Claude" — it's because I built <strong>several safety nets stacked one under the other</strong>.</p>
 </section>
 
 
-<!-- STEP 1 -->
-<section class="step">
-  <div class="step-numero">STEP 1</div>
-  <h2 style="margin-top:0">Where I started — the client's problem</h2>
-  <div class="blocco mostrare">
-    <div class="blocco-label">What to show on screen</div>
-    <p>CAMERA on you. Maybe a small overlay with a photo/illustration of "sporting goods store" while you tell the case. Nothing more. The story matters, not the graphics.</p>
+<!-- ============== ARCHITECTURE ============== -->
+<section>
+  <span class="kicker">How it's built</span>
+  <h2>System architecture</h2>
+  <p>On the left, the piece that kicks everything off by itself. In the center, the always-on server, where Claude
+  Code works but <em>inside a cage</em> (the barriers in red). On the right, what it produces. The important part
+  isn't the flow: it's the <strong>barriers</strong> that surround Claude.</p>
+
+  <svg class="diagramma" viewBox="0 0 900 360" xmlns="http://www.w3.org/2000/svg" role="img" aria-label="Architecture diagram: scheduling, server with Claude Code inside the security barriers, output">
+    <defs>
+      <marker id="arrow" markerWidth="10" markerHeight="10" refX="8" refY="3" orient="auto" markerUnits="strokeWidth">
+        <path d="M0,0 L8,3 L0,6 Z" fill="#555"></path>
+      </marker>
+    </defs>
+
+    <!-- Scheduling -->
+    <rect x="8" y="150" width="150" height="86" rx="10" fill="#dbeafe" stroke="#1d4ed8" stroke-width="1.5"></rect>
+    <text x="83" y="178" text-anchor="middle" font-size="12" font-weight="800" fill="#1d4ed8">THE ALARM CLOCK</text>
+    <text x="83" y="198" text-anchor="middle" font-size="12.5" fill="#1a1a1a">cron · 04:00</text>
+    <text x="83" y="215" text-anchor="middle" font-size="11" fill="#555">every night,</text>
+    <text x="83" y="229" text-anchor="middle" font-size="11" fill="#555">on its own</text>
+
+    <!-- Server box (contains Claude + barriers) -->
+    <rect x="200" y="40" width="430" height="290" rx="14" fill="#fafafa" stroke="#888" stroke-width="1.5" stroke-dasharray="6 4"></rect>
+    <text x="218" y="64" font-size="12.5" font-weight="800" fill="#555">THE ALWAYS-ON SERVER — Ubuntu VPS, ~$6/mo</text>
+
+    <!-- Barriers = rings/labels inside the server -->
+    <rect x="220" y="78" width="390" height="232" rx="11" fill="#fee2e2" stroke="#dc2626" stroke-width="1.4"></rect>
+    <text x="415" y="98" text-anchor="middle" font-size="11.5" font-weight="800" fill="#dc2626">BARRIER · non-root "claude" user (least privilege)</text>
+
+    <rect x="240" y="108" width="350" height="182" rx="9" fill="#ffe9e9" stroke="#dc2626" stroke-width="1.2"></rect>
+    <text x="415" y="127" text-anchor="middle" font-size="11.5" font-weight="700" fill="#dc2626">BARRIER · allow/deny permissions + blocking hook</text>
+
+    <!-- Claude Code at the center of the cage -->
+    <rect x="300" y="150" width="230" height="118" rx="10" fill="#ede9fe" stroke="#7c3aed" stroke-width="1.6"></rect>
+    <text x="415" y="178" text-anchor="middle" font-size="13" font-weight="800" fill="#7c3aed">CLAUDE CODE</text>
+    <text x="415" y="197" text-anchor="middle" font-size="11.5" fill="#1a1a1a">headless, from a prompt</text>
+    <text x="415" y="216" text-anchor="middle" font-size="11" fill="#555">reads the 3 sites (WebFetch)</text>
+    <text x="415" y="232" text-anchor="middle" font-size="11" fill="#555">extracts prices · compares</text>
+    <text x="415" y="251" text-anchor="middle" font-size="11" fill="#555">logs every step</text>
+
+    <!-- Competitor sites (data source, top right) -->
+    <rect x="664" y="40" width="156" height="64" rx="10" fill="#fff" stroke="#cfcfcf" stroke-width="1.5"></rect>
+    <text x="742" y="66" text-anchor="middle" font-size="12" font-weight="700" fill="#1a1a1a">The 3 competitor sites</text>
+    <text x="742" y="84" text-anchor="middle" font-size="11" fill="#888">read-only, public data</text>
+
+    <!-- Database -->
+    <rect x="664" y="124" width="156" height="60" rx="10" fill="#fff" stroke="#cfcfcf" stroke-width="1.5"></rect>
+    <text x="742" y="149" text-anchor="middle" font-size="12.5" font-weight="700" fill="#1a1a1a">prezzi.db</text>
+    <text x="742" y="167" text-anchor="middle" font-size="11" fill="#888">price history (SQLite)</text>
+
+    <!-- Output: report + mail -->
+    <rect x="664" y="204" width="156" height="60" rx="10" fill="#dcfce7" stroke="#15803d" stroke-width="1.5"></rect>
+    <text x="742" y="229" text-anchor="middle" font-size="12.5" font-weight="800" fill="#15803d">report + email</text>
+    <text x="742" y="247" text-anchor="middle" font-size="11" fill="#1a1a1a">only if prices changed</text>
+
+    <!-- Log -->
+    <rect x="664" y="284" width="156" height="46" rx="10" fill="#fff" stroke="#cfcfcf" stroke-width="1.5"></rect>
+    <text x="742" y="312" text-anchor="middle" font-size="12" font-weight="700" fill="#555">log of every run</text>
+
+    <!-- Arrows -->
+    <line x1="158" y1="193" x2="298" y2="200" stroke="#555" stroke-width="2" marker-end="url(#arrow)"></line>
+    <text x="178" y="183" font-size="10.5" fill="#555">starts</text>
+
+    <!-- Claude -> sites (read) -->
+    <path d="M530,168 C600,140 630,100 662,82" fill="none" stroke="#1d4ed8" stroke-width="2" marker-end="url(#arrow)"></path>
+    <!-- Claude <-> db -->
+    <line x1="530" y1="200" x2="662" y2="160" stroke="#555" stroke-width="2" marker-end="url(#arrow)"></line>
+    <!-- Claude -> report/mail -->
+    <path d="M530,232 C600,238 630,234 662,234" fill="none" stroke="#15803d" stroke-width="2" marker-end="url(#arrow)"></path>
+    <!-- Claude -> log -->
+    <path d="M530,255 C595,285 630,300 662,304" fill="none" stroke="#888" stroke-width="1.8" marker-end="url(#arrow)"></path>
+  </svg>
+
+  <div class="legenda">
+    <span><span class="dot" style="background:#1d4ed8"></span> Starts on its own (scheduling)</span>
+    <span><span class="dot" style="background:#7c3aed"></span> Claude Code (the worker)</span>
+    <span><span class="dot" style="background:#dc2626"></span> The barriers (the cage)</span>
+    <span><span class="dot" style="background:#15803d"></span> What it delivers</span>
   </div>
-  <div class="blocco dire">
-    <div class="blocco-label">What to say (verbatim)</div>
-    <p>"The client in question is a small sporting goods e-commerce — running shoes, technical apparel, accessories. They have three direct competitors they monitor by hand: once a week, the owner's wife opens the three sites, copies the prices of the sixty key products, drops them into an Excel sheet, and circles in red the ones where they're priced above the market."</p>
-    <p>"He tells me: 'Federico, this thing costs my wife one afternoon a week. Can it be automated with our AI friend?'. Easy answer: sure, just scheduled scraping. Real answer, more complicated: yes, but if you want it to run on its own 24/7 with no excuses, you need a production setup, and in the YouTube content out there in Italian no one explains it well."</p>
-    <p>"I decide to do it myself, experiment first-hand, and then tell you about it. That's what you're watching right now."</p>
+  <p class="grafico-nota">Outside the drawing, above everything, there is a sixth barrier that doesn't live on the
+  server: the <strong>spending cap</strong> set in the Anthropic Console. Even if everything else failed, beyond
+  that figure the key stops working.</p>
+</section>
+
+
+<!-- ============== HOW IT WORKS, PIECE BY PIECE ============== -->
+<section>
+  <span class="kicker">Piece by piece</span>
+  <h2>How it works, piece by piece</h2>
+
+  <div class="strato">
+    <div class="num" style="background:#1d4ed8">1</div>
+    <div>
+      <h3>The always-on server — the "shop that never closes"</h3>
+      <p>A small rented computer in a data center (a <em>VPS</em>): Ubuntu, about six dollars a month. The reason
+      for not using your home PC is trivial: if you unplug it or the power goes out, nothing fires at night. The
+      server, instead, is always on. You log in remotely only with a key (<em>SSH</em>), never with a password.</p>
+    </div>
+  </div>
+
+  <div class="strato">
+    <div class="num" style="background:#7c3aed">2</div>
+    <div>
+      <h3>Claude Code "hands-free" — the worker with no screen</h3>
+      <p>On the server runs <code>claude --headless</code>: it's Claude Code with no chat in front of it, executing
+      a task written in a file (<code>scraper-prompt.md</code>) and then shutting down. That file tells it what to
+      do step by step: read the three sites, grab the prices, compare with yesterday, write the report. The
+      <strong>how</strong> of each step it decides on its own — this is where it becomes an "agent" and not a plain
+      script.</p>
+    </div>
+  </div>
+
+  <div class="strato">
+    <div class="num" style="background:#1d4ed8">3</div>
+    <div>
+      <h3>The automatic alarm — <code>cron</code>, the "self-starting cleaner"</h3>
+      <p>One line of system scheduling: <code>0 4 * * *</code> means "every night at four". It's the server's timer:
+      at that hour it launches the command, without me touching anything. The same mechanism that would fire off a
+      backup while you sleep.</p>
+    </div>
+  </div>
+
+  <div class="strato">
+    <div class="num" style="background:#15803d">4</div>
+    <div>
+      <h3>What it touches and what it produces — public reads, verifiable output</h3>
+      <p>Claude <strong>reads</strong> the competitors' pages (<code>WebFetch</code>, public data), saves the
+      prices in a small store on the server (<code>prezzi.db</code>, a SQLite database), and <strong>writes</strong>
+      a daily report. It emails the client <em>only</em> if it finds changes above 5%. All the other nights:
+      silence, because nothing changed.</p>
+    </div>
+  </div>
+
+  <div class="strato">
+    <div class="num" style="background:#dc2626">5</div>
+    <div>
+      <h3>The flight log — the <code>log</code>, the black box</h3>
+      <p>On every run Claude writes a journal to <code>/var/log/claude-scraper.log</code>: when it started, what it
+      decided, what it executed, when it finished. In the morning, if something went wrong, I have the exact
+      account. If everything went fine, I have the numbers to improve. Without a journal, you're blind.</p>
+    </div>
   </div>
 </section>
 
 
-<!-- STEP 2 -->
-<section class="step">
-  <div class="step-numero">STEP 2</div>
-  <h2 style="margin-top:0">Initial setup — a 6 dollar VPS</h2>
-  <div class="blocco mostrare">
-    <div class="blocco-label">What to show on screen</div>
-    <p>Sequence:</p>
-    <ul style="margin-top:8px">
-      <li>Screen: digitalocean.com -> Create Droplet -> Ubuntu 22.04 -> Frankfurt -> 6 USD/month</li>
-      <li>Local terminal: `ssh root@<ip>` (show the prompt changing, you're in)</li>
-      <li>`sudo adduser claude` (creating non-root user)</li>
-      <li>`su - claude` (switching to non-root user)</li>
-      <li>NVM + Node + Claude Code install (cut the wait in edit)</li>
-      <li>`claude --version` -> version shows up</li>
+<!-- ============== WHY IT'S SOLID (THE THESIS) ============== -->
+<section class="goal">
+  <span class="kicker">The heart of the video</span>
+  <h2>Why it's acceptable to let it run on its own</h2>
+  <p>This is the thesis, and it's counterintuitive: I do <strong>not</strong> let it run because I trust Claude. I
+  let it run because between Claude and a disaster I put <strong>five independent barriers, one under the
+  other</strong>. If Claude makes a mistake — and in thirty days it did — it has to break through them <em>all</em>
+  at the same time to do damage. It's the Swiss cheese principle: one slice has holes, but five stacked slices let
+  nothing through.</p>
+
+  <p style="margin-top:22px"><strong>The five nets, from the outermost to the one closest to Claude</strong> (the
+  longer the bar = the wider the barrier, the more it stops):</p>
+
+  <div class="barriera">
+    <div class="barriera-label">1 · Spending cap</div>
+    <div class="barriera-track"><div class="barriera-fill" style="width:100%;background:#dc2626">€ limit in the Anthropic Console — beyond it, the key shuts off</div></div>
+  </div>
+  <div class="barriera">
+    <div class="barriera-label">2 · Non-root user</div>
+    <div class="barriera-track"><div class="barriera-fill" style="width:84%;background:#b91c1c">A <code style="background:rgba(255,255,255,.25);color:#fff">claude</code> user with least privilege — the system refuses the big commands</div></div>
+  </div>
+  <div class="barriera">
+    <div class="barriera-label">3 · allow/deny permissions</div>
+    <div class="barriera-track"><div class="barriera-fill" style="width:68%;background:#dc2626">Allow/deny list in <code style="background:rgba(255,255,255,.25);color:#fff">settings.json</code>: <code style="background:rgba(255,255,255,.25);color:#fff">rm</code>, <code style="background:rgba(255,255,255,.25);color:#fff">sudo</code>, <code style="background:rgba(255,255,255,.25);color:#fff">Edit</code> forbidden</div></div>
+  </div>
+  <div class="barriera">
+    <div class="barriera-label">4 · Blocking hook</div>
+    <div class="barriera-track"><div class="barriera-fill" style="width:52%;background:#b91c1c">A check that, before every command, blocks the catastrophic patterns</div></div>
+  </div>
+  <div class="barriera">
+    <div class="barriera-label">5 · Rules in the CLAUDE.md</div>
+    <div class="barriera-track"><div class="barriera-fill" style="width:38%;background:#dc2626">The "constitution" Claude reads first: what never to do</div></div>
+  </div>
+  <p class="grafico-nota">The barriers don't replace each other: they <strong>add up</strong>. The rule written in
+  the CLAUDE.md is the gentlest (Claude reads it and respects it); the spending cap is the most brutal (it asks
+  nobody for permission). In between, two layers of permissions and an automatic check. Plus a sixth, invisible net
+  here: the <strong>dry-run</strong>, which I try before every push to production to see what it <em>would</em> do
+  without it actually doing anything.</p>
+
+  <p style="margin-top:24px"><strong>The barriers put to the test</strong> — the three incidents of the 30 days and
+  which net stopped them:</p>
+  <table>
+    <thead>
+      <tr><th>What went wrong</th><th>Which barrier held</th></tr>
+    </thead>
+    <tbody>
+      <tr><td>Claude tried a misplaced deletion command</td><td>Non-root user + hook → the command never ran</td></tr>
+      <tr><td>One night it got into a loop on a slow site</td><td>Spending cap → the damage stopped at a known figure</td></tr>
+      <tr><td>A site changed its structure, prices not extracted</td><td>Log + report → in the morning I knew exactly what to fix</td></tr>
+    </tbody>
+  </table>
+  <p class="grafico-nota">No incident required a middle-of-the-night emergency. Each time, a net below contained the
+  problem until morning. <em>This</em> is what makes it sustainable to let it run.</p>
+</section>
+
+
+<!-- ============== THE REAL PIECES ============== -->
+<section>
+  <span class="kicker">The real commands</span>
+  <h2>The real pieces, in the open</h2>
+  <p>Everything I say above exists in the materials. Here is the mapping between "safety net" and the concrete
+  piece that implements it, so on screen I can open the right file:</p>
+  <table>
+    <thead>
+      <tr><th>Piece</th><th>Where it lives</th><th>What it's for</th></tr>
+    </thead>
+    <tbody>
+      <tr><td>Automatic start</td><td><code>crontab</code> — line <code>0 4 * * *</code></td><td>Launches <code>claude --headless -f scraper-prompt.md</code> every night</td></tr>
+      <tr><td>The task</td><td><code>scraper-prompt.md</code></td><td>The step-by-step instructions of the task (read, compare, alert)</td></tr>
+      <tr><td>The constitution</td><td>Project <code>CLAUDE.md</code></td><td>The non-negotiable rules Claude reads first</td></tr>
+      <tr><td>Permissions + hook</td><td><code>~/.claude/settings.json</code></td><td>Allow/deny list of commands + automatic blocking of dangerous patterns</td></tr>
+      <tr><td>The secret key</td><td><code>~/.claude/env</code> (never on Git)</td><td>The <code>ANTHROPIC_API_KEY</code> — see <code>DISCLAIMER.md</code></td></tr>
+      <tr><td>The spending cap</td><td>Anthropic Console → Billing</td><td>Soft limit (email) + hard limit (the key shuts off)</td></tr>
+    </tbody>
+  </table>
+  <p>The point to get across out loud: there's no magic, there are <strong>text files</strong>. Anyone can open
+  them, read them, copy them. "Production" isn't a secret superpower — it's discipline written into five files.</p>
+</section>
+
+
+<!-- ============== LIMITS ============== -->
+<section>
+  <span class="kicker">Honesty</span>
+  <h2>What the system is NOT (and where a human is still needed)</h2>
+  <div class="nota-onesta">
+    <p><strong>Safe doesn't mean infallible.</strong> The barriers reduce the damage, they don't zero out the
+    mistakes. Claude can still get a price wrong or skip a site: that's why there's the log and that's why in the
+    morning I take a look. The nets are there to contain the <em>disaster</em>, not to avoid every small error.</p>
+    <p><strong>It's not "install and forget".</strong> Sites change their structure, someone blocks your access,
+    one night a server responds slowly. The system handles the unexpected on its own until morning, but the
+    maintainer — on the big cases tagged <code>BLOCKING ISSUE</code> — stays you.</p>
+    <p><strong>Scraping is a gray area.</strong> Before pointing it at a real site: read the terms of service,
+    respect a moderate frequency, download only public data. On the legal side, when in doubt, you need a lawyer —
+    not Claude.</p>
+    <p style="margin-bottom:0"><strong>Credentials are where everything is at stake.</strong> The
+    <code>ANTHROPIC_API_KEY</code> on the server is worth real money: a dedicated key, never inside Git, and if it
+    accidentally ends up online you <strong>revoke and regenerate</strong> it immediately (deleting it from history
+    isn't enough — bots find it). All the details in the <code>DISCLAIMER.md</code> of the materials.</p>
+  </div>
+</section>
+
+<!-- ============== WHAT'S IN THE MATERIALS ============== -->
+<section>
+  <span class="kicker">The folder you hand over</span>
+  <h2>What's in the materials</h2>
+  <p>It's the <code>materiali/</code> folder the viewer downloads and that you zip up at the end of the video. There's
+  no code to run: these are the <strong>configuration files</strong> to copy onto the server, plus the instructions.
+  Each with a precise role. Here's how it's laid out and how the pieces talk to each other.</p>
+
+  <table>
+    <thead>
+      <tr><th>File</th><th>What it is / what it's for</th></tr>
+    </thead>
+    <tbody>
+      <tr><td><code>scraper-prompt.md</code></td><td>The agent's <strong>task</strong>: the prompt that cron launches every night. It tells Claude Code what to do step by step (open the log, read the competitor list, download the pages, compare prices, write the report, send the email). It contains 3 <em>placeholders</em> to replace (the competitor URLs, the client's email) and an example of the <code>competitors.json</code> file.</td></tr>
+      <tr><td><code>claude-settings-produzione.json</code></td><td>The <strong>safety barriers</strong>: you copy it to <code>~/.claude/settings.json</code> on the server. Inside is the list of what Claude <em>can</em> do (<code>allow</code>) and what is <strong>forbidden</strong> (<code>deny</code>: no <code>rm</code>, <code>sudo</code>, <code>curl</code>…), plus the <em>hooks</em>: one blocks destructive commands before they run, the others write a log line on every move.</td></tr>
+      <tr><td><code>claude-md-produzione.md</code></td><td>The <strong>project's constitution</strong>: you copy it as <code>CLAUDE.md</code> into the folder on the server. Claude reads it first on every start. It spells out the 5 rules (no destructive actions, always log, no personal data, dry-run, a cap on spending) and when it must <em>stop and call a human</em>.</td></tr>
+      <tr><td><code>README.md</code></td><td>The step-by-step guide for the public: from an empty VPS to the scheduled system. Installation commands, where to paste each file above, and the 5 rules explained.</td></tr>
+      <tr><td><code>DISCLAIMER.md</code></td><td>The safety note: how to protect the <code>ANTHROPIC_API_KEY</code> and the server, what NOT to keep on the machine, the legal side of scraping, and what to do in an emergency.</td></tr>
+    </tbody>
+  </table>
+
+  <p>In one line: <code>scraper-prompt.md</code> <strong>defines the task</strong>,
+  <code>claude-settings-produzione.json</code> and <code>claude-md-produzione.md</code> <strong>impose the safety
+  barriers</strong> (what it can and can't do), the <em>cron</em> on the server <strong>schedules it</strong> every
+  night, and the <strong>log file</strong> <strong>records every run</strong>. <code>README</code> and
+  <code>DISCLAIMER</code> are the instructions and the precautions.</p>
+
+  <p><em>What you won't find in the materials</em> because it's born <strong>on the server when the system runs</strong>:
+  the log file <code>/var/log/claude-scraper.log</code>, the price database <code>prezzi.db</code>, the
+  <code>reports/</code> folder with the daily reports, the <code>last_run_state.json</code> state and the
+  <code>competitors.json</code> list (you prepare it yourself at the first setup, starting from the example in the
+  prompt). They're not there at the start: they're the fruit of the nightly work.</p>
+</section>
+
+
+<!-- ============== HOW TO TEST (operational section, separate) ============== -->
+<section class="test">
+  <span class="kicker">Try it &mdash; operational part</span>
+  <h2>How to test the system (with the course materials)</h2>
+  <p>Everything you need is in the <code>materiali/</code> folder (the <code>CLAUDE.md</code>, the
+  <code>settings.json</code>, the task prompt). The golden rule is one: <strong>before letting it run on its own,
+  verify by hand that the safety nets hold</strong>. You don't schedule anything until you've seen, with your own
+  eyes, a destructive command get <em>blocked</em>. This is the exact sequence.</p>
+
+  <ol class="passi">
+    <li><strong>Run by hand, on the server, the same command that will run at night</strong> &mdash; but safely.
+    From inside <code>~/scraper</code> launch the <em>dry-run</em>: <code>claude --dry-run -f scraper-prompt.md</code>.
+    Claude runs the whole logic (reads the sites, computes the changes) but does <strong>not</strong> write to the
+    database, does <strong>not</strong> send mail, does <strong>not</strong> touch the state: it only shows you what it
+    <em>would</em> do. It's the dry test before going to production.</li>
+    <li><strong>Check that it only reads the sources and only writes where it should.</strong> In the log
+    (<code>/var/log/claude-scraper.log</code>) and in the dry-run output the competitor pages appear only as
+    <em>read</em> (<code>WebFetch</code>), and the only writes are inside <code>/home/claude/scraper/</code> &mdash;
+    the <code>prezzi.db</code> database, the <code>reports/</code>, the log. No writes outside of there: that's
+    enforced by the <em>allow</em> list in <code>~/.claude/settings.json</code>.</li>
+    <li><strong>Test a barrier: deliberately launch a destructive action and watch it fail.</strong> Still from
+    <code>~/scraper</code>, ask Claude in interactive mode for a forbidden command &mdash; for example deleting the log
+    with <code>rm -rf /var/log/claude-scraper.log</code>. Two independent nets stop it: the <em>deny</em> rule
+    <code>Bash(rm:*)</code> in <code>settings.json</code> and the <em>PreToolUse hook</em>, which before every Bash
+    command intercepts the catastrophic patterns (<code>rm -rf</code>, <code>sudo</code>, <code>mkfs</code>&hellip;) and
+    replies <code>BLOCKED: comando distruttivo</code>. The command <strong>does not run</strong>.</li>
+    <li><strong>Check that the spending cap is set.</strong> Open the Anthropic console
+    (<em>Settings &rarr; Billing &rarr; Usage Limits</em>) and verify there is a <em>soft limit</em> (it emails you,
+    example 50 USD) and above all a <em>hard limit</em>: beyond that figure the key stops working. It's the net that
+    doesn't live on the server &mdash; it holds even if everything else failed, for instance if Claude got stuck in a
+    loop on a slow site.</li>
+    <li><strong>Only now schedule, and check the log after the first night.</strong> Put in <code>crontab -e</code>
+    the line <code>0 4 * * * cd /home/claude/scraper &amp;&amp; claude --headless -f scraper-prompt.md &gt;&gt; /var/log/claude-scraper.log 2&gt;&amp;1</code>.
+    The next morning open <code>/var/log/claude-scraper.log</code> and the latest <code>reports/&lt;date&gt;.md</code>:
+    you should find a clean <code>RUN START</code> / <code>RUN END</code>. If cron didn't fire, check with
+    <code>grep CRON /var/log/syslog</code> (often it's a <code>PATH</code> problem inside cron).</li>
+  </ol>
+
+  <p style="margin-top:18px"><strong>What you should see</strong> when you test the barrier in step 3 (sample
+  terminal output):</p>
+  <pre class="term">&gt; rm -rf /var/log/claude-scraper.log
+
+[PreToolUse:Bash] checking destructive patterns...
+BLOCKED: comando distruttivo
+Permission denied by deny rule: Bash(rm:*)
+
+The command was NOT executed.
+<span class="ok">[OK] The barrier held: the file is still there.</span></pre>
+
+  <p style="margin-top:18px"><strong>And this is what a regular run looks like instead</strong> in the log, after a
+  night that went well:</p>
+  <pre class="term">=== RUN START 2026-06-15T04:00:03Z ===
+Trigger: cron
+Goal: scrape prices of 3 competitors, alert on changes &gt; 5%
+[WebFetch] competitor A ... ok
+[WebFetch] competitor B ... ok
+[WebFetch] competitor C ... ok
+Change &gt; 5% found: [Competitor A] Product X: 49.90 -&gt; 39.90 (-20%)
+Report written to reports/2026-06-15.md
+Mail sent to the client.
+=== RUN END 2026-06-15T04:03:41Z | status: success | commands executed: 14 ===</pre>
+
+  <div class="check">
+    <strong>Proof that the nets hold:</strong>
+    <ul>
+      <li>It <strong>only read</strong> the sources: in the log the competitors appear as <code>WebFetch</code>, never as a login or a write on their sites &rarr; <strong>read-only access</strong>.</li>
+      <li>It produced <strong>verifiable report and log</strong>: <code>reports/&lt;date&gt;.md</code> updated and <code>RUN START</code>/<code>RUN END</code> in the log &rarr; <strong>you always know what it did</strong>.</li>
+      <li>The destructive command was <strong>blocked</strong> by hook + <em>deny</em> rule, and beyond the spending cap the key shuts itself off &rarr; <strong>the disaster is contained before it happens</strong>.</li>
     </ul>
   </div>
-  <div class="blocco dire">
-    <div class="blocco-label">What to say (verbatim)</div>
-    <p>"First decision: where to run Claude Code. I could have used my home desktop, but if my wife unplugs the outlet or the power goes out, scraping doesn't run. So VPS. DigitalOcean at six dollars a month, Frankfurt region because it's the closest to me geographically — Italian sites respond faster."</p>
-    <p>"Base VPS setup: Ubuntu twenty-two, SSH key, no password — only certificate access. When the VPS is up, I do something I always recommend before touching anything else: I create a dedicated user called 'claude'. I never work as 'root'. This is also rule number one of the five I'll tell you at the end — spoiler: it's the rule that saved me once where it would have been the only thing protecting me."</p>
-    <p>"I install Node Version Manager, Node twenty, and Claude Code. Three commands. Five minutes. Verify with claude dash version — it responds, I'm operational."</p>
-  </div>
-</section>
 
-
-<!-- STEP 3 -->
-<section class="step">
-  <div class="step-numero">STEP 3</div>
-  <h2 style="margin-top:0">Things that work right away — first email report arrives</h2>
-  <div class="blocco mostrare">
-    <div class="blocco-label">What to show on screen</div>
-    <p>Split screen:</p>
-    <ul style="margin-top:8px">
-      <li>Left: VPS terminal showing Claude Code running in headless mode (`claude --headless -f scraper-prompt.md`). Logs show "Reading competitors.json", "Fetching Competitor A...", "Found price 49.90 EUR for product X"</li>
-      <li>Right: after 3 minutes, an email notification arrives on phone / Gmail: subject "Price Report - 5 variations found"</li>
-      <li>Open the mail, show the nicely formatted markdown report: list of variations with before/after</li>
-    </ul>
-  </div>
-  <div class="blocco dire">
-    <div class="blocco-label">What to say (verbatim)</div>
-    <p>"First run, manually. I launch claude dash dash headless with a prompt file I wrote in twenty minutes — show me three competitor URLs, extract prices of listed products, compare with previous database, send email if there are variations. Three minutes of execution. Email lands on my phone: 'five variations found'."</p>
-    <p>"I open it. I find a nicely formatted markdown report — percentage variation, price before, price after, link to the product on the competitor's site. A running shoe of interest dropped by fifteen percent on competitor number two. Stuff my client would have discovered the following week, by hand, too late to react."</p>
-    <p>"In this moment I think: cool, done. I schedule cron at four in the morning, and sleep easy. You got it, right? For the first five days it really went that way. Then the problems started."</p>
-  </div>
-</section>
-
-
-<!-- STEP 4 -->
-<section class="step problema">
-  <div class="step-numero">STEP 4</div>
-  <h2 style="margin-top:0">When things break — the three times I banged my head</h2>
-  <div class="blocco mostrare">
-    <div class="blocco-label">What to show on screen</div>
-    <p>Three short "scenes" in sequence, each with a red icon-tag "PROBLEM 1", "PROBLEM 2", "PROBLEM 3":</p>
-    <ul style="margin-top:8px">
-      <li><b>Problem 1 — broken CSS selectors</b>: show the competitor site that suddenly changed layout, old selector <code>.price-now</code> no longer finds anything, the email report arrives with "60 products scanned, 0 prices extracted"</li>
-      <li><b>Problem 2 — IP ban</b>: competitor three detected the scraping pattern and blocked the VPS's IP. HTTP 403 errors on every request</li>
-      <li><b>Problem 3 — exploded API consumption</b>: one night Claude enters a loop because the site responds slowly, retries forever. Next morning, budget alert at 80% in a single day</li>
-    </ul>
-  </div>
-  <div class="blocco dire">
-    <div class="blocco-label">What to say (verbatim)</div>
-    <p>"Day six, morning, I open my email. Overnight scraping report: 'sixty products scanned, zero prices extracted'. All scrapes failed. I check: competitor number one had changed their site's layout overnight. My CSS selector — the rule saying 'the price lives in this HTML element' — wasn't finding anything anymore. Old scraping problem, I knew it. Cost me an hour of selector readjustment. Fine, lesson learned, first problem solved."</p>
-    <p>"Day seventeen: competitor number three detected the pattern of my visits — always at four in the morning, always from the same VPS IP — and banned me. HTTP four-oh-three on every page. That competitor's scraping was dead. Solution: I had to introduce a proxy that rotates IPs, additional cost ten dollars a month. Moving on."</p>
-    <p>"Day twenty-four: the biggest problem. Wake up at seven in the morning, check the mail. Notification from Anthropic: 'you've reached eighty percent of your monthly budget in a single day'. I go to the logs. One night, competitor one's site was strangely slow, responses coming back in thirty seconds instead of two. Claude retried, and retried, and retried. Infinite loop for hours. Burned a hundred dollars of tokens in one night."</p>
-    <p>"And this is where rule number five was born, the one I now ALWAYS apply: hard budget limit in the Anthropic console. Even in the worst possible bug scenario, the damage is contained. Let's look at all five rules together."</p>
-  </div>
-</section>
-
-
-<!-- STEP 5 -->
-<section class="step">
-  <div class="step-numero">STEP 5</div>
-  <h2 style="margin-top:0">The 5 rules I now apply ALWAYS</h2>
-  <div class="blocco mostrare">
-    <div class="blocco-label">What to show on screen</div>
-    <p>Full-screen, the 5 rules as numbered cards. As you discuss each, highlight the corresponding card. Below each card, a mini-icon of the file that implements it (e.g. settings.json icon, anthropic console icon).</p>
-    <ul style="margin-top:8px">
-      <li><b>Rule 1</b> — Never run as root</li>
-      <li><b>Rule 2</b> — Blocking hooks for destructive commands</li>
-      <li><b>Rule 3</b> — Aggressive logging always</li>
-      <li><b>Rule 4</b> — Dry-run before every deploy</li>
-      <li><b>Rule 5</b> — API budget with alerts and hard limit</li>
-    </ul>
-  </div>
-  <div class="blocco dire">
-    <div class="blocco-label">What to say (verbatim)</div>
-    <p>"Rule one: never run Claude Code as the root user on the VPS. Create a dedicated user with minimum permissions. If Claude one day causes a mess — not out of malice but because the prompt was poorly written — damage is contained. If instead it runs as root, one wrong command is a catastrophe. It happened to me once: Claude tried to run an rm dash rf on a folder because it misinterpreted a prompt instruction. The claude user had no permissions, OS refused, saved. If it had been root, it was over."</p>
-    <p>"Rule two: blocking hooks for destructive commands. In the VPS settings.json file, I add a PreToolUse hook that intercepts every call to the Bash tool and blocks dangerous commands a priori — rm dash rf, sudo, dd, mkfs. Even if Claude tried them, the hook blocks them. Redundancy above OS permissions. The full file, production settings.json, is in the materials."</p>
-    <p>"Rule three: aggressive logging, always. Every execution, Claude writes a detailed log to slash var slash log slash claude dash scraper dot log. Start timestamp, decisions made, commands executed, end timestamp. When something goes wrong in the morning, I have the history of what happened. When everything's fine, I have metrics for tuning the prompt. Without logs, you're blind."</p>
-    <p>"Rule four: dry-run before every deploy. When I modify the prompt or add a new competitor, I always launch FIRST with claude dash dash dry-run. Claude runs all the logic but does NOT write to the database, does NOT send email, does NOT change files. Just logs what it WOULD HAVE done. I read the output. If I'm convinced, I push to production. If not, I revise the prompt."</p>
-    <p>"Rule five: API budget with alerts. In the Anthropic console I set a soft limit of fifty dollars monthly — above which I get email — and a hard limit of two hundred dollars — above which the API key stops working. So even in the worst possible bug scenario, even with an overnight infinite loop, the maximum damage is two hundred dollars. Thirty seconds of setup, sleep easy for six months."</p>
-  </div>
-</section>
-
-
-<!-- STEP 6 -->
-<section class="step">
-  <div class="step-numero">STEP 6</div>
-  <h2 style="margin-top:0">Current state of the system (day thirty-one)</h2>
-  <div class="blocco mostrare">
-    <div class="blocco-label">What to show on screen</div>
-    <p>Three stats on screen, clean dashboard format:</p>
-    <ul style="margin-top:8px">
-      <li><b>Consecutive successful runs</b>: 30</li>
-      <li><b>Price variations identified</b>: 7</li>
-      <li><b>Monthly API consumption</b>: 12 USD (under budget)</li>
-      <li><b>Hours saved for client</b>: ~4 per week</li>
-    </ul>
-    <p>Then back to CAMERA for closing the step.</p>
-  </div>
-  <div class="blocco dire">
-    <div class="blocco-label">What to say (verbatim)</div>
-    <p>"State of the system today, day thirty-one. Thirty consecutive successful executions after the three initial breakages. Seven significant price variations identified — of these, the client acted on four by adjusting their own pricing, and says they recovered measurable margin. Monthly API consumption: twelve dollars. Client time recovered: about four hours a week his wife used to spend on Excel sheets."</p>
-    <p>"Total infrastructure cost: sixteen dollars a month — six VPS, ten proxy rotation. Plus Claude API consumption, which stays under fifteen dollars monthly. Thirty dollars a month for a system that runs on its own, always, that has already paid back the setup many times over."</p>
-    <p>"Final lesson — what I take away from these thirty days. Putting Claude Code in production works, but it's not the same as using it as a personal assistant on your PC. It's a different job. It requires preparation, rules, healthy paranoia. The five rules I gave you are my anti-paranoia kit: if you apply them, you sleep peacefully."</p>
-  </div>
-</section>
-
-
-<!-- FINAL CTA -->
-<section class="cta">
-  <div class="badge-intro" style="background:white;color:var(--green)">Final CTA</div>
-  <h2 style="margin-top:0">Closing</h2>
-  <div class="blocco mostrare">
-    <div class="blocco-label">What to show on screen</div>
-    <p>CAMERA on you. "I told you the story" tone.</p>
-  </div>
-  <div class="blocco dire">
-    <div class="blocco-label">What to say (verbatim)</div>
-    <p>"All the files I used — the production CLAUDE.md, the settings.json with blocking hooks, the full scraper prompt, the disclaimer on VPS and API key security — are free in the link in description. There's also a step-by-step guide to replicate the whole setup, from the DigitalOcean droplet to the first email report, in forty-five minutes."</p>
-    <p>"If this video was useful and you want to keep seeing practical AI cases applied to real work — not playground tutorials — subscribe. The next video I'm dedicating to a problem ALL new Claude Code users face: the agent that floods your folder with useless files. I'll show you five techniques to stop it. See you there."</p>
-  </div>
+  <p class="grafico-nota">Credentials: the <code>ANTHROPIC_API_KEY</code> lives in <code>~/.claude/env</code> on the
+  server and <strong>must never be committed to Git</strong> &mdash; if it accidentally ends up online, revoke and
+  regenerate it immediately (all the details in the <code>DISCLAIMER.md</code> of the materials).</p>
 </section>
 
 </body>
