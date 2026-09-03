@@ -1,6 +1,0 @@
-# La libreria OpenAI: la usiamo per parlare con OpenRouter (endpoint compatibile).
-# Include già pydantic, che usiamo per la "scheda" (structured output).
-openai
-
-# Per leggere la chiave dal file .env
-python-dotenv

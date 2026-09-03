@@ -1,9 +1,0 @@
-# Credenziali: NON committare mai il file .env vero (vedi DISCLAIMER.md)
-.env
-
-# Dati dei dipendenti: il registro puo' contenere nomi e richieste
-richieste.log
-
-# Cache di Python
-__pycache__/
-*.pyc

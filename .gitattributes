@@ -1,3 +1,0 @@
-# Il pre-commit hook deve restare LF anche su Windows, altrimenti lo shebang
-# con CRLF (#!/usr/bin/env bash\r) fa fallire l'esecuzione.
-.githooks/pre-commit text eol=lf

@@ -1,9 +1,0 @@
-# Mai committare le credenziali
-.env
-
-# Output generato dallo script (si rigenera a ogni esecuzione)
-report.md
-
-# File temporanei di Python
-__pycache__/
-*.pyc

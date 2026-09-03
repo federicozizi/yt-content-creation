@@ -1,4 +1,0 @@
-# Serve >=0.69: il "tool runner" e @beta_tool sono stati aggiunti nella 0.68.
-anthropic>=0.69
-python-telegram-bot>=21
-python-dotenv>=1.0
